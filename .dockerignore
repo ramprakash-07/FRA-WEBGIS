@@ -1,0 +1,22 @@
+.git
+.gitignore
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+ENV/
+
+# Ignore non-deploy folders and local artifacts
+FRASENTINEL/002/
+FRASENTINEL/**/__pycache__/
+FRASENTINEL/**/*.pyc
+FRASENTINEL/**/*.pyo
+FRASENTINEL/**/*.db
+FRASENTINEL/**/*.tif
+FRASENTINEL/**/*.tiff
+FRASENTINEL/**/*.pdf
+FRASENTINEL/**/uploads/
