@@ -1,0 +1,1192 @@
+{% extends "base.html" %}
+
+{% block title %}{% trans %}Government Schemes{% endtrans %}{% endblock %}
+
+{% block content %}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0d4f3c 0%, #1b5e20 25%, #2e7d32 50%, #4caf50 75%, #81c784 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #0d4f3c;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .dajgua-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .dajgua-toggle label {
+            font-weight: 600;
+            color: #0d4f3c;
+            cursor: pointer;
+        }
+
+        .dajgua-toggle input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #0d4f3c;
+        }
+
+        .convergence-score {
+            background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .convergence-score h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .convergence-score .score {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .priority-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .priority-badge.high {
+            background: linear-gradient(135deg, #d32f2f, #f44336);
+        }
+
+        .priority-badge.medium {
+            background: linear-gradient(135deg, #f57c00, #ff9800);
+        }
+
+        .priority-badge.low {
+            background: linear-gradient(135deg, #388e3c, #4caf50);
+        }
+
+        .compliance-note-header {
+            background: rgba(13, 79, 60, 0.1);
+            padding: 8px 15px;
+            border-radius: 15px;
+            margin: 10px 0;
+            border-left: 3px solid #0d4f3c;
+        }
+
+        .compliance-note-header small {
+            color: #0d4f3c;
+            font-weight: 500;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-bar input:focus {
+            border-color: #4caf50;
+        }
+
+        .search-bar button {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+
+        .search-bar button:hover {
+            transform: translateY(-2px);
+        }
+
+        .schemes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .scheme-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid #4caf50;
+        }
+
+        .scheme-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .scheme-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .scheme-icon {
+            font-size: 2.5rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            border-radius: 50%;
+            color: white;
+        }
+
+        .scheme-title {
+            flex: 1;
+        }
+
+        .scheme-title h3 {
+            color: #0d4f3c;
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .scheme-title         .ministry {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .ministry-pill {
+            display: inline-block;
+            background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 5px 5px 5px 0;
+            box-shadow: 0 2px 8px rgba(13, 79, 60, 0.3);
+        }
+
+        .guideline-ref {
+            display: inline-block;
+            background: linear-gradient(135deg, #1976d2, #42a5f5);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 5px 5px 5px 0;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .guideline-ref:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4);
+        }
+
+        .dajgua-footer {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .dajgua-footer h4 {
+            color: #0d4f3c;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .dajgua-footer p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .scheme-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .scheme-benefits {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .benefit-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .benefit-icon {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .eligibility-section {
+            margin-bottom: 20px;
+        }
+
+        .eligibility-title {
+            color: #0d4f3c;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .eligibility-list {
+            list-style: none;
+        }
+
+        .eligibility-list li {
+            padding: 5px 0;
+            color: #555;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .eligibility-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .scheme-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #4caf50;
+            padding: 10px 20px;
+            border: 2px solid #4caf50;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #4caf50;
+            color: white;
+        }
+
+        .category-section {
+            margin-bottom: 40px;
+        }
+
+        .category-title {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .stats-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: white;
+            border-radius: 10px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #0d4f3c;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .schemes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .search-bar {
+                flex-direction: column;
+            }
+            
+            .scheme-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="{{ url_for('dashboard') }}" class="back-btn">← Back to Dashboard</a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ {% trans %}Government Schemes{% endtrans %}</h1>
+            <p>{% trans %}Discover eligible government schemes for FRA beneficiaries and forest-dwelling communities{% endtrans %}</p>
+            <div class="compliance-note-header">
+                <small>📋 Aligned with MoTA FRA guidelines and DAJGUA convergence model</small>
+            </div>
+            
+            <div class="dajgua-toggle">
+                <input type="checkbox" id="dajguaMode" onchange="toggleDAJGUAMode()">
+                <label for="dajguaMode">🎯 {% trans %}DAJGUA Convergence Mode{% endtrans %}</label>
+            </div>
+            
+            <div class="convergence-score" id="convergenceScore" style="display: none;">
+                <h3>{% trans %}Village Convergence Score{% endtrans %}</h3>
+                <p class="score" id="convergenceScoreValue">0.0</p>
+            </div>
+            
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search schemes by name, ministry, or category...">
+                <button onclick="searchSchemes()">🔍 Search</button>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #0d4f3c;">📊 Scheme Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">15+</div>
+                    <div class="stat-label">Available Schemes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">₹50L+</div>
+                    <div class="stat-label">Total Benefits</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Digital Access</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-section" id="personalizedSuggestions" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #0d4f3c;">🎯 Personalized Scheme Suggestions</h2>
+            <div id="userProfile" style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="color: #0d4f3c; margin-bottom: 15px;">Your Profile</h3>
+                <div id="profileDetails"></div>
+            </div>
+            <div id="prioritySchemes">
+                <h3 style="color: #0d4f3c; margin-bottom: 15px;">⭐ Top Priority Schemes for You</h3>
+                <div id="prioritySchemesList"></div>
+            </div>
+            <div id="recommendations" style="background: #e8f5e8; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                <h3 style="color: #0d4f3c; margin-bottom: 15px;">💡 Recommendations</h3>
+                <div id="recommendationsList"></div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 30px;">
+            <a href="{{ url_for('fra_data_collection') }}" class="btn-primary" style="font-size: 1.1rem; padding: 15px 30px; text-decoration: none; display: inline-block; margin-right: 15px;">
+                📋 Enter Your Data
+            </a>
+            <button onclick="loadPersonalizedSuggestions()" class="btn-secondary" style="font-size: 1.1rem; padding: 15px 30px;">
+                🎯 Get Demo Suggestions
+            </button>
+        </div>
+
+        <div class="category-section">
+            <h2 class="category-title">🌾 Agricultural Schemes</h2>
+            <div class="schemes-grid">
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <div class="scheme-icon">💰</div>
+                        <div class="scheme-title">
+                            <h3>PM-KISAN</h3>
+                            <div class="ministry">Ministry of Agriculture & Farmers Welfare</div>
+                        </div>
+                    </div>
+                    <div class="scheme-description">
+                        Direct income support of Rs. 6,000 per year to small and marginal farmers in three equal installments.
+                    </div>
+                    <div class="scheme-benefits">
+                        <div class="benefit-item">
+                            <span class="benefit-icon">💰</span>
+                            <span>Rs. 6,000 per year (Rs. 2,000 per installment)</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">📱</span>
+                            <span>Direct bank transfer</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🌾</span>
+                            <span>For landholding farmers up to 2 hectares</span>
+                        </div>
+                    </div>
+                    <div class="eligibility-section">
+                        <div class="eligibility-title">Eligibility Criteria:</div>
+                        <ul class="eligibility-list">
+                            <li>Land ownership up to 2 hectares</li>
+                            <li>Cultivates crops</li>
+                            <li>Not a government employee</li>
+                            <li>Not an income tax payer</li>
+                        </ul>
+                    </div>
+                    <div class="scheme-actions">
+                        <a href="https://pmkisan.gov.in" class="btn-primary" target="_blank">Apply Online</a>
+                        <button class="btn-secondary" onclick="checkEligibility('PM-KISAN')">Check Eligibility</button>
+                    </div>
+                </div>
+
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <div class="scheme-icon">🛡️</div>
+                        <div class="scheme-title">
+                            <h3>PMFBY</h3>
+                            <div class="ministry">Ministry of Agriculture & Farmers Welfare</div>
+                        </div>
+                    </div>
+                    <div class="scheme-description">
+                        Comprehensive crop insurance scheme providing financial support to farmers in case of crop failure.
+                    </div>
+                    <div class="scheme-benefits">
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🛡️</span>
+                            <span>Up to 100% of sum insured</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🌧️</span>
+                            <span>Coverage for natural calamities</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">💰</span>
+                            <span>Low premium rates</span>
+                        </div>
+                    </div>
+                    <div class="eligibility-section">
+                        <div class="eligibility-title">Eligibility Criteria:</div>
+                        <ul class="eligibility-list">
+                            <li>Land ownership required</li>
+                            <li>Cultivates crops</li>
+                            <li>Bank account mandatory</li>
+                            <li>Valid Aadhaar card</li>
+                        </ul>
+                    </div>
+                    <div class="scheme-actions">
+                        <a href="https://pmfby.gov.in" class="btn-primary" target="_blank">Apply Online</a>
+                        <button class="btn-secondary" onclick="checkEligibility('PMFBY')">Check Eligibility</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category-section">
+            <h2 class="category-title">🏠 Housing Schemes</h2>
+            <div class="schemes-grid">
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <div class="scheme-icon">🏠</div>
+                        <div class="scheme-title">
+                            <h3>PMAY</h3>
+                            <div class="ministry">Ministry of Housing and Urban Affairs</div>
+                        </div>
+                    </div>
+                    <div class="scheme-description">
+                        Housing for all by 2022 - providing affordable housing to economically weaker sections.
+                    </div>
+                    <div class="scheme-benefits">
+                        <div class="benefit-item">
+                            <span class="benefit-icon">💰</span>
+                            <span>Rs. 1.5-2.5 lakhs assistance</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🏠</span>
+                            <span>Pucca house construction</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🔧</span>
+                            <span>Basic amenities included</span>
+                        </div>
+                    </div>
+                    <div class="eligibility-section">
+                        <div class="eligibility-title">Eligibility Criteria:</div>
+                        <ul class="eligibility-list">
+                            <li>Below Poverty Line (BPL) status</li>
+                            <li>No existing pucca house</li>
+                            <li>SC/ST/OBC preference</li>
+                            <li>Bank account required</li>
+                        </ul>
+                    </div>
+                    <div class="scheme-actions">
+                        <a href="https://pmaymis.gov.in" class="btn-primary" target="_blank">Apply Online</a>
+                        <button class="btn-secondary" onclick="checkEligibility('PMAY')">Check Eligibility</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category-section">
+            <h2 class="category-title">💼 Employment Schemes</h2>
+            <div class="schemes-grid">
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <div class="scheme-icon">💼</div>
+                        <div class="scheme-title">
+                            <h3>MGNREGA</h3>
+                            <div class="ministry">Ministry of Rural Development</div>
+                        </div>
+                    </div>
+                    <div class="scheme-description">
+                        100 days of guaranteed wage employment per year to rural households.
+                    </div>
+                    <div class="scheme-benefits">
+                        <div class="benefit-item">
+                            <span class="benefit-icon">💰</span>
+                            <span>Rs. 200-300 per day</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">📅</span>
+                            <span>100 days guaranteed employment</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🏗️</span>
+                            <span>Infrastructure development work</span>
+                        </div>
+                    </div>
+                    <div class="eligibility-section">
+                        <div class="eligibility-title">Eligibility Criteria:</div>
+                        <ul class="eligibility-list">
+                            <li>Rural household</li>
+                            <li>Adult family members</li>
+                            <li>Bank account required</li>
+                            <li>Valid ration card</li>
+                        </ul>
+                    </div>
+                    <div class="scheme-actions">
+                        <a href="https://nrega.nic.in" class="btn-primary" target="_blank">Apply Online</a>
+                        <button class="btn-secondary" onclick="checkEligibility('MGNREGA')">Check Eligibility</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category-section">
+            <h2 class="category-title">🌲 Forest Rights Schemes</h2>
+            <div class="schemes-grid">
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <div class="scheme-icon">🌲</div>
+                        <div class="scheme-title">
+                            <h3>FRA - Individual Forest Rights</h3>
+                            <div class="ministry">Ministry of Tribal Affairs</div>
+                        </div>
+                    </div>
+                    <div class="scheme-description">
+                        Recognition of individual forest rights for forest-dwelling communities.
+                    </div>
+                    <div class="scheme-benefits">
+                        <div class="benefit-item">
+                            <span class="benefit-icon">📜</span>
+                            <span>Land title up to 4 hectares</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🌿</span>
+                            <span>Forest produce collection rights</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🏛️</span>
+                            <span>Legal recognition of rights</span>
+                        </div>
+                    </div>
+                    <div class="eligibility-section">
+                        <div class="eligibility-title">Eligibility Criteria:</div>
+                        <ul class="eligibility-list">
+                            <li>Located in tribal district</li>
+                            <li>Collects forest produce</li>
+                            <li>Scheduled Tribe (ST) category</li>
+                            <li>No existing land ownership</li>
+                        </ul>
+                    </div>
+                    <div class="scheme-actions">
+                        <a href="https://tribal.nic.in" class="btn-primary" target="_blank">Apply Online</a>
+                        <button class="btn-secondary" onclick="checkEligibility('FRA_INDIVIDUAL')">Check Eligibility</button>
+                    </div>
+                </div>
+
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <div class="scheme-icon">👥</div>
+                        <div class="scheme-title">
+                            <h3>FRA - Community Forest Rights</h3>
+                            <div class="ministry">Ministry of Tribal Affairs</div>
+                        </div>
+                    </div>
+                    <div class="scheme-description">
+                        Recognition of community forest rights for forest-dwelling communities.
+                    </div>
+                    <div class="scheme-benefits">
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🌳</span>
+                            <span>Community forest management rights</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🤝</span>
+                            <span>Collective decision making</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">💰</span>
+                            <span>Forest produce commercialization</span>
+                        </div>
+                    </div>
+                    <div class="eligibility-section">
+                        <div class="eligibility-title">Eligibility Criteria:</div>
+                        <ul class="eligibility-list">
+                            <li>Located in tribal district</li>
+                            <li>Collects forest produce</li>
+                            <li>Scheduled Tribe (ST) category</li>
+                            <li>Community-based application</li>
+                        </ul>
+                    </div>
+                    <div class="scheme-actions">
+                        <a href="https://tribal.nic.in" class="btn-primary" target="_blank">Apply Online</a>
+                        <button class="btn-secondary" onclick="checkEligibility('FRA_COMMUNITY')">Check Eligibility</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category-section">
+            <h2 class="category-title">🏥 Social Welfare Schemes</h2>
+            <div class="schemes-grid">
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <div class="scheme-icon">🏥</div>
+                        <div class="scheme-title">
+                            <h3>PMJAY</h3>
+                            <div class="ministry">Ministry of Health and Family Welfare</div>
+                        </div>
+                    </div>
+                    <div class="scheme-description">
+                        Health insurance for poor and vulnerable families providing cashless treatment.
+                    </div>
+                    <div class="scheme-benefits">
+                        <div class="benefit-item">
+                            <span class="benefit-icon">💰</span>
+                            <span>Up to Rs. 5 lakhs per family per year</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🏥</span>
+                            <span>Cashless treatment</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">📱</span>
+                            <span>Portable across India</span>
+                        </div>
+                    </div>
+                    <div class="eligibility-section">
+                        <div class="eligibility-title">Eligibility Criteria:</div>
+                        <ul class="eligibility-list">
+                            <li>Below Poverty Line (BPL) status</li>
+                            <li>SC/ST/OBC category</li>
+                            <li>Family size consideration</li>
+                            <li>No existing health insurance</li>
+                        </ul>
+                    </div>
+                    <div class="scheme-actions">
+                        <a href="https://pmjay.gov.in" class="btn-primary" target="_blank">Apply Online</a>
+                        <button class="btn-secondary" onclick="checkEligibility('PMJAY')">Check Eligibility</button>
+                    </div>
+                </div>
+
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <div class="scheme-icon">🔥</div>
+                        <div class="scheme-title">
+                            <h3>PMUY</h3>
+                            <div class="ministry">Ministry of Petroleum and Natural Gas</div>
+                        </div>
+                    </div>
+                    <div class="scheme-description">
+                        Free LPG connections to poor households to promote clean cooking fuel.
+                    </div>
+                    <div class="scheme-benefits">
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🔥</span>
+                            <span>Free LPG connection</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">💰</span>
+                            <span>Rs. 1,600 subsidy</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🌱</span>
+                            <span>Clean cooking fuel</span>
+                        </div>
+                    </div>
+                    <div class="eligibility-section">
+                        <div class="eligibility-title">Eligibility Criteria:</div>
+                        <ul class="eligibility-list">
+                            <li>Below Poverty Line (BPL) status</li>
+                            <li>No existing LPG connection</li>
+                            <li>SC/ST/OBC category</li>
+                            <li>Valid Aadhaar card</li>
+                        </ul>
+                    </div>
+                    <div class="scheme-actions">
+                        <a href="https://pmuy.gov.in" class="btn-primary" target="_blank">Apply Online</a>
+                        <button class="btn-secondary" onclick="checkEligibility('PMUY')">Check Eligibility</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category-section">
+            <h2 class="category-title">🏗️ Infrastructure Schemes</h2>
+            <div class="schemes-grid">
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <div class="scheme-icon">💧</div>
+                        <div class="scheme-title">
+                            <h3>Jal Jeevan Mission</h3>
+                            <div class="ministry">Ministry of Jal Shakti</div>
+                        </div>
+                    </div>
+                    <div class="scheme-description">
+                        Tap water connection to every household by 2024.
+                    </div>
+                    <div class="scheme-benefits">
+                        <div class="benefit-item">
+                            <span class="benefit-icon">💧</span>
+                            <span>Free tap water connection</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🏠</span>
+                            <span>Household level connection</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🌊</span>
+                            <span>Safe drinking water</span>
+                        </div>
+                    </div>
+                    <div class="eligibility-section">
+                        <div class="eligibility-title">Eligibility Criteria:</div>
+                        <ul class="eligibility-list">
+                            <li>Rural household</li>
+                            <li>No existing tap water</li>
+                            <li>Valid address proof</li>
+                            <li>Aadhaar card required</li>
+                        </ul>
+                    </div>
+                    <div class="scheme-actions">
+                        <a href="https://jaljeevanmission.gov.in" class="btn-primary" target="_blank">Apply Online</a>
+                        <button class="btn-secondary" onclick="checkEligibility('JAL_JEEVAN')">Check Eligibility</button>
+                    </div>
+                </div>
+
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <div class="scheme-icon">⚡</div>
+                        <div class="scheme-title">
+                            <h3>SAUBHAGYA</h3>
+                            <div class="ministry">Ministry of Power</div>
+                        </div>
+                    </div>
+                    <div class="scheme-description">
+                        Electricity connection to every household for better quality of life.
+                    </div>
+                    <div class="scheme-benefits">
+                        <div class="benefit-item">
+                            <span class="benefit-icon">⚡</span>
+                            <span>Free electricity connection</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🏠</span>
+                            <span>Household level connection</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">💡</span>
+                            <span>LED bulbs included</span>
+                        </div>
+                    </div>
+                    <div class="eligibility-section">
+                        <div class="eligibility-title">Eligibility Criteria:</div>
+                        <ul class="eligibility-list">
+                            <li>No existing electricity</li>
+                            <li>Below Poverty Line (BPL) status</li>
+                            <li>Valid address proof</li>
+                            <li>Aadhaar card required</li>
+                        </ul>
+                    </div>
+                    <div class="scheme-actions">
+                        <a href="https://saubhagya.gov.in" class="btn-primary" target="_blank">Apply Online</a>
+                        <button class="btn-secondary" onclick="checkEligibility('SAUBHAGYA')">Check Eligibility</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function searchSchemes() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const schemeCards = document.querySelectorAll('.scheme-card');
+            
+            schemeCards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('.scheme-description').textContent.toLowerCase();
+                const ministry = card.querySelector('.ministry').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm) || ministry.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function checkEligibility(schemeName) {
+            alert(`Eligibility check for ${schemeName} will be implemented with user data integration.`);
+        }
+
+        function toggleDAJGUAMode() {
+            const dajguaMode = document.getElementById('dajguaMode').checked;
+            const convergenceScore = document.getElementById('convergenceScore');
+            
+            if (dajguaMode) {
+                convergenceScore.style.display = 'block';
+                loadDAJGUARecommendations();
+            } else {
+                convergenceScore.style.display = 'none';
+                loadPersonalizedSuggestions();
+            }
+        }
+
+        async function loadDAJGUARecommendations() {
+            try {
+                const response = await fetch('/api/dss/recommendations?village_id=Khargone');
+                const data = await response.json();
+                
+                if (data.error) {
+                    console.error('Error loading DAJGUA recommendations:', data.error);
+                    return;
+                }
+                
+                // Update convergence score
+                document.getElementById('convergenceScoreValue').textContent = data.convergence_score;
+                
+                // Update scheme cards with DAJGUA data
+                updateSchemeCardsWithDAJGUAData(data.recommendations);
+                
+            } catch (error) {
+                console.error('Error loading DAJGUA recommendations:', error);
+            }
+        }
+
+        function updateSchemeCardsWithDAJGUAData(recommendations) {
+            const schemeCards = document.querySelectorAll('.scheme-card');
+            
+            schemeCards.forEach(card => {
+                const schemeName = card.querySelector('h3').textContent;
+                const matchingRecommendation = recommendations.find(rec => 
+                    rec.scheme.toLowerCase().includes(schemeName.toLowerCase()) ||
+                    schemeName.toLowerCase().includes(rec.scheme.toLowerCase())
+                );
+                
+                if (matchingRecommendation) {
+                    // Add DAJGUA indicators (percentage display removed)
+                    const scoreElement = card.querySelector('.eligibility-score');
+                    if (scoreElement) {
+                        scoreElement.style.display = 'none';
+                    }
+                    
+                    // Add ministry pill
+                    const ministryElement = card.querySelector('.ministry');
+                    if (ministryElement) {
+                        ministryElement.innerHTML = `
+                            <div class="ministry-pill">${matchingRecommendation.ministry}</div>
+                        `;
+                    }
+                    
+                    // Add guideline reference
+                    const guidelineRef = document.createElement('div');
+                    guidelineRef.className = 'guideline-ref';
+                    guidelineRef.innerHTML = `
+                        <a href="#" onclick="showGuidelineRef('${matchingRecommendation.guideline_ref}')" style="color: white; text-decoration: none;">
+                            📋 Guideline Ref
+                        </a>
+                    `;
+                    card.appendChild(guidelineRef);
+                    
+                    // Add beneficiaries estimate
+                    const benefitElement = card.querySelector('.benefit');
+                    if (benefitElement) {
+                        benefitElement.innerHTML = `
+                            <strong>Benefit:</strong> ${matchingRecommendation.benefit_amount}<br>
+                            <strong>Estimated Beneficiaries:</strong> ${matchingRecommendation.beneficiaries_estimate}
+                        `;
+                    }
+                    
+                    // Add DAJGUA priority badge
+                    const priorityBadge = document.createElement('div');
+                    priorityBadge.className = `priority-badge ${matchingRecommendation.dajgua_priority}`;
+                    priorityBadge.textContent = `DAJGUA ${matchingRecommendation.dajgua_priority.toUpperCase()}`;
+                    card.appendChild(priorityBadge);
+                }
+            });
+        }
+
+        function showGuidelineRef(guidelineRef) {
+            alert(`Guideline Reference: ${guidelineRef}\n\nThis links to the specific section in the DAJGUA guidelines document.`);
+        }
+
+        async function loadPersonalizedSuggestions() {
+            try {
+                const response = await fetch('/api/schemes/suggestions');
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                // Show personalized suggestions section
+                document.getElementById('personalizedSuggestions').style.display = 'block';
+                
+                // Display user profile
+                const profileDetails = document.getElementById('profileDetails');
+                profileDetails.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div><strong>Role:</strong> ${data.user_profile.role}</div>
+                        <div><strong>Social Category:</strong> ${data.user_profile.social_category}</div>
+                        <div><strong>BPL Status:</strong> ${data.user_profile.bpl_status}</div>
+                        <div><strong>Land Ownership:</strong> ${data.user_profile.land_ownership ? 'Yes' : 'No'}</div>
+                        <div><strong>Tribal District:</strong> ${data.user_profile.tribal_district ? 'Yes' : 'No'}</div>
+                        <div><strong>Overall Score:</strong> ${data.overall_score}%</div>
+                    </div>
+                `;
+                
+                // Display priority schemes
+                const prioritySchemesList = document.getElementById('prioritySchemesList');
+                prioritySchemesList.innerHTML = data.priority_schemes.map(scheme => `
+                    <div class="scheme-card" style="margin-bottom: 15px;">
+                        <div class="scheme-header">
+                            <div class="scheme-icon">${getSchemeIcon(scheme.scheme_id)}</div>
+                            <div class="scheme-title">
+                                <h3>${scheme.name}</h3>
+                                <div class="ministry">${scheme.ministry}</div>
+                            </div>
+                            <div style="display: none;">
+                                ${scheme.eligibility_score}%
+                            </div>
+                        </div>
+                        <div class="scheme-description">${scheme.description}</div>
+                        <div class="scheme-benefits">
+                            <div class="benefit-item">
+                                <span class="benefit-icon">💰</span>
+                                <span>${scheme.benefit_amount}</span>
+                            </div>
+                        </div>
+                        <div class="eligibility-section">
+                            <div class="eligibility-title">Why you're eligible:</div>
+                            <ul class="eligibility-list">
+                                ${scheme.reasons.map(reason => `<li>${reason}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="scheme-actions">
+                            <a href="${scheme.website}" class="btn-primary" target="_blank">Apply Online</a>
+                            <button class="btn-secondary" onclick="checkEligibility('${scheme.scheme_id}')">Check Eligibility</button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Display recommendations
+                const recommendationsList = document.getElementById('recommendationsList');
+                recommendationsList.innerHTML = data.recommendations.map(rec => `
+                    <div style="padding: 10px 0; border-bottom: 1px solid #ddd;">
+                        ${rec}
+                    </div>
+                `).join('');
+                
+                // Scroll to personalized suggestions
+                document.getElementById('personalizedSuggestions').scrollIntoView({
+                    behavior: 'smooth'
+                });
+                
+            } catch (error) {
+                alert('Error loading personalized suggestions: ' + error.message);
+            }
+        }
+
+        function getSchemeIcon(schemeId) {
+            const icons = {
+                'PM_KISAN': '💰',
+                'PMFBY': '🛡️',
+                'PMAY': '🏠',
+                'MGNREGA': '💼',
+                'FRA_TITLE': '🌲',
+                'FRA_COMMUNITY': '👥',
+                'PMJAY': '🏥',
+                'PMUY': '🔥',
+                'JAL_JEEVAN': '💧',
+                'SAUBHAGYA': '⚡'
+            };
+            return icons[schemeId] || '🏛️';
+        }
+
+        // Add search functionality on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchSchemes();
+            }
+        });
+
+        // Add smooth scrolling for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+{% endblock %}

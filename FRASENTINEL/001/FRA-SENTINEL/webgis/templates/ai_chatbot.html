@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant - FRA Sentinel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/unified-buttons.css') }}" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #0d4f3c 0%, #1b5e20 25%, #2e7d32 50%, #4caf50 75%, #81c784 100%);
+            --text-primary: #1a1a1a;
+            --text-secondary: #2e7d32;
+            --border-radius: 16px;
+            --shadow: 0 8px 32px rgba(13, 79, 60, 0.08);
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%);
+            min-height: 100vh;
+        }
+
+        .top-navbar {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(13, 79, 60, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .chat-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 1px solid #e0e0e0;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-icon {
+            font-size: 1.5rem;
+        }
+
+        .chat-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: var(--spacing-md);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }
+
+        .message.bot {
+            background: #f0f9ff;
+            color: #1a1a1a;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user {
+            background: var(--primary-gradient);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-input-container {
+            padding: var(--spacing-md);
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .chat-input:focus {
+            border-color: var(--text-secondary);
+        }
+
+        .send-btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 24px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(13, 79, 60, 0.3);
+        }
+
+        .coming-soon {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: var(--spacing-lg);
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin-top: var(--spacing-lg);
+        }
+
+        .suggested-questions {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow);
+            border: 1px solid #e0e0e0;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-sm);
+        }
+
+        .suggested-btn {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .suggested-btn:hover {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: var(--text-secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(13, 79, 60, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-navbar">
+        <div class="navbar-brand">
+            <h1>🤖 AI Assistant</h1>
+        </div>
+        <a href="{{ url_for('dashboard') }}" class="back-btn">
+            ← Back to Dashboard
+        </a>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">AI Assistant</h1>
+            <p class="page-subtitle">Get instant help and answers about forest rights management</p>
+        </div>
+
+        <!-- Suggested Questions -->
+        <div class="suggested-questions">
+            <h3 style="margin-bottom: 16px; color: var(--text-secondary);">💡 Suggested Questions</h3>
+            <div class="question-grid">
+                <button class="btn-unified btn-secondary btn-sm" onclick="askQuestion('How do I apply for forest rights?')">How do I apply for forest rights?</button>
+                <button class="btn-unified btn-secondary btn-sm" onclick="askQuestion('What documents do I need for FRA application?')">What documents do I need?</button>
+                <button class="btn-unified btn-secondary btn-sm" onclick="askQuestion('How can I check my application status?')">Check application status</button>
+                <button class="btn-unified btn-secondary btn-sm" onclick="askQuestion('What is the processing time for FRA claims?')">Processing time</button>
+                <button class="btn-unified btn-secondary btn-sm" onclick="askQuestion('What are the eligibility criteria?')">Eligibility criteria</button>
+                <button class="btn-unified btn-secondary btn-sm" onclick="askQuestion('How to appeal if my application is rejected?')">Appeal process</button>
+            </div>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <span class="chat-icon">🤖</span>
+                <span class="chat-title">FRA Assistant</span>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    👋 Hello! I'm your FRA Assistant. I can help you with questions about forest rights, document processing, and system navigation. 
+                    <br><br>
+                    <strong>I can assist you with:</strong>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li>FRA application processes</li>
+                        <li>Document requirements</li>
+                        <li>Status checking</li>
+                        <li>Eligibility criteria</li>
+                        <li>Appeal procedures</li>
+                    </ul>
+                    <br>
+                    You can ask me anything or click on the suggested questions above!
+                </div>
+            </div>
+            
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Ask me anything about FRA..." onkeypress="handleKeyPress(event)">
+                <button class="btn-unified btn-primary" onclick="sendMessage()">
+                    <span>📤</span>
+                    Send
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addMessage(message, 'user');
+                input.value = '';
+                
+                // Generate intelligent response
+                setTimeout(() => {
+                    const response = generateIntelligentResponse(message);
+                    addMessage(response, 'bot');
+                }, 1000);
+            }
+        }
+        
+        function generateIntelligentResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            
+            // FRA-specific responses
+            if (message.includes('patta') || message.includes('land') || message.includes('document')) {
+                return "📄 A Patta is a landholding document issued by the government. For FRA claims, you need to submit your Patta along with supporting documents like identity proof, residence certificate, and land survey details. The processing time is typically 30-45 days.";
+            }
+            
+            if (message.includes('claim') || message.includes('application') || message.includes('apply')) {
+                return "📋 To apply for forest rights, visit your local Forest Rights Committee or Gram Sabha. You'll need: 1) Identity proof, 2) Residence certificate, 3) Land documents, 4) Community verification. The application goes through multiple verification stages.";
+            }
+            
+            if (message.includes('status') || message.includes('check') || message.includes('track')) {
+                return "🔍 You can check your application status by visiting the FRA portal or contacting your local Forest Rights Committee. You'll need your application reference number. Status updates are provided at each stage of processing.";
+            }
+            
+            if (message.includes('reject') || message.includes('denied') || message.includes('appeal')) {
+                return "📝 If your application is rejected, you can file an appeal within 30 days. Contact your District Collector or Forest Rights Committee for the appeal process. Make sure to provide additional supporting documents.";
+            }
+            
+            if (message.includes('time') || message.includes('duration') || message.includes('how long')) {
+                return "⏱️ The typical processing time for FRA applications is 30-45 days from submission. However, complex cases may take up to 90 days. You'll receive notifications at each stage of the process.";
+            }
+            
+            if (message.includes('help') || message.includes('guide') || message.includes('assistance')) {
+                return "🤝 I'm here to help! I can assist with FRA application processes, document requirements, status checking, and general queries about forest rights. What specific information do you need?";
+            }
+            
+            if (message.includes('document') || message.includes('required') || message.includes('need')) {
+                return "📋 Required documents for FRA application: 1) Identity proof (Aadhaar/Voter ID), 2) Residence certificate, 3) Land documents (Patta/Khasra), 4) Community verification certificate, 5) Photographs, 6) Bank account details.";
+            }
+            
+            if (message.includes('fee') || message.includes('cost') || message.includes('charge')) {
+                return "💰 FRA applications are free of cost. There are no application fees or processing charges. However, you may need to pay for document photocopies and notarization if required.";
+            }
+            
+            if (message.includes('eligibility') || message.includes('qualify') || message.includes('criteria')) {
+                return "✅ Eligibility criteria: 1) Must be a forest-dwelling Scheduled Tribe or traditional forest dweller, 2) Must have been residing in the forest area for at least 75 years, 3) Must depend on forest land for livelihood, 4) Must be a member of the Gram Sabha.";
+            }
+            
+            // General responses
+            const generalResponses = [
+                "I understand your question about forest rights. Let me provide you with the most relevant information based on FRA guidelines.",
+                "That's an important question regarding forest rights management. Here's what I can tell you based on current regulations.",
+                "Thank you for your query. I can help you with information about forest rights, applications, and related processes.",
+                "I'm here to assist with your forest rights questions. Let me provide you with accurate information.",
+                "Based on the Forest Rights Act, I can help clarify your query. Here's the relevant information."
+            ];
+            
+            return generalResponses[Math.floor(Math.random() * generalResponses.length)];
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function addMessage(text, sender) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = text;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function askQuestion(question) {
+            const input = document.getElementById('chatInput');
+            input.value = question;
+            sendMessage();
+        }
+
+        console.log('🤖 AI Assistant page loaded successfully');
+    </script>
+</body>
+</html>

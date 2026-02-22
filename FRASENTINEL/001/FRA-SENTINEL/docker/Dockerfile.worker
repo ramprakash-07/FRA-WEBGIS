@@ -1,0 +1,126 @@
+# Dockerfile for Celery Worker
+# Background task processing for FRA-SENTINEL
+
+# =============================================================================
+# Stage 1: Base System Dependencies (same as backend)
+# =============================================================================
+FROM python:3.9-slim as base
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies for OCR, GIS, ML
+RUN apt-get update && apt-get install -y \
+    # OCR and image processing
+    tesseract-ocr \
+    tesseract-ocr-tam \
+    tesseract-ocr-hin \
+    tesseract-ocr-tel \
+    libtesseract-dev \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgomp1 \
+    # GIS and geospatial libraries
+    libgdal-dev \
+    gdal-bin \
+    libproj-dev \
+    libgeos-dev \
+    libspatialite-dev \
+    # Database client libraries
+    postgresql-client \
+    libpq-dev \
+    # System utilities
+    curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+# Set working directory
+WORKDIR /app
+
+# =============================================================================
+# Stage 2: Python Dependencies
+# =============================================================================
+FROM base as dependencies
+
+# Copy requirements file
+COPY requirements_enhanced.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements_enhanced.txt
+
+# Install Celery and Redis support
+RUN pip install --no-cache-dir \
+    celery[redis]==5.3.4 \
+    redis==5.0.1
+
+# =============================================================================
+# Stage 3: Application Code
+# =============================================================================
+FROM dependencies as application
+
+# Copy application code
+COPY . .
+
+# Create necessary directories
+RUN mkdir -p /app/data /app/logs /app/models /app/uploads /app/temp \
+    && chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
+
+# =============================================================================
+# Stage 4: Production Configuration
+# =============================================================================
+FROM application as production
+
+# Create Celery configuration
+RUN echo 'from celery import Celery' > /app/celery_config.py && \
+    echo 'import os' >> /app/celery_config.py && \
+    echo '' >> /app/celery_config.py && \
+    echo 'celery_app = Celery("fra-sentinel")' >> /app/celery_config.py && \
+    echo 'celery_app.config_from_object("celery_config")' >> /app/celery_config.py && \
+    echo '' >> /app/celery_config.py && \
+    echo '# Redis broker configuration' >> /app/celery_config.py && \
+    echo 'celery_app.conf.update(' >> /app/celery_config.py && \
+    echo '    broker_url=os.getenv("REDIS_URL", "redis://redis:6379/0"),' >> /app/celery_config.py && \
+    echo '    result_backend=os.getenv("REDIS_URL", "redis://redis:6379/0"),' >> /app/celery_config.py && \
+    echo '    task_serializer="json",' >> /app/celery_config.py && \
+    echo '    accept_content=["json"],' >> /app/celery_config.py && \
+    echo '    result_serializer="json",' >> /app/celery_config.py && \
+    echo '    timezone="UTC",' >> /app/celery_config.py && \
+    echo '    enable_utc=True,' >> /app/celery_config.py && \
+    echo '    worker_prefetch_multiplier=1,' >> /app/celery_config.py && \
+    echo '    task_acks_late=True,' >> /app/celery_config.py && \
+    echo '    worker_max_tasks_per_child=1000,' >> /app/celery_config.py && \
+    echo ')' >> /app/celery_config.py
+
+# Health check for Celery worker
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD celery -A celery_config inspect ping || exit 1
+
+# Default command to run Celery worker
+CMD ["celery", "-A", "celery_config", "worker", "--loglevel=info", "--concurrency=2"]
+
+# =============================================================================
+# Stage 5: Development Configuration
+# =============================================================================
+FROM application as development
+
+# Install development dependencies
+RUN pip install --no-cache-dir \
+    pytest \
+    pytest-cov \
+    ipython
+
+# Override command for development
+CMD ["celery", "-A", "celery_config", "worker", "--loglevel=debug", "--concurrency=1"]

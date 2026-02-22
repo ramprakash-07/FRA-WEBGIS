@@ -1,0 +1,458 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created": "2025-09-26",
+    "source": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf#annexure_viii",
+    "description": "CFR Management Plan Template as per DAJGUA Annexure VIII"
+  },
+  "template": {
+    "district": {
+      "type": "string",
+      "description": "District name",
+      "required": true
+    },
+    "block": {
+      "type": "string",
+      "description": "Block/Tehsil name",
+      "required": true
+    },
+    "gram_panchayat": {
+      "type": "string",
+      "description": "Gram Panchayat name",
+      "required": true
+    },
+    "village": {
+      "type": "string",
+      "description": "Village name",
+      "required": true
+    },
+    "cfr_title_details": {
+      "type": "object",
+      "properties": {
+        "title_number": {
+          "type": "string",
+          "description": "CFR title number",
+          "required": true
+        },
+        "title_date": {
+          "type": "string",
+          "description": "Date of CFR title issuance",
+          "required": true
+        },
+        "area_hectares": {
+          "type": "number",
+          "description": "Total CFR area in hectares",
+          "required": true
+        },
+        "boundary_description": {
+          "type": "string",
+          "description": "Description of CFR boundaries",
+          "required": true
+        },
+        "community_name": {
+          "type": "string",
+          "description": "Name of the community",
+          "required": true
+        }
+      },
+      "description": "CFR title and area details",
+      "required": true
+    },
+    "interventions_list": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "intervention_type": {
+            "type": "enum",
+            "values": [
+              "water_bodies_management",
+              "fire_management",
+              "nurseries",
+              "ntfp_value_addition",
+              "soil_moisture_works",
+              "biodiversity_conservation",
+              "traditional_knowledge_documentation",
+              "capacity_building",
+              "infrastructure_development",
+              "monitoring_surveillance"
+            ],
+            "description": "Type of intervention",
+            "required": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed description of the intervention",
+            "required": true
+          },
+          "target_area": {
+            "type": "number",
+            "description": "Target area in hectares",
+            "required": false
+          },
+          "duration_months": {
+            "type": "number",
+            "description": "Duration in months",
+            "required": true
+          },
+          "priority": {
+            "type": "enum",
+            "values": ["High", "Medium", "Low"],
+            "description": "Priority level",
+            "required": true
+          },
+          "expected_outcomes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Expected outcomes from the intervention",
+            "required": true
+          }
+        }
+      },
+      "description": "List of planned interventions",
+      "required": true
+    },
+    "budget_heads": {
+      "type": "object",
+      "properties": {
+        "total_budget": {
+          "type": "number",
+          "description": "Total budget in rupees",
+          "required": true
+        },
+        "central_share": {
+          "type": "number",
+          "description": "Central government share",
+          "required": true
+        },
+        "state_share": {
+          "type": "number",
+          "description": "State government share",
+          "required": true
+        },
+        "community_contribution": {
+          "type": "number",
+          "description": "Community contribution",
+          "required": true
+        },
+        "budget_breakdown": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "activity": {
+                "type": "string",
+                "description": "Activity name",
+                "required": true
+              },
+              "amount": {
+                "type": "number",
+                "description": "Budget amount",
+                "required": true
+              },
+              "source": {
+                "type": "string",
+                "description": "Funding source",
+                "required": true
+              }
+            }
+          },
+          "description": "Detailed budget breakdown",
+          "required": true
+        }
+      },
+      "description": "Budget allocation and breakdown",
+      "required": true
+    },
+    "monitoring_notes": {
+      "type": "object",
+      "properties": {
+        "monitoring_frequency": {
+          "type": "enum",
+          "values": ["Monthly", "Quarterly", "Half-yearly", "Annual"],
+          "description": "Frequency of monitoring",
+          "required": true
+        },
+        "key_indicators": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Key performance indicators",
+          "required": true
+        },
+        "reporting_mechanism": {
+          "type": "string",
+          "description": "Reporting mechanism and format",
+          "required": true
+        },
+        "stakeholders": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Key stakeholders involved",
+          "required": true
+        },
+        "challenges": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Anticipated challenges",
+          "required": false
+        },
+        "mitigation_strategies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Strategies to mitigate challenges",
+          "required": false
+        }
+      },
+      "description": "Monitoring and evaluation framework",
+      "required": true
+    },
+    "implementation_timeline": {
+      "type": "object",
+      "properties": {
+        "start_date": {
+          "type": "string",
+          "description": "Implementation start date",
+          "required": true
+        },
+        "end_date": {
+          "type": "string",
+          "description": "Implementation end date",
+          "required": true
+        },
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "phase_name": {
+                "type": "string",
+                "description": "Phase name",
+                "required": true
+              },
+              "start_date": {
+                "type": "string",
+                "description": "Phase start date",
+                "required": true
+              },
+              "end_date": {
+                "type": "string",
+                "description": "Phase end date",
+                "required": true
+              },
+              "activities": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Activities in this phase",
+                "required": true
+              }
+            }
+          },
+          "description": "Implementation phases",
+          "required": true
+        }
+      },
+      "description": "Implementation timeline and phases",
+      "required": true
+    }
+  },
+  "sample_data": {
+    "district": "Khargone",
+    "block": "Barwani",
+    "gram_panchayat": "Barwani GP",
+    "village": "Barwani",
+    "cfr_title_details": {
+      "title_number": "CFR/MP/KH/001/2024",
+      "title_date": "2024-03-15",
+      "area_hectares": 125.5,
+      "boundary_description": "North: Revenue boundary, South: Forest boundary, East: Village boundary, West: River boundary",
+      "community_name": "Barwani Tribal Community"
+    },
+    "interventions_list": [
+      {
+        "intervention_type": "water_bodies_management",
+        "description": "Restoration and management of traditional water bodies",
+        "target_area": 25.0,
+        "duration_months": 12,
+        "priority": "High",
+        "expected_outcomes": [
+          "Improved water availability",
+          "Enhanced biodiversity",
+          "Reduced soil erosion"
+        ]
+      },
+      {
+        "intervention_type": "fire_management",
+        "description": "Community-based fire prevention and management",
+        "target_area": 125.5,
+        "duration_months": 6,
+        "priority": "High",
+        "expected_outcomes": [
+          "Reduced fire incidents",
+          "Protected forest resources",
+          "Enhanced community safety"
+        ]
+      },
+      {
+        "intervention_type": "nurseries",
+        "description": "Establishment of community nurseries for native species",
+        "target_area": 2.0,
+        "duration_months": 18,
+        "priority": "Medium",
+        "expected_outcomes": [
+          "Availability of native saplings",
+          "Income generation",
+          "Biodiversity conservation"
+        ]
+      },
+      {
+        "intervention_type": "ntfp_value_addition",
+        "description": "Value addition of Non-Timber Forest Products",
+        "target_area": 50.0,
+        "duration_months": 24,
+        "priority": "Medium",
+        "expected_outcomes": [
+          "Increased income",
+          "Skill development",
+          "Market linkage"
+        ]
+      },
+      {
+        "intervention_type": "soil_moisture_works",
+        "description": "Soil and water conservation works",
+        "target_area": 75.0,
+        "duration_months": 15,
+        "priority": "High",
+        "expected_outcomes": [
+          "Improved soil moisture",
+          "Enhanced productivity",
+          "Reduced runoff"
+        ]
+      }
+    ],
+    "budget_heads": {
+      "total_budget": 2500000,
+      "central_share": 1500000,
+      "state_share": 750000,
+      "community_contribution": 250000,
+      "budget_breakdown": [
+        {
+          "activity": "Water bodies management",
+          "amount": 800000,
+          "source": "Central share"
+        },
+        {
+          "activity": "Fire management",
+          "amount": 300000,
+          "source": "State share"
+        },
+        {
+          "activity": "Nurseries",
+          "amount": 400000,
+          "source": "Central share"
+        },
+        {
+          "activity": "NTFP value addition",
+          "amount": 600000,
+          "source": "Central share"
+        },
+        {
+          "activity": "Soil moisture works",
+          "amount": 400000,
+          "source": "State share"
+        }
+      ]
+    },
+    "monitoring_notes": {
+      "monitoring_frequency": "Quarterly",
+      "key_indicators": [
+        "Area under intervention",
+        "Community participation",
+        "Income generation",
+        "Biodiversity indicators",
+        "Water availability"
+      ],
+      "reporting_mechanism": "Quarterly progress reports to District Collector",
+      "stakeholders": [
+        "Gram Sabha",
+        "District Collector",
+        "Forest Department",
+        "Tribal Welfare Department",
+        "Community members"
+      ],
+      "challenges": [
+        "Seasonal variations",
+        "Community coordination",
+        "Resource availability"
+      ],
+      "mitigation_strategies": [
+        "Flexible implementation schedule",
+        "Regular community meetings",
+        "Alternative resource sourcing"
+      ]
+    },
+    "implementation_timeline": {
+      "start_date": "2024-04-01",
+      "end_date": "2026-03-31",
+      "phases": [
+        {
+          "phase_name": "Phase 1: Planning and Preparation",
+          "start_date": "2024-04-01",
+          "end_date": "2024-06-30",
+          "activities": [
+            "Community consultation",
+            "Detailed planning",
+            "Resource mobilization",
+            "Training programs"
+          ]
+        },
+        {
+          "phase_name": "Phase 2: Implementation",
+          "start_date": "2024-07-01",
+          "end_date": "2025-12-31",
+          "activities": [
+            "Water bodies restoration",
+            "Fire management setup",
+            "Nursery establishment",
+            "NTFP value addition",
+            "Soil conservation works"
+          ]
+        },
+        {
+          "phase_name": "Phase 3: Monitoring and Evaluation",
+          "start_date": "2026-01-01",
+          "end_date": "2026-03-31",
+          "activities": [
+            "Impact assessment",
+            "Community feedback",
+            "Report preparation",
+            "Future planning"
+          ]
+        }
+      ]
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+

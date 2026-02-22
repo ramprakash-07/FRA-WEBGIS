@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "structured_fra_data",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "village": "Khargone\n        Patta Holder", "patta_holder": "Ram Singh  \n        Coordinates", "latitude": 21.8225, "longitude": 75.6102, "area_hectares": 2.5, "claim_status": "Approved" }, "geometry": { "type": "Point", "coordinates": [ 75.6102, 21.8225 ] } }
+]
+}

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FRA Atlas - Simple Test</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #map { height: 400px; border: 2px solid #ccc; margin: 20px 0; }
+        .info { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .loading { color: blue; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>🌲 FRA Atlas - Simple Test</h1>
+    
+    <div class="info">
+        <strong>API Status:</strong> <span id="api-status" class="loading">Testing...</span>
+    </div>
+    
+    <div class="info">
+        <strong>Data Loading:</strong> <span id="data-status" class="loading">Checking...</span>
+    </div>
+    
+    <div id="map"></div>
+    
+    <div class="info">
+        <h3>📊 Land Use Stats</h3>
+        <div id="stats" class="loading">Loading...</div>
+    </div>
+    
+    <div class="info">
+        <h3>🏘️ Village Info</h3>
+        <div id="village-info" class="loading">Loading...</div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        console.log('🚀 Simple test starting...');
+        
+        // Test API connectivity first
+        async function testAPI() {
+            try {
+                const response = await fetch('/api/system_status');
+                const data = await response.json();
+                
+                document.getElementById('api-status').innerHTML = '<span class="success">✅ API Working</span>';
+                console.log('✅ API test passed:', data);
+                
+                loadData();
+                
+            } catch (error) {
+                document.getElementById('api-status').innerHTML = '<span class="error">❌ API Failed: ' + error.message + '</span>';
+                console.error('❌ API test failed:', error);
+            }
+        }
+        
+        // Load all data
+        async function loadData() {
+            try {
+                console.log('📊 Loading village data...');
+                
+                // Test FRA data
+                const fraResponse = await fetch('/api/fra_data');
+                const fraData = await fraResponse.json();
+                console.log('Village data:', fraData);
+                
+                if (fraData.features && fraData.features.length > 0) {
+                    document.getElementById('data-status').innerHTML = '<span class="success">✅ Villages Loaded: ' + fraData.features.length + '</span>';
+                    
+                    // Show village info
+                    const village = fraData.features[0].properties;
+                    document.getElementById('village-info').innerHTML = `
+                        <strong>Name:</strong> ${village.village}<br>
+                        <strong>Holder:</strong> ${village.patta_holder}<br>
+                        <strong>Area:</strong> ${village.area_hectares} hectares<br>
+                        <strong>Status:</strong> ${village.claim_status}
+                    `;
+                    
+                    // Initialize map
+                    const map = L.map('map').setView([village.latitude, village.longitude], 12);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+                    
+                    // Add village marker
+                    const marker = L.marker([village.latitude, village.longitude]).addTo(map);
+                    marker.bindPopup(`<h4>${village.village}</h4><p>${village.patta_holder}</p>`).openPopup();
+                    
+                    console.log('✅ Map and village loaded');
+                    
+                } else {
+                    throw new Error('No village data found');
+                }
+                
+                // Test stats
+                const statsResponse = await fetch('/api/classification_stats');
+                const stats = await statsResponse.json();
+                console.log('Stats data:', stats);
+                
+                let statsHTML = '';
+                Object.entries(stats).forEach(([type, data]) => {
+                    statsHTML += `<div><strong>${type}:</strong> ${data.percentage}% (${data.pixels} pixels)</div>`;
+                });
+                document.getElementById('stats').innerHTML = statsHTML;
+                
+                console.log('✅ All data loaded successfully');
+                
+            } catch (error) {
+                document.getElementById('data-status').innerHTML = '<span class="error">❌ Data Load Failed: ' + error.message + '</span>';
+                console.error('💥 Data loading error:', error);
+            }
+        }
+        
+        // Start the test
+        testAPI();
+    </script>
+</body>
+</html>

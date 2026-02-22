@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Files - FRA Atlas</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(13, 79, 60, 0.2);
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .files-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .files-table th,
+        .files-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .files-table th {
+            background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+            color: #2e7d32;
+            font-weight: 600;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+        
+        .status-approved { background: #d4edda; color: #155724; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-verified { background: #cce5ff; color: #004085; }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            margin: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-verify { background: #17a2b8; color: white; }
+        .btn-approve { background: #28a745; color: white; }
+        .btn-view { background: #6c757d; color: white; }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📁 File Management</h1>
+        <p>Manage uploaded patta documents and verify submissions</p>
+        <div class="nav-links">
+            <a href="/dashboard">📊 Dashboard</a>
+            <a href="/upload_patta">📤 Upload Patta</a>
+            <a href="/fra_data_collection">🏠 FRA Data Collection</a>
+            <a href="/unified_assessment">🎯 Unified Assessment</a>
+            <a href="/logout">🚪 Logout</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        {% if files %}
+            <table class="files-table">
+                <thead>
+                    <tr>
+                        <th>📄 File</th>
+                        <th>🏘️ Village</th>
+                        <th>👤 Patta Holder</th>
+                        <th>📏 Area (ha)</th>
+                        <th>📅 Upload Date</th>
+                        <th>📋 Status</th>
+                        <th>⚡ Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in files %}
+                    <tr>
+                        <td>{{ file[2] }}</td> <!-- original_filename -->
+                        <td>{{ file[3] }}</td> <!-- village_name -->
+                        <td>{{ file[4] }}</td> <!-- patta_holder -->
+                        <td>{{ file[7] }}</td> <!-- area_hectares -->
+                        <td>{{ file[11][:10] if file[11] else 'N/A' }}</td> <!-- uploaded_date -->
+                        <td>
+                            <span class="status-badge status-{{ file[9].lower().replace(' ', '-') if file[9] else 'pending' }}">
+                                {{ file[9] or 'Pending' }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if session.user_role in ['CCF', 'DCF', 'RFO'] and file[9] != 'Verified' %}
+                                <a href="/verify_file/{{ file[0] }}" class="action-btn btn-verify">✅ Verify</a>
+                            {% endif %}
+                            
+                            {% if session.user_role in ['CCF', 'DCF'] and file[9] == 'Verified' %}
+                                <a href="/approve_file/{{ file[0] }}" class="action-btn btn-approve">👍 Approve</a>
+                            {% endif %}
+                            
+                            <button class="action-btn btn-view" onclick="viewFile('{{ file[0] }}')">👁️ View</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty-state">
+                <div style="font-size: 4em; margin-bottom: 20px;">📂</div>
+                <h3>No Files Found</h3>
+                <p>No patta documents have been uploaded yet.</p>
+                <a href="/upload_patta" class="action-btn" style="background: #2e7d32; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block; margin-top: 20px;">
+                    📤 Upload First Document
+                </a>
+            </div>
+        {% endif %}
+    </div>
+    
+    <script>
+        function viewFile(fileId) {
+            alert(`Viewing file details for File ID: ${fileId}\n\nThis would open a detailed view of the patta document.`);
+            // In a real application, this would open a modal or new page
+        }
+        
+        // Flash message handling
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    const alertDiv = document.createElement('div');
+                    alertDiv.style.cssText = `
+                        position: fixed; top: 20px; right: 20px; z-index: 10000;
+                        background: {{ '#d4edda' if category == 'success' else '#f8d7da' }};
+                        color: {{ '#155724' if category == 'success' else '#721c24' }};
+                        padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                        max-width: 350px;
+                    `;
+                    alertDiv.innerHTML = `{{ message }}`;
+                    document.body.appendChild(alertDiv);
+                    
+                    setTimeout(() => alertDiv.remove(), 5000);
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+# Multi-stage Dockerfile for Flask Backend (FRA-SENTINEL)
+# Production-ready with OCR, ML, GIS, and Blockchain dependencies
+
+# =============================================================================
+# Stage 1: Base System Dependencies
+# =============================================================================
+FROM python:3.9-slim as base
+
+# Set environment variables for Python optimization
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies for OCR, GIS, ML, and Blockchain
+RUN apt-get update && apt-get install -y \
+    # OCR and image processing
+    tesseract-ocr \
+    tesseract-ocr-tam \
+    tesseract-ocr-hin \
+    tesseract-ocr-tel \
+    libtesseract-dev \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgomp1 \
+    # GIS and geospatial libraries
+    libgdal-dev \
+    gdal-bin \
+    libproj-dev \
+    libgeos-dev \
+    libspatialite-dev \
+    # Database client libraries
+    postgresql-client \
+    libpq-dev \
+    # System utilities
+    curl \
+    wget \
+    git \
+    build-essential \
+    # Clean up to reduce image size
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Create non-root user for security
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+# Set working directory
+WORKDIR /app
+
+# =============================================================================
+# Stage 2: Python Dependencies
+# =============================================================================
+FROM base as dependencies
+
+# Copy requirements file first for better Docker layer caching
+COPY requirements_enhanced.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements_enhanced.txt
+
+# Install production WSGI server with gevent for async support
+RUN pip install --no-cache-dir gunicorn[gevent]==21.2.0
+
+# =============================================================================
+# Stage 3: Application Code
+# =============================================================================
+FROM dependencies as application
+
+# Copy application code
+COPY . .
+
+# Create necessary directories with proper permissions
+RUN mkdir -p /app/data /app/logs /app/models /app/uploads /app/temp /app/static \
+    && chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
+
+# Expose port 5000 for Flask application
+EXPOSE 5000
+
+# =============================================================================
+# Stage 4: Production Configuration
+# =============================================================================
+FROM application as production
+
+# Create Gunicorn configuration file optimized for production
+RUN echo '[server:app]' > /app/gunicorn.conf.py && \
+    echo 'bind = "0.0.0.0:5000"' >> /app/gunicorn.conf.py && \
+    echo 'workers = 4' >> /app/gunicorn.conf.py && \
+    echo 'worker_class = "gevent"' >> /app/gunicorn.conf.py && \
+    echo 'worker_connections = 1000' >> /app/gunicorn.conf.py && \
+    echo 'max_requests = 1000' >> /app/gunicorn.conf.py && \
+    echo 'max_requests_jitter = 100' >> /app/gunicorn.conf.py && \
+    echo 'timeout = 30' >> /app/gunicorn.conf.py && \
+    echo 'keepalive = 2' >> /app/gunicorn.conf.py && \
+    echo 'preload_app = True' >> /app/gunicorn.conf.py && \
+    echo 'accesslog = "/app/logs/access.log"' >> /app/gunicorn.conf.py && \
+    echo 'errorlog = "/app/logs/error.log"' >> /app/gunicorn.conf.py && \
+    echo 'loglevel = "info"' >> /app/gunicorn.conf.py && \
+    echo 'capture_output = True' >> /app/gunicorn.conf.py
+
+# Health check to ensure application is running
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:5000/api/health || exit 1
+
+# Default command to run Gunicorn WSGI server
+CMD ["gunicorn", "--config", "gunicorn.conf.py", "webgis.app:app"]
+
+# =============================================================================
+# Stage 5: Development Configuration
+# =============================================================================
+FROM application as development
+
+# Install development dependencies
+RUN pip install --no-cache-dir \
+    pytest \
+    pytest-cov \
+    pytest-mock \
+    black \
+    flake8 \
+    isort \
+    jupyter \
+    ipython
+
+# Override command for development with Flask's built-in server
+CMD ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=5000", "--debug"]

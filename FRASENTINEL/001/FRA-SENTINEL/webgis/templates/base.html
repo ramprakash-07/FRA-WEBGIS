@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="{{ current_lang or 'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% trans %}FRA Sentinel{% endtrans %}{% endblock %}</title>
+    
+    <!-- Language Dropdown Styles -->
+    <style>
+        .language-dropdown {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 8px 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .language-dropdown select {
+            background: transparent;
+            border: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #0d4f3c;
+            cursor: pointer;
+            outline: none;
+        }
+        
+        .language-dropdown select option {
+            background: white;
+            color: #0d4f3c;
+        }
+        
+        .language-dropdown:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        /* Metrics Ribbon Styles */
+        .metrics-ribbon {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(13, 79, 60, 0.95);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            box-shadow: 0 8px 32px rgba(13, 79, 60, 0.3);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .metrics-content {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .metric-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            font-weight: 500;
+        }
+
+        .metric-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #81c784;
+        }
+
+        /* Hide metrics ribbon on print */
+        @media print {
+            .metrics-ribbon {
+                display: none !important;
+            }
+        }
+
+        /* Respect reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            .metrics-ribbon {
+                transition: none;
+            }
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Language Dropdown -->
+    <div class="language-dropdown">
+        <select onchange="changeLanguage(this.value)">
+            <option value="en" {% if current_lang == 'en' %}selected{% endif %}>🇺🇸 English</option>
+            <option value="hi" {% if current_lang == 'hi' %}selected{% endif %}>🇮🇳 हिंदी</option>
+            <option value="ta" {% if current_lang == 'ta' %}selected{% endif %}>🇮🇳 தமிழ்</option>
+            <option value="te" {% if current_lang == 'te' %}selected{% endif %}>🇮🇳 తెలుగు</option>
+        </select>
+    </div>
+    
+    {% block content %}{% endblock %}
+    
+    <!-- Metrics Ribbon -->
+    <div class="metrics-ribbon" id="metricsRibbon">
+        <div class="metrics-content">
+            <div class="metric-item">
+                <span class="metric-label">Processing</span>
+                <span class="metric-value" id="metricProcessing">3.2s</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Accuracy</span>
+                <span class="metric-value" id="metricAccuracy">91.5%</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Documents</span>
+                <span class="metric-value" id="metricDocs">47</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Area Mapped</span>
+                <span class="metric-value" id="metricArea">127.8 ha</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function changeLanguage(lang) {
+            // Set cookie and redirect
+            document.cookie = `lang=${lang}; path=/; max-age=${60*60*24*365}`;
+            window.location.href = `/lang/${lang}`;
+        }
+
+        // Load metrics data
+        async function loadMetrics() {
+            try {
+                const response = await fetch('/api/metrics');
+                const metrics = await response.json();
+                
+                document.getElementById('metricProcessing').textContent = metrics.avg_processing;
+                document.getElementById('metricAccuracy').textContent = metrics.extraction_accuracy;
+                document.getElementById('metricDocs').textContent = metrics.docs;
+                document.getElementById('metricArea').textContent = metrics.mapped_area;
+            } catch (error) {
+                console.error('Error loading metrics:', error);
+            }
+        }
+
+        // Load metrics when page loads
+        document.addEventListener('DOMContentLoaded', loadMetrics);
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

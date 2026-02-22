@@ -1,0 +1,370 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created": "2025-09-26",
+    "source": "FRAActnRulesBook.pdf",
+    "description": "Standardized schema for FRA digitization aligned to Forest Rights Act 2006 and Rules 2007"
+  },
+  "schema": {
+    "claim_type": {
+      "type": "enum",
+      "values": ["IFR", "CR", "CFR"],
+      "description": "Type of forest rights claim",
+      "reference": "FRA_2006_section_3"
+    },
+    "claimant_category": {
+      "type": "enum",
+      "values": ["ST", "OTFD"],
+      "description": "Scheduled Tribe or Other Traditional Forest Dweller",
+      "reference": "FRA_2006_section_2"
+    },
+    "evidence_types": {
+      "type": "array",
+      "values": [
+        "public_documents",
+        "government_records",
+        "maps",
+        "survey_settlement_records",
+        "village_elder_statements",
+        "community_member_statements",
+        "traditional_functionary_statements",
+        "physical_evidence_houses",
+        "physical_evidence_huts",
+        "permanent_land_improvements",
+        "other_relevant_evidence"
+      ],
+      "description": "Evidence types as per Rule 13 of FRA Rules 2007",
+      "reference": "FRA_Rules_2007_rule_13"
+    },
+    "form_type": {
+      "type": "enum",
+      "values": ["A", "B", "C"],
+      "description": "Application form type - A: Individual, B: Community, C: Community Forest Resource",
+      "reference": "FRA_Forms"
+    },
+    "committee_stage": {
+      "type": "enum",
+      "values": ["GS", "SDLC", "DLC"],
+      "description": "Committee stage - GS: Gram Sabha, SDLC: Sub-Divisional Level Committee, DLC: District Level Committee",
+      "reference": "FRA_Rules_2007"
+    },
+    "survey_no": {
+      "type": "string",
+      "description": "Survey number of the land",
+      "validation": "alphanumeric",
+      "required": true
+    },
+    "coords": {
+      "type": "object",
+      "properties": {
+        "latitude": {
+          "type": "number",
+          "description": "Latitude coordinate",
+          "validation": "range: -90 to 90"
+        },
+        "longitude": {
+          "type": "number",
+          "description": "Longitude coordinate",
+          "validation": "range: -180 to 180"
+        }
+      },
+      "description": "Geographic coordinates of the claimed area",
+      "required": true
+    },
+    "area_claimed": {
+      "type": "number",
+      "description": "Area claimed in hectares",
+      "validation": "positive_number",
+      "required": true
+    },
+    "area_vested": {
+      "type": "number",
+      "description": "Area vested/granted in hectares",
+      "validation": "positive_number",
+      "required": false
+    },
+    "status": {
+      "type": "enum",
+      "values": ["filed", "under_verification", "granted", "rejected", "appealed"],
+      "description": "Current status of the claim",
+      "reference": "FRA_implementation_status"
+    },
+    "holder_details": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the claimant",
+          "required": true
+        },
+        "father_husband_name": {
+          "type": "string",
+          "description": "Father's or husband's name",
+          "required": true
+        },
+        "age": {
+          "type": "number",
+          "description": "Age of the claimant",
+          "validation": "range: 18 to 120"
+        },
+        "gender": {
+          "type": "enum",
+          "values": ["Male", "Female", "Other"],
+          "description": "Gender of the claimant"
+        },
+        "tribal_group": {
+          "type": "string",
+          "description": "Name of the tribal group (for ST claimants)",
+          "required": false
+        },
+        "family_size": {
+          "type": "number",
+          "description": "Number of family members",
+          "validation": "positive_integer"
+        }
+      },
+      "description": "Details of the claimant/holder",
+      "required": true
+    },
+    "location_details": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "description": "State name",
+          "required": true
+        },
+        "district": {
+          "type": "string",
+          "description": "District name",
+          "required": true
+        },
+        "block": {
+          "type": "string",
+          "description": "Block/Tehsil name",
+          "required": true
+        },
+        "village": {
+          "type": "string",
+          "description": "Village name",
+          "required": true
+        },
+        "gram_panchayat": {
+          "type": "string",
+          "description": "Gram Panchayat name",
+          "required": true
+        }
+      },
+      "description": "Administrative location details",
+      "required": true
+    },
+    "land_details": {
+      "type": "object",
+      "properties": {
+        "khasra_number": {
+          "type": "string",
+          "description": "Khasra number",
+          "required": false
+        },
+        "dag_number": {
+          "type": "string",
+          "description": "Dag number",
+          "required": false
+        },
+        "patta_number": {
+          "type": "string",
+          "description": "Patta number",
+          "required": false
+        },
+        "land_type": {
+          "type": "enum",
+          "values": ["forest_land", "revenue_land", "common_land", "other"],
+          "description": "Type of land"
+        },
+        "land_use": {
+          "type": "enum",
+          "values": ["habitation", "cultivation", "grazing", "forest_use", "other"],
+          "description": "Current land use"
+        }
+      },
+      "description": "Land-related details",
+      "required": false
+    },
+    "document_details": {
+      "type": "object",
+      "properties": {
+        "file_id": {
+          "type": "string",
+          "description": "Unique file identifier",
+          "required": true
+        },
+        "file_name": {
+          "type": "string",
+          "description": "Original file name",
+          "required": true
+        },
+        "file_size": {
+          "type": "number",
+          "description": "File size in bytes",
+          "required": true
+        },
+        "upload_date": {
+          "type": "string",
+          "description": "Date of upload in ISO format",
+          "required": true
+        },
+        "uploaded_by": {
+          "type": "string",
+          "description": "User who uploaded the document",
+          "required": true
+        },
+        "extraction_accuracy": {
+          "type": "number",
+          "description": "OCR extraction accuracy percentage",
+          "validation": "range: 0 to 100"
+        }
+      },
+      "description": "Document metadata",
+      "required": true
+    },
+    "verification_details": {
+      "type": "object",
+      "properties": {
+        "gram_sabha_verification": {
+          "type": "boolean",
+          "description": "Gram Sabha verification status"
+        },
+        "gram_sabha_date": {
+          "type": "string",
+          "description": "Date of Gram Sabha verification"
+        },
+        "sdlc_verification": {
+          "type": "boolean",
+          "description": "SDLC verification status"
+        },
+        "sdlc_date": {
+          "type": "string",
+          "description": "Date of SDLC verification"
+        },
+        "dlc_verification": {
+          "type": "boolean",
+          "description": "DLC verification status"
+        },
+        "dlc_date": {
+          "type": "string",
+          "description": "Date of DLC verification"
+        },
+        "final_decision_date": {
+          "type": "string",
+          "description": "Date of final decision"
+        }
+      },
+      "description": "Verification process details",
+      "required": false
+    },
+    "compliance_flags": {
+      "type": "object",
+      "properties": {
+        "fra_2006_compliant": {
+          "type": "boolean",
+          "description": "Compliance with FRA 2006"
+        },
+        "rules_2007_compliant": {
+          "type": "boolean",
+          "description": "Compliance with FRA Rules 2007"
+        },
+        "evidence_sufficient": {
+          "type": "boolean",
+          "description": "Sufficient evidence provided"
+        },
+        "geo_referenced": {
+          "type": "boolean",
+          "description": "Geographic coordinates available"
+        },
+        "standardized_format": {
+          "type": "boolean",
+          "description": "Data in standardized format"
+        }
+      },
+      "description": "Compliance and quality flags",
+      "required": true
+    }
+  },
+  "validation_rules": {
+    "required_fields": [
+      "claim_type",
+      "claimant_category",
+      "survey_no",
+      "coords",
+      "area_claimed",
+      "holder_details",
+      "location_details",
+      "document_details",
+      "compliance_flags"
+    ],
+    "conditional_fields": {
+      "tribal_group": {
+        "condition": "claimant_category == 'ST'",
+        "required": true
+      },
+      "area_vested": {
+        "condition": "status == 'granted'",
+        "required": true
+      }
+    },
+    "format_validation": {
+      "coords": "decimal_degrees",
+      "area_claimed": "positive_decimal",
+      "area_vested": "positive_decimal",
+      "upload_date": "iso_date",
+      "extraction_accuracy": "percentage"
+    }
+  },
+  "export_formats": {
+    "annexure_v_csv": {
+      "description": "Quarterly Progress Report format as per Annexure V",
+      "fields": [
+        "state",
+        "district",
+        "block",
+        "village",
+        "ifr_filed",
+        "ifr_granted",
+        "ifr_rejected",
+        "cr_filed",
+        "cr_granted",
+        "cr_rejected",
+        "cfr_filed",
+        "cfr_granted",
+        "cfr_rejected",
+        "total_area_vested",
+        "cfr_managed_area",
+        "remarks"
+      ]
+    },
+    "geojson": {
+      "description": "Geographic data format for mapping",
+      "fields": [
+        "type",
+        "properties",
+        "geometry"
+      ]
+    },
+    "standardized_json": {
+      "description": "Complete standardized schema",
+      "fields": "all_schema_fields"
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+

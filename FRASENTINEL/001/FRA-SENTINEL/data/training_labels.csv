@@ -1,0 +1,13 @@
+row,col,class_id,class_name
+10,15,0,farmland
+12,18,0,farmland
+15,20,0,farmland
+45,50,1,forest
+48,55,1,forest
+50,58,1,forest
+75,80,2,water
+78,82,2,water
+80,85,2,water
+25,30,3,homestead
+28,32,3,homestead
+30,35,3,homestead

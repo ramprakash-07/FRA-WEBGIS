@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRA Sentinel - Blockchain Storage</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .blockchain-card {
+            background: linear-gradient(135deg, #0d4f3c 0%, #1b5e20 25%, #2e7d32 50%, #4caf50 75%, #81c784 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(13, 79, 60, 0.2);
+        }
+        .transaction-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #28a745;
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #0d4f3c 0%, #1b5e20 25%, #2e7d32 50%, #4caf50 75%, #81c784 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+        .demo-badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .blockchain-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+        .hash-display {
+            font-family: 'Courier New', monospace;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            word-break: break-all;
+            font-size: 12px;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        .status-confirmed { background-color: #28a745; }
+        .status-pending { background-color: #ffc107; }
+        .status-failed { background-color: #dc3545; }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .blockchain-header {
+            background: linear-gradient(135deg, #0d4f3c 0%, #1b5e20 25%, #2e7d32 50%, #4caf50 75%, #81c784 100%);
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 30px;
+        }
+        .feature-highlight {
+            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 50%, #4caf50 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        /* Make input field text black */
+        .form-control {
+            color: black !important;
+        }
+        
+        .hash-display {
+            color: black !important;
+        }
+        
+        /* Back to Dashboard Button Styling */
+        .back-to-dashboard {
+            background: rgba(255, 255, 255, 0.9);
+            color: #0d4f3c;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .back-to-dashboard:hover {
+            background: white;
+            color: #0d4f3c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+        }
+        
+        .back-to-dashboard i {
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Blockchain Header -->
+    <div class="blockchain-header">
+        <div class="container">
+            <!-- Back to Dashboard Button -->
+            <div class="row mb-3">
+                <div class="col-12 text-end">
+                    <a href="{{ url_for('dashboard') }}" class="back-to-dashboard">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+            
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-4 mb-3">
+                        <i class="fas fa-link"></i> FRA Sentinel Blockchain Storage
+                    </h1>
+                    <p class="lead">Immutable Document Storage & Secure Verification System</p>
+                    <span class="demo-badge">DEMO MODE - Live Blockchain Simulation</span>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="blockchain-icon">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Blockchain Statistics -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <h3 id="totalDocuments">1,247</h3>
+                    <p>Documents Registered</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <h3 id="totalRecords">892</h3>
+                    <p>Land Records</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <h3 id="totalVerifications">156</h3>
+                    <p>Verifications</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <h3 id="activeNodes">12</h3>
+                    <p>Active Nodes</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Features -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="feature-highlight">
+                    <h4><i class="fas fa-shield-alt"></i> Document Integrity</h4>
+                    <p>SHA-256 hashing ensures document authenticity and prevents tampering</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-highlight">
+                    <h4><i class="fas fa-history"></i> Audit Trail</h4>
+                    <p>Complete transaction history with timestamps and block numbers</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-highlight">
+                    <h4><i class="fas fa-users"></i> Decentralized</h4>
+                    <p>Multiple nodes verify transactions ensuring system reliability</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Demo Section -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="blockchain-card">
+                    <h3><i class="fas fa-upload"></i> Document Registration Demo</h3>
+                    <p>Register a FRA document on the blockchain</p>
+                    
+                    <form id="documentRegistrationForm">
+                        <div class="mb-3">
+                            <label class="form-label">Patta Holder Name</label>
+                            <input type="text" class="form-control" id="pattaHolderName" value="Ram Singh Bhil" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Village</label>
+                            <input type="text" class="form-control" id="village" value="Khargone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">District</label>
+                            <input type="text" class="form-control" id="district" value="Khargone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">State</label>
+                            <input type="text" class="form-control" id="state" value="Madhya Pradesh" required>
+                        </div>
+                        <button type="submit" class="btn btn-light">
+                            <i class="fas fa-link"></i> Register on Blockchain
+                        </button>
+                    </form>
+                    
+                    <div id="registrationResult" class="mt-3" style="display: none;">
+                        <h5>Registration Result:</h5>
+                        <div class="hash-display" id="documentHash"></div>
+                        <div class="mt-2">
+                            <strong>Transaction Hash:</strong> <span id="transactionHash" class="hash-display"></span>
+                        </div>
+                        <div class="mt-2">
+                            <strong>Block Number:</strong> <span id="blockNumber"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="blockchain-card">
+                    <h3><i class="fas fa-check-circle"></i> Document Verification Demo</h3>
+                    <p>Verify a registered document on the blockchain</p>
+                    
+                    <form id="documentVerificationForm">
+                        <div class="mb-3">
+                            <label class="form-label">Document Hash</label>
+                            <input type="text" class="form-control" id="verifyDocumentHash" placeholder="Enter document hash">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Verification Notes</label>
+                            <textarea class="form-control" id="verificationNotes" rows="3">Document verified by authorized officer. All details match government records.</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="isValid" checked>
+                                <label class="form-check-label" for="isValid">
+                                    Document is Valid
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-light">
+                            <i class="fas fa-check"></i> Verify Document
+                        </button>
+                    </form>
+                    
+                    <div id="verificationResult" class="mt-3" style="display: none;">
+                        <h5>Verification Result:</h5>
+                        <div class="mt-2">
+                            <strong>Status:</strong> <span id="verificationStatus" class="badge bg-success">Verified</span>
+                        </div>
+                        <div class="mt-2">
+                            <strong>Verifier:</strong> <span id="verifierAddress" class="hash-display"></span>
+                        </div>
+                        <div class="mt-2">
+                            <strong>Transaction Hash:</strong> <span id="verifyTransactionHash" class="hash-display"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="blockchain-card">
+                    <h3><i class="fas fa-list"></i> Recent Blockchain Transactions</h3>
+                    <p>Live feed of blockchain transactions</p>
+                    
+                    <div id="transactionsList">
+                        <!-- Transactions will be loaded here -->
+                    </div>
+                    
+                    <button class="btn btn-light" onclick="loadRecentTransactions()">
+                        <i class="fas fa-sync"></i> Refresh Transactions
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Network Information -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="blockchain-card">
+                    <h3><i class="fas fa-network-wired"></i> Network Information</h3>
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>Network:</strong> FRA Sentinel Network<br>
+                            <strong>Chain ID:</strong> 1337<br>
+                            <strong>Block Time:</strong> 13.2 seconds<br>
+                            <strong>Gas Price:</strong> 20 Gwei
+                        </div>
+                        <div class="col-6">
+                            <strong>Hash Rate:</strong> 45.2 TH/s<br>
+                            <strong>Contract Version:</strong> 1.0.0<br>
+                            <strong>Status:</strong> <span class="status-indicator status-confirmed"></span> Active<br>
+                            <strong>Last Block:</strong> <span id="lastBlockNumber">18,456,789</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="blockchain-card">
+                    <h3><i class="fas fa-chart-line"></i> Blockchain Benefits</h3>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> <strong>Immutable Records:</strong> Cannot be altered once recorded</li>
+                        <li><i class="fas fa-check text-success"></i> <strong>Transparency:</strong> All transactions are publicly verifiable</li>
+                        <li><i class="fas fa-check text-success"></i> <strong>Decentralization:</strong> No single point of failure</li>
+                        <li><i class="fas fa-check text-success"></i> <strong>Audit Trail:</strong> Complete history of all changes</li>
+                        <li><i class="fas fa-check text-success"></i> <strong>Security:</strong> Cryptographic protection against fraud</li>
+                        <li><i class="fas fa-check text-success"></i> <strong>Efficiency:</strong> Automated verification processes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Details -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="blockchain-card">
+                    <h3><i class="fas fa-code"></i> Technical Implementation</h3>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5>Smart Contract</h5>
+                            <p><strong>Language:</strong> Solidity ^0.8.19</p>
+                            <p><strong>Functions:</strong> registerDocument, verifyDocument, createLandRecord</p>
+                            <p><strong>Events:</strong> DocumentRegistered, DocumentVerified, LandRecordCreated</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Blockchain Integration</h5>
+                            <p><strong>Web3 Library:</strong> Web3.js</p>
+                            <p><strong>Hash Algorithm:</strong> SHA-256</p>
+                            <p><strong>Gas Optimization:</strong> Efficient contract design</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>API Endpoints</h5>
+                            <p><strong>Registration:</strong> /api/blockchain/register-document</p>
+                            <p><strong>Verification:</strong> /api/blockchain/verify-document</p>
+                            <p><strong>Statistics:</strong> /api/blockchain/stats</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Blockchain Demo JavaScript
+        let transactionCounter = 0;
+
+        // Load blockchain statistics
+        async function loadBlockchainStats() {
+            try {
+                const response = await fetch('/api/blockchain/stats');
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('totalDocuments').textContent = data.stats.total_documents.toLocaleString();
+                    document.getElementById('totalRecords').textContent = data.stats.total_land_records.toLocaleString();
+                    document.getElementById('totalVerifications').textContent = data.stats.total_verification_requests.toLocaleString();
+                    document.getElementById('activeNodes').textContent = data.stats.active_nodes;
+                    document.getElementById('lastBlockNumber').textContent = data.stats.last_block_number.toLocaleString();
+                }
+            } catch (error) {
+                console.error('Error loading blockchain stats:', error);
+            }
+        }
+
+        // Load recent transactions
+        async function loadRecentTransactions() {
+            try {
+                const response = await fetch('/api/blockchain/transactions');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const transactionsList = document.getElementById('transactionsList');
+                    transactionsList.innerHTML = '';
+                    
+                    data.transactions.forEach(tx => {
+                        const transactionCard = document.createElement('div');
+                        transactionCard.className = 'transaction-card';
+                        transactionCard.innerHTML = `
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">${tx.type}</h6>
+                                    <small class="text-muted">${tx.patta_holder} - ${tx.village}</small>
+                                </div>
+                                <div class="text-end">
+                                    <div class="status-indicator status-confirmed"></div>
+                                    <small class="text-muted">${tx.status}</small>
+                                    <br>
+                                    <small class="text-muted">Gas: ${tx.gas_used.toLocaleString()}</small>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <small class="hash-display">${tx.hash}</small>
+                            </div>
+                        `;
+                        transactionsList.appendChild(transactionCard);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading transactions:', error);
+            }
+        }
+
+        // Document registration form handler
+        document.getElementById('documentRegistrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                document_data: {
+                    name: document.getElementById('pattaHolderName').value,
+                    village: document.getElementById('village').value,
+                    district: document.getElementById('district').value,
+                    state: document.getElementById('state').value,
+                    patta_id: `FRA${Date.now()}`,
+                    area: '2.5 hectares',
+                    patta_no: `P${Math.floor(Math.random() * 10000)}`,
+                    survey_no: `S${Math.floor(Math.random() * 1000)}`
+                }
+            };
+            
+            try {
+                const response = await fetch('/api/blockchain/register-document', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('documentHash').textContent = result.data.document_hash;
+                    document.getElementById('transactionHash').textContent = result.data.transaction_hash;
+                    document.getElementById('blockNumber').textContent = result.data.block_number;
+                    document.getElementById('registrationResult').style.display = 'block';
+                    
+                    // Update verification form with the new hash
+                    document.getElementById('verifyDocumentHash').value = result.data.document_hash;
+                    
+                    // Refresh transactions
+                    loadRecentTransactions();
+                } else {
+                    alert('Registration failed: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                alert('Registration failed: ' + error.message);
+            }
+        });
+
+        // Document verification form handler
+        document.getElementById('documentVerificationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                document_hash: document.getElementById('verifyDocumentHash').value,
+                is_valid: document.getElementById('isValid').checked,
+                notes: document.getElementById('verificationNotes').value
+            };
+            
+            try {
+                const response = await fetch('/api/blockchain/verify-document', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('verificationStatus').textContent = formData.is_valid ? 'Verified' : 'Rejected';
+                    document.getElementById('verificationStatus').className = `badge ${formData.is_valid ? 'bg-success' : 'bg-danger'}`;
+                    document.getElementById('verifierAddress').textContent = result.data.verification_data.verifier;
+                    document.getElementById('verifyTransactionHash').textContent = result.data.transaction_hash;
+                    document.getElementById('verificationResult').style.display = 'block';
+                    
+                    // Refresh transactions
+                    loadRecentTransactions();
+                } else {
+                    alert('Verification failed: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Verification error:', error);
+                alert('Verification failed: ' + error.message);
+            }
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBlockchainStats();
+            loadRecentTransactions();
+            
+            // Auto-refresh every 30 seconds
+            setInterval(() => {
+                loadBlockchainStats();
+                loadRecentTransactions();
+            }, 30000);
+        });
+
+        // Add some visual effects
+        function addPulseEffect() {
+            const statsCards = document.querySelectorAll('.stats-card h3');
+            statsCards.forEach(card => {
+                card.classList.add('pulse');
+                setTimeout(() => card.classList.remove('pulse'), 2000);
+            });
+        }
+
+        // Trigger pulse effect every 10 seconds
+        setInterval(addPulseEffect, 10000);
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRA Household Data Collection - FRA Atlas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #0d4f3c 0%, #1b5e20 25%, #2e7d32 50%, #4caf50 75%, #81c784 100%);
+            --surface-gradient: linear-gradient(135deg, #ffffff 0%, #f1f8e9 100%);
+            --card-gradient: linear-gradient(135deg, #ffffff 0%, #f9fbe7 100%);
+            --text-primary: #1a1a1a;
+            --text-secondary: #2e7d32;
+            --border-color: #c8e6c9;
+            --shadow: 0 8px 32px rgba(13, 79, 60, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 50%, #c8e6c9 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .form-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--card-gradient);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .form-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .form-header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .form-content {
+            padding: 40px;
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: var(--surface-gradient);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2e7d32;
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #2e7d32;
+        }
+
+        .checkbox-group label {
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--surface-gradient);
+            color: var(--text-secondary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        .help-text {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-content {
+                padding: 30px 20px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <h1>🏠 FRA Household Data Collection</h1>
+            <p>Comprehensive form to determine eligibility for government welfare schemes</p>
+        </div>
+
+        <div class="form-content">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div style="margin-bottom: 20px; padding: 15px; border-radius: 8px; {% if category == 'success' %}background: #d4edda; color: #155724;{% elif category == 'error' %}background: #f8d7da; color: #721c24;{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" id="fraDataForm">
+                <!-- Personal Information Section -->
+                <div class="form-section">
+                    <h2 class="section-title">👤 Personal Information</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="head_name">Full Name of Head of Household <span class="required">*</span></label>
+                            <input type="text" id="head_name" name="head_name" required 
+                                   placeholder="Enter full name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="aadhaar_number">Aadhaar Number of Head of Household <span class="required">*</span></label>
+                            <input type="text" id="aadhaar_number" name="aadhaar_number" required 
+                                   placeholder="12-digit Aadhaar number" pattern="[0-9]{12}" maxlength="12">
+                            <div class="help-text">Enter 12-digit Aadhaar number</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mobile_number">Mobile Number <span class="required">*</span></label>
+                            <input type="tel" id="mobile_number" name="mobile_number" required 
+                                   placeholder="10-digit mobile number" pattern="[0-9]{10}" maxlength="10">
+                            <div class="help-text">Enter 10-digit mobile number</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="social_category">Social Category <span class="required">*</span></label>
+                            <select id="social_category" name="social_category" required>
+                                <option value="">Select Category</option>
+                                <option value="General">General</option>
+                                <option value="SC">SC (Scheduled Caste)</option>
+                                <option value="ST">ST (Scheduled Tribe)</option>
+                                <option value="OBC">OBC (Other Backward Class)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="complete_address">Complete Address <span class="required">*</span></label>
+                        <textarea id="complete_address" name="complete_address" rows="3" required 
+                                  placeholder="Village, Taluk, District, State"></textarea>
+                    </div>
+                </div>
+
+                <!-- Family Information Section -->
+                <div class="form-section">
+                    <h2 class="section-title">👨‍👩‍👧‍👦 Family Information</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="total_family_members">Total Number of Family Members <span class="required">*</span></label>
+                            <input type="number" id="total_family_members" name="total_family_members" min="1" required 
+                                   placeholder="Total members">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="adults_count">Number of Adults (18 years or older) <span class="required">*</span></label>
+                            <input type="number" id="adults_count" name="adults_count" min="0" required 
+                                   placeholder="Adults count">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="elderly_count">Number of Elderly Members (60 years or older)</label>
+                            <input type="number" id="elderly_count" name="elderly_count" min="0" 
+                                   placeholder="Elderly count">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bpl_status">Are you Below Poverty Line (BPL)? <span class="required">*</span></label>
+                            <select id="bpl_status" name="bpl_status" required>
+                                <option value="">Select</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="has_widowed_disabled" name="has_widowed_disabled">
+                        <label for="has_widowed_disabled">Any Widowed or Disabled Member?</label>
+                    </div>
+                </div>
+
+                <!-- Housing Information Section -->
+                <div class="form-section">
+                    <h2 class="section-title">🏠 Housing Information</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="owns_house">Do you own a house? <span class="required">*</span></label>
+                            <select id="owns_house" name="owns_house" required>
+                                <option value="">Select</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="house_type">Type of House <span class="required">*</span></label>
+                            <select id="house_type" name="house_type" required>
+                                <option value="">Select House Type</option>
+                                <option value="Kutcha">Kutcha</option>
+                                <option value="Semi Pucca">Semi Pucca</option>
+                                <option value="Pucca">Pucca</option>
+                                <option value="Homeless">Homeless</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="land_area_hectares">Land Area Owned (in hectares)</label>
+                            <input type="number" id="land_area_hectares" name="land_area_hectares" step="0.01" min="0" 
+                                   placeholder="Area in hectares">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="survey_numbers">Survey Number(s) (from Patta)</label>
+                            <input type="text" id="survey_numbers" name="survey_numbers" 
+                                   placeholder="Survey numbers">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agriculture Information Section -->
+                <div class="form-section">
+                    <h2 class="section-title">🌾 Agriculture Information</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="cultivates_crops">Do you cultivate any crops? <span class="required">*</span></label>
+                            <select id="cultivates_crops" name="cultivates_crops" required>
+                                <option value="">Select</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="crops_list">If Yes, list the Crops</label>
+                            <textarea id="crops_list" name="crops_list" rows="2" 
+                                      placeholder="List crops grown (e.g., Rice, Wheat, Maize)"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Basic Amenities Section -->
+                <div class="form-section">
+                    <h2 class="section-title">⚡ Basic Amenities</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="tap_water">Do you have a tap water connection at home? <span class="required">*</span></label>
+                            <select id="tap_water" name="tap_water" required>
+                                <option value="">Select</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="toilet_facility">Type of Toilet Facility <span class="required">*</span></label>
+                            <select id="toilet_facility" name="toilet_facility" required>
+                                <option value="">Select</option>
+                                <option value="Private">Private</option>
+                                <option value="Community">Community</option>
+                                <option value="Open Defecation">Open Defecation</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="electricity">Do you have electricity connection? <span class="required">*</span></label>
+                            <select id="electricity" name="electricity" required>
+                                <option value="">Select</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="clean_fuel">Do you have LPG or other clean fuel connection? <span class="required">*</span></label>
+                            <select id="clean_fuel" name="clean_fuel" required>
+                                <option value="">Select</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documentation Section -->
+                <div class="form-section">
+                    <h2 class="section-title">📄 Documentation</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="ration_card">Do you have a Ration Card? <span class="required">*</span></label>
+                            <select id="ration_card" name="ration_card" required>
+                                <option value="">Select</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bank_account">Do you have a Bank Account? <span class="required">*</span></label>
+                            <select id="bank_account" name="bank_account" required>
+                                <option value="">Select</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="secc_code">SECC Family Code or ID (if available)</label>
+                            <input type="text" id="secc_code" name="secc_code" 
+                                   placeholder="SECC code if available">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Forest & Tribal Information Section -->
+                <div class="form-section">
+                    <h2 class="section-title">🌲 Forest & Tribal Information</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="tribal_district">Is your village located in a notified tribal district? <span class="required">*</span></label>
+                            <select id="tribal_district" name="tribal_district" required>
+                                <option value="">Select</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="collects_forest_produce">Do you collect forest produce (bamboo, honey, leaves, etc.)? <span class="required">*</span></label>
+                            <select id="collects_forest_produce" name="collects_forest_produce" required>
+                                <option value="">Select</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="forest_products">If Yes, specify the products</label>
+                        <textarea id="forest_products" name="forest_products" rows="2" 
+                                  placeholder="List forest products collected (e.g., Bamboo, Honey, Leaves, Medicinal plants)"></textarea>
+                    </div>
+                </div>
+
+                <!-- Employment & Schemes Section -->
+                <div class="form-section">
+                    <h2 class="section-title">💼 Employment & Schemes</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="willing_mgnrega">Is any adult family member willing to do wage labor/work under MGNREGA? <span class="required">*</span></label>
+                            <select id="willing_mgnrega" name="willing_mgnrega" required>
+                                <option value="">Select</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="enrolled_schemes">Are you enrolled in any government welfare schemes?</label>
+                            <textarea id="enrolled_schemes" name="enrolled_schemes" rows="3" 
+                                      placeholder="List names of schemes if enrolled (e.g., PM-KISAN, PMAY, etc.)"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="{{ url_for('admin_panel') }}" class="btn btn-secondary">
+                        ← Back to Admin
+                    </a>
+                    <button type="submit" class="btn btn-primary" id="submit-btn">
+                        📋 Submit FRA Data
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Form validation
+        document.getElementById('fraDataForm').addEventListener('submit', function(e) {
+            const requiredFields = document.querySelectorAll('input[required], select[required], textarea[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.style.borderColor = '#dc3545';
+                } else {
+                    field.style.borderColor = '#c8e6c9';
+                }
+            });
+
+            // Validate Aadhaar number
+            const aadhaar = document.getElementById('aadhaar_number').value;
+            if (aadhaar && !/^[0-9]{12}$/.test(aadhaar)) {
+                isValid = false;
+                document.getElementById('aadhaar_number').style.borderColor = '#dc3545';
+                alert('Please enter a valid 12-digit Aadhaar number.');
+            }
+
+            // Validate mobile number
+            const mobile = document.getElementById('mobile_number').value;
+            if (mobile && !/^[0-9]{10}$/.test(mobile)) {
+                isValid = false;
+                document.getElementById('mobile_number').style.borderColor = '#dc3545';
+                alert('Please enter a valid 10-digit mobile number.');
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please fill in all required fields correctly.');
+            } else {
+                document.getElementById('submit-btn').disabled = true;
+                document.getElementById('submit-btn').innerHTML = '⏳ Submitting...';
+            }
+        });
+
+        // Auto-hide flash messages
+        setTimeout(() => {
+            const flashMessages = document.querySelectorAll('[style*="background: #d4edda"], [style*="background: #f8d7da"]');
+            flashMessages.forEach(msg => {
+                msg.style.opacity = '0';
+                setTimeout(() => msg.remove(), 300);
+            });
+        }, 4000);
+
+        // Show/hide crops list based on cultivation
+        document.getElementById('cultivates_crops').addEventListener('change', function() {
+            const cropsList = document.getElementById('crops_list');
+            if (this.value === 'Yes') {
+                cropsList.parentElement.style.display = 'block';
+            } else {
+                cropsList.parentElement.style.display = 'none';
+                cropsList.value = '';
+            }
+        });
+
+        // Show/hide forest products based on collection
+        document.getElementById('collects_forest_produce').addEventListener('change', function() {
+            const forestProducts = document.getElementById('forest_products');
+            if (this.value === 'Yes') {
+                forestProducts.parentElement.style.display = 'block';
+            } else {
+                forestProducts.parentElement.style.display = 'none';
+                forestProducts.value = '';
+            }
+        });
+    </script>
+</body>
+</html>
+

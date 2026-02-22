@@ -1,0 +1,253 @@
+# Docker Compose for Production Environment
+# FRA-SENTINEL Production Setup with Security and Performance
+
+version: '3.8'
+
+# =============================================================================
+# Production Services Configuration
+# =============================================================================
+services:
+  # =============================================================================
+  # PostgreSQL Database with PostGIS
+  # =============================================================================
+  db:
+    image: postgis/postgis:15-3.3
+    container_name: fra-sentinel-db-prod
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      # Persistent data storage
+      - postgres_prod_data:/var/lib/postgresql/data
+      # Database initialization scripts
+      - ./database/init:/docker-entrypoint-initdb.d
+      # Backup directory
+      - ./backups:/backups
+    networks:
+      - fra-prod-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+
+  # =============================================================================
+  # Redis Cache Service
+  # =============================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: fra-sentinel-redis-prod
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_prod_data:/data
+    networks:
+      - fra-prod-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+  # =============================================================================
+  # Flask Backend Service (Production)
+  # =============================================================================
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+      target: production
+    container_name: fra-sentinel-backend-prod
+    restart: unless-stopped
+    environment:
+      # Flask production configuration
+      FLASK_ENV: production
+      FLASK_APP: webgis/app.py
+      SECRET_KEY: ${SECRET_KEY}
+      
+      # Database configuration
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      
+      # Redis configuration
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      
+      # Production settings
+      DEBUG: "False"
+      LOG_LEVEL: info
+      WORKERS: 4
+      
+      # External service URLs
+      FRONTEND_URL: ${FRONTEND_URL}
+      BACKEND_URL: ${BACKEND_URL}
+      
+      # Monitoring and logging
+      SENTRY_DSN: ${SENTRY_DSN}
+      LOGGLY_TOKEN: ${LOGGLY_TOKEN}
+    volumes:
+      # Application data persistence (no bind mounts in production)
+      - app_data:/app/data
+      - app_logs:/app/logs
+      - app_models:/app/models
+      - app_uploads:/app/uploads
+      - app_static:/app/static
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - fra-prod-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2.0'
+        reservations:
+          memory: 1G
+          cpus: '1.0'
+      replicas: 2
+
+  # =============================================================================
+  # Celery Worker Service (Production)
+  # =============================================================================
+  worker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.worker
+      target: production
+    container_name: fra-sentinel-worker-prod
+    restart: unless-stopped
+    environment:
+      # Same environment as backend
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      FLASK_ENV: production
+      DEBUG: "False"
+    volumes:
+      - app_data:/app/data
+      - app_logs:/app/logs
+      - app_models:/app/models
+      - app_uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - fra-prod-network
+    healthcheck:
+      test: ["CMD", "celery", "-A", "celery_config", "inspect", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+      replicas: 2
+
+  # =============================================================================
+  # Nginx Reverse Proxy (Production)
+  # =============================================================================
+  nginx:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.nginx
+      target: production
+    container_name: fra-sentinel-nginx-prod
+    restart: unless-stopped
+    ports:
+      - "${NGINX_PORT:-80}:80"
+      - "${NGINX_SSL_PORT:-443}:443"
+    volumes:
+      # Production nginx config
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      # SSL certificates (if using HTTPS)
+      - ./nginx/ssl:/etc/nginx/ssl
+      # Static files
+      - app_static:/usr/share/nginx/html/static
+    depends_on:
+      - backend
+    networks:
+      - fra-prod-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+        reservations:
+          memory: 128M
+          cpus: '0.25'
+
+# =============================================================================
+# Volumes for Production Data Persistence
+# =============================================================================
+volumes:
+  postgres_prod_data:
+    driver: local
+  redis_prod_data:
+    driver: local
+  app_data:
+    driver: local
+  app_logs:
+    driver: local
+  app_models:
+    driver: local
+  app_uploads:
+    driver: local
+  app_static:
+    driver: local
+
+# =============================================================================
+# Production Network
+# =============================================================================
+networks:
+  fra-prod-network:
+    driver: bridge
+    name: fra-sentinel-prod-network
+    driver_opts:
+      com.docker.network.bridge.name: fra-prod-br

@@ -1,0 +1,795 @@
+{% extends "base.html" %}
+
+{% block title %}{% trans %}FRA Data Collection{% endtrans %}{% endblock %}
+
+{% block content %}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0d4f3c 0%, #1b5e20 25%, #2e7d32 50%, #4caf50 75%, #81c784 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #0d4f3c;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #4caf50;
+        }
+
+        .section-title {
+            color: #0d4f3c;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #0d4f3c;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4caf50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .radio-item input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #4caf50;
+            padding: 15px 30px;
+            border: 2px solid #4caf50;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #4caf50;
+            color: white;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #0d4f3c;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .help-text {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .results-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            margin-top: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            display: none;
+        }
+
+        .scheme-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid #4caf50;
+        }
+
+        .scheme-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .scheme-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            border-radius: 50%;
+            color: white;
+        }
+
+        .scheme-title {
+            flex: 1;
+        }
+
+        .scheme-title h3 {
+            color: #0d4f3c;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .scheme-title .ministry {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .eligibility-score {
+            background: #4caf50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="{{ url_for('dashboard') }}" class="back-btn">← Back to Dashboard</a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>📋 {% trans %}FRA Data Collection{% endtrans %}</h1>
+            <p>{% trans %}Enter your household information to get personalized government scheme suggestions{% endtrans %}</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <form id="fraDataForm">
+                <!-- Personal Information -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span>👤</span>
+                        {% trans %}Personal Information{% endtrans %}
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="head_name">{% trans %}Head of Household Name{% endtrans %} <span class="required">*</span></label>
+                            <input type="text" id="head_name" name="head_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="aadhaar_number">Aadhaar Number <span class="required">*</span></label>
+                            <input type="text" id="aadhaar_number" name="aadhaar_number" pattern="[0-9]{12}" required>
+                            <div class="help-text">12-digit Aadhaar number</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile_number">Mobile Number <span class="required">*</span></label>
+                            <input type="tel" id="mobile_number" name="mobile_number" pattern="[0-9]{10}" required>
+                            <div class="help-text">10-digit mobile number</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="social_category">Social Category <span class="required">*</span></label>
+                            <select id="social_category" name="social_category" required>
+                                <option value="">Select Category</option>
+                                <option value="ST">Scheduled Tribe (ST)</option>
+                                <option value="SC">Scheduled Caste (SC)</option>
+                                <option value="OBC">Other Backward Class (OBC)</option>
+                                <option value="General">General</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address Information -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span>🏠</span>
+                        {% trans %}Address Information{% endtrans %}
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="complete_address">{% trans %}Complete Address{% endtrans %} <span class="required">*</span></label>
+                            <textarea id="complete_address" name="complete_address" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="tribal_district">{% trans %}Located in Tribal District?{% endtrans %}</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="tribal_district_yes" name="tribal_district" value="Yes">
+                                    <label for="tribal_district_yes">Yes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="tribal_district_no" name="tribal_district" value="No">
+                                    <label for="tribal_district_no">No</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Family Information -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span>👨‍👩‍👧‍👦</span>
+                        Family Information
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="total_family_members">{% trans %}Total Family Members{% endtrans %} <span class="required">*</span></label>
+                            <input type="number" id="total_family_members" name="total_family_members" min="1" max="20" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="adults_count">Number of Adults (18+)</label>
+                            <input type="number" id="adults_count" name="adults_count" min="0" max="20">
+                        </div>
+                        <div class="form-group">
+                            <label for="elderly_count">Number of Elderly (60+)</label>
+                            <input type="number" id="elderly_count" name="elderly_count" min="0" max="20">
+                        </div>
+                        <div class="form-group">
+                            <label for="has_widowed_disabled">Has Widowed/Disabled Members?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="has_widowed_disabled_yes" name="has_widowed_disabled" value="Yes">
+                                    <label for="has_widowed_disabled_yes">Yes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="has_widowed_disabled_no" name="has_widowed_disabled" value="No">
+                                    <label for="has_widowed_disabled_no">No</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Economic Status -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span>💰</span>
+                        Economic Status
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="bpl_status">Below Poverty Line (BPL) Status <span class="required">*</span></label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="bpl_status_yes" name="bpl_status" value="Yes" required>
+                                    <label for="bpl_status_yes">Yes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="bpl_status_no" name="bpl_status" value="No" required>
+                                    <label for="bpl_status_no">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bank_account">Has Bank Account?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="bank_account_yes" name="bank_account" value="Yes">
+                                    <label for="bank_account_yes">Yes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="bank_account_no" name="bank_account" value="No">
+                                    <label for="bank_account_no">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="ration_card">Has Ration Card?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="ration_card_yes" name="ration_card" value="Yes">
+                                    <label for="ration_card_yes">Yes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="ration_card_no" name="ration_card" value="No">
+                                    <label for="ration_card_no">No</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Housing Information -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span>🏡</span>
+                        Housing Information
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="owns_house">Owns House?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="owns_house_yes" name="owns_house" value="Yes">
+                                    <label for="owns_house_yes">Yes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="owns_house_no" name="owns_house" value="No">
+                                    <label for="owns_house_no">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="house_type">House Type</label>
+                            <select id="house_type" name="house_type">
+                                <option value="">Select Type</option>
+                                <option value="Pucca">Pucca (Concrete)</option>
+                                <option value="Semi Pucca">Semi Pucca</option>
+                                <option value="Kutcha">Kutcha (Mud/Thatch)</option>
+                                <option value="Homeless">Homeless</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tap_water">Has Tap Water?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="tap_water_yes" name="tap_water" value="Yes">
+                                    <label for="tap_water_yes">Yes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="tap_water_no" name="tap_water" value="No">
+                                    <label for="tap_water_no">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="electricity">Has Electricity?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="electricity_yes" name="electricity" value="Yes">
+                                    <label for="electricity_yes">Yes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="electricity_no" name="electricity" value="No">
+                                    <label for="electricity_no">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="clean_fuel">Uses Clean Fuel (LPG/Biogas)?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="clean_fuel_yes" name="clean_fuel" value="Yes">
+                                    <label for="clean_fuel_yes">Yes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="clean_fuel_no" name="clean_fuel" value="No">
+                                    <label for="clean_fuel_no">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="toilet_facility">Toilet Facility</label>
+                            <select id="toilet_facility" name="toilet_facility">
+                                <option value="">Select Type</option>
+                                <option value="Private">Private Toilet</option>
+                                <option value="Shared">Shared Toilet</option>
+                                <option value="Public">Public Toilet</option>
+                                <option value="Open Defecation">Open Defecation</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Land Information -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span>🌾</span>
+                        {% trans %}Land Information{% endtrans %}
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="land_area_hectares">Land Area (Hectares)</label>
+                            <input type="number" id="land_area_hectares" name="land_area_hectares" step="0.01" min="0" max="100">
+                            <div class="help-text">Enter land area in hectares (1 hectare = 2.47 acres)</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="survey_numbers">Survey Numbers</label>
+                            <input type="text" id="survey_numbers" name="survey_numbers">
+                            <div class="help-text">Enter survey numbers separated by commas</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cultivates_crops">Cultivates Crops?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="cultivates_crops_yes" name="cultivates_crops" value="Yes">
+                                    <label for="cultivates_crops_yes">Yes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="cultivates_crops_no" name="cultivates_crops" value="No">
+                                    <label for="cultivates_crops_no">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="crops_list">Crops Grown</label>
+                            <textarea id="crops_list" name="crops_list" placeholder="e.g., Rice, Wheat, Maize"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Forest Rights Information -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span>🌲</span>
+                        Forest Rights Information
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="collects_forest_produce">Collects Forest Produce?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="collects_forest_produce_yes" name="collects_forest_produce" value="Yes">
+                                    <label for="collects_forest_produce_yes">Yes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="collects_forest_produce_no" name="collects_forest_produce" value="No">
+                                    <label for="collects_forest_produce_no">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="forest_products">Forest Products Collected</label>
+                            <textarea id="forest_products" name="forest_products" placeholder="e.g., Bamboo, Honey, Medicinal plants"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="willing_mgnrega">Willing to Work under MGNREGA?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="willing_mgnrega_yes" name="willing_mgnrega" value="Yes">
+                                    <label for="willing_mgnrega_yes">Yes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="willing_mgnrega_no" name="willing_mgnrega" value="No">
+                                    <label for="willing_mgnrega_no">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="enrolled_schemes">Currently Enrolled Schemes</label>
+                            <textarea id="enrolled_schemes" name="enrolled_schemes" placeholder="e.g., PM-KISAN, MGNREGA"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">🎯 {% trans %}Get Scheme Suggestions{% endtrans %}</button>
+                <button type="button" class="btn-secondary" onclick="clearForm()">🔄 {% trans %}Clear Form{% endtrans %}</button>
+            </form>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <h2 style="color: #0d4f3c; margin-bottom: 20px; text-align: center;">🎯 Your Personalized Scheme Suggestions</h2>
+            <div id="schemeResults"></div>
+        </div>
+    </div>
+
+    <script>
+        // Update progress bar
+        function updateProgress() {
+            const form = document.getElementById('fraDataForm');
+            const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+            const filledInputs = Array.from(inputs).filter(input => input.value.trim() !== '');
+            const progress = (filledInputs.length / inputs.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        // Add event listeners to update progress
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('fraDataForm');
+            const inputs = form.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', updateProgress);
+                input.addEventListener('change', updateProgress);
+            });
+        });
+
+        // Form submission
+        document.getElementById('fraDataForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            
+            try {
+                const response = await fetch('/api/fra-data/assess', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+                
+                displayResults(result);
+                
+            } catch (error) {
+                alert('Error processing data: ' + error.message);
+            }
+        });
+
+        function displayResults(data) {
+            const resultsSection = document.getElementById('resultsSection');
+            const schemeResults = document.getElementById('schemeResults');
+            
+            // Show results section
+            resultsSection.style.display = 'block';
+            
+            // Display user profile summary
+            let html = `
+                <div style="background: #e8f5e8; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+                    <h3 style="color: #0d4f3c; margin-bottom: 15px;">📊 Your Profile Summary</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div><strong>Name:</strong> ${data.head_name}</div>
+                        <div><strong>Social Category:</strong> ${data.user_profile.social_category}</div>
+                        <div><strong>BPL Status:</strong> ${data.user_profile.bpl_status}</div>
+                        <div><strong>Land Ownership:</strong> ${data.user_profile.land_ownership ? 'Yes' : 'No'}</div>
+                        <div><strong>Tribal District:</strong> ${data.user_profile.tribal_district ? 'Yes' : 'No'}</div>
+                        <div><strong>Overall Score:</strong> ${data.overall_score}%</div>
+                    </div>
+                </div>
+            `;
+            
+            // Display priority schemes
+            if (data.priority_schemes && data.priority_schemes.length > 0) {
+                html += '<h3 style="color: #0d4f3c; margin-bottom: 20px;">⭐ Top Priority Schemes for You</h3>';
+                
+                data.priority_schemes.forEach(scheme => {
+                    html += `
+                        <div class="scheme-card">
+                            <div class="scheme-header">
+                                <div class="scheme-icon">${getSchemeIcon(scheme.scheme_id)}</div>
+                                <div class="scheme-title">
+                                    <h3>${scheme.name}</h3>
+                                    <div class="ministry">${scheme.ministry}</div>
+                                </div>
+                                <div class="eligibility-score" style="display: none;"></div>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <strong>Description:</strong> ${scheme.description}
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <strong>Benefit:</strong> ${scheme.benefit_amount}
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <strong>Why you're eligible:</strong>
+                                <ul style="margin-top: 5px;">
+                                    ${scheme.reasons.map(reason => `<li>${reason}</li>`).join('')}
+                                </ul>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <a href="${scheme.website}" class="btn-primary" target="_blank" style="width: auto; padding: 10px 20px;">Apply Online</a>
+                                <button class="btn-secondary" onclick="checkEligibility('${scheme.scheme_id}')" style="width: auto; padding: 10px 20px;">Check Eligibility</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            // Display recommendations
+            if (data.recommendations && data.recommendations.length > 0) {
+                html += `
+                    <div style="background: #f0f8ff; padding: 20px; border-radius: 10px; margin-top: 30px;">
+                        <h3 style="color: #0d4f3c; margin-bottom: 15px;">💡 Recommendations</h3>
+                        ${data.recommendations.map(rec => `<div style="padding: 5px 0;">${rec}</div>`).join('')}
+                    </div>
+                `;
+            }
+            
+            schemeResults.innerHTML = html;
+            
+            // Scroll to results
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function getSchemeIcon(schemeId) {
+            const icons = {
+                'PM_KISAN': '💰',
+                'PMFBY': '🛡️',
+                'PMAY': '🏠',
+                'MGNREGA': '💼',
+                'FRA_TITLE': '🌲',
+                'FRA_COMMUNITY': '👥',
+                'PMJAY': '🏥',
+                'PMUY': '🔥',
+                'JAL_JEEVAN': '💧',
+                'SAUBHAGYA': '⚡'
+            };
+            return icons[schemeId] || '🏛️';
+        }
+
+        function checkEligibility(schemeName) {
+            alert(`Detailed eligibility check for ${schemeName} will be implemented.`);
+        }
+
+        function clearForm() {
+            if (confirm('Are you sure you want to clear all form data?')) {
+                document.getElementById('fraDataForm').reset();
+                document.getElementById('resultsSection').style.display = 'none';
+                document.getElementById('progressFill').style.width = '0%';
+            }
+        }
+    </script>
+</body>
+{% endblock %}

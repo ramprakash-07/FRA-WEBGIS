@@ -1,0 +1,239 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created": "2025-09-26",
+    "source": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf",
+    "description": "DAJGUA-aligned scheme catalog for DSS recommendations"
+  },
+  "schemes": {
+    "pm_kisan": {
+      "scheme_key": "pm_kisan",
+      "display_name": "PM-KISAN",
+      "ministry": "Ministry of Agriculture & Farmers Welfare",
+      "category": "Agriculture",
+      "dajgua_priority": "High",
+      "eligibility_fields": [
+        "landholding_size",
+        "farmer_status",
+        "bank_account",
+        "aadhaar_linked"
+      ],
+      "evidence_expected": [
+        "land_records",
+        "bank_passbook",
+        "aadhaar_card",
+        "income_certificate"
+      ],
+      "guideline_ref": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf#intervention_1",
+      "monitoring_notes": "Direct income support of Rs. 6,000 per year in three equal installments. Priority for small and marginal farmers with landholding up to 2 hectares.",
+      "convergence_tags": ["agriculture", "income_support", "direct_benefit_transfer"],
+      "benefit_amount": "Rs. 6,000 per year",
+      "convergence_ministries": ["Ministry of Rural Development", "Ministry of Tribal Affairs"]
+    },
+    "jjm": {
+      "scheme_key": "jjm",
+      "display_name": "Jal Jeevan Mission",
+      "ministry": "Ministry of Jal Shakti",
+      "category": "Water & Sanitation",
+      "dajgua_priority": "High",
+      "eligibility_fields": [
+        "rural_household",
+        "water_stress_area",
+        "tribal_area",
+        "functional_tap_connection"
+      ],
+      "evidence_expected": [
+        "household_survey",
+        "water_quality_report",
+        "infrastructure_assessment",
+        "community_consent"
+      ],
+      "guideline_ref": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf#intervention_2",
+      "monitoring_notes": "Providing functional household tap connections to every rural household. Priority areas include tribal areas, water-stressed regions, and aspirational districts.",
+      "convergence_tags": ["water", "rural_development", "infrastructure", "health"],
+      "benefit_amount": "Functional tap connection",
+      "convergence_ministries": ["Ministry of Rural Development", "Ministry of Health & Family Welfare"]
+    },
+    "mgnrega": {
+      "scheme_key": "mgnrega",
+      "display_name": "MGNREGA",
+      "ministry": "Ministry of Rural Development",
+      "category": "Employment",
+      "dajgua_priority": "High",
+      "eligibility_fields": [
+        "rural_household",
+        "adult_member",
+        "job_card",
+        "willing_to_work"
+      ],
+      "evidence_expected": [
+        "job_card",
+        "muster_roll",
+        "work_completion_certificate",
+        "wage_payment_record"
+      ],
+      "guideline_ref": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf#intervention_3",
+      "monitoring_notes": "Provides 100 days of guaranteed wage employment. Focus on water conservation, drought proofing, and land development works in tribal areas.",
+      "convergence_tags": ["employment", "rural_development", "water_conservation", "land_development"],
+      "benefit_amount": "100 days employment + wages",
+      "convergence_ministries": ["Ministry of Agriculture & Farmers Welfare", "Ministry of Jal Shakti"]
+    },
+    "pmay_g": {
+      "scheme_key": "pmay_g",
+      "display_name": "PMAY-G",
+      "ministry": "Ministry of Rural Development",
+      "category": "Housing",
+      "dajgua_priority": "High",
+      "eligibility_fields": [
+        "rural_household",
+        "pucca_house_absence",
+        "income_criteria",
+        "land_ownership"
+      ],
+      "evidence_expected": [
+        "income_certificate",
+        "land_documents",
+        "household_survey",
+        "construction_plan"
+      ],
+      "guideline_ref": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf#intervention_4",
+      "monitoring_notes": "Housing for all in rural areas. Priority for tribal households, particularly those in forest areas and with FRA titles.",
+      "convergence_tags": ["housing", "rural_development", "tribal_households", "forest_areas"],
+      "benefit_amount": "Rs. 1.2 lakh assistance",
+      "convergence_ministries": ["Ministry of Tribal Affairs", "Ministry of Environment, Forest & Climate Change"]
+    },
+    "rkvy": {
+      "scheme_key": "rkvy",
+      "display_name": "RKVY",
+      "ministry": "Ministry of Agriculture & Farmers Welfare",
+      "category": "Agriculture",
+      "dajgua_priority": "Medium",
+      "eligibility_fields": [
+        "farmer_status",
+        "land_holding",
+        "agricultural_activity",
+        "tribal_area"
+      ],
+      "evidence_expected": [
+        "land_records",
+        "agricultural_plan",
+        "market_linkage_proposal",
+        "value_addition_plan"
+      ],
+      "guideline_ref": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf#intervention_5",
+      "monitoring_notes": "Remunerative Approaches for Agriculture and Allied Sectors. Focus on tribal agriculture, organic farming, and value addition of forest produce.",
+      "convergence_tags": ["agriculture", "organic_farming", "forest_produce", "value_addition"],
+      "benefit_amount": "Project-based assistance",
+      "convergence_ministries": ["Ministry of Tribal Affairs", "Ministry of Commerce & Industry"]
+    },
+    "pmmsy": {
+      "scheme_key": "pmmsy",
+      "display_name": "PMMSY",
+      "ministry": "Ministry of Fisheries, Animal Husbandry & Dairying",
+      "category": "Fisheries",
+      "dajgua_priority": "Medium",
+      "eligibility_fields": [
+        "fishing_community",
+        "water_body_access",
+        "traditional_practice",
+        "tribal_area"
+      ],
+      "evidence_expected": [
+        "community_certificate",
+        "water_body_documents",
+        "fishing_license",
+        "value_chain_proposal"
+      ],
+      "guideline_ref": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf#intervention_6",
+      "monitoring_notes": "Development of fisheries sector. Support for traditional fishing communities, fish farming in tribal areas, and value chain development.",
+      "convergence_tags": ["fisheries", "traditional_communities", "value_chain", "aquaculture"],
+      "benefit_amount": "Project-based assistance",
+      "convergence_ministries": ["Ministry of Tribal Affairs", "Ministry of Rural Development"]
+    },
+    "nlm": {
+      "scheme_key": "nlm",
+      "display_name": "NLM",
+      "ministry": "Ministry of Fisheries, Animal Husbandry & Dairying",
+      "category": "Livestock",
+      "dajgua_priority": "Medium",
+      "eligibility_fields": [
+        "livestock_ownership",
+        "pastoral_community",
+        "traditional_practice",
+        "tribal_area"
+      ],
+      "evidence_expected": [
+        "livestock_census",
+        "community_certificate",
+        "veterinary_certificate",
+        "dairy_development_plan"
+      ],
+      "guideline_ref": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf#intervention_7",
+      "monitoring_notes": "Development of livestock sector. Support for traditional pastoral communities, animal husbandry, and dairy development in tribal areas.",
+      "convergence_tags": ["livestock", "pastoral_communities", "dairy_development", "animal_husbandry"],
+      "benefit_amount": "Project-based assistance",
+      "convergence_ministries": ["Ministry of Tribal Affairs", "Ministry of Rural Development"]
+    },
+    "rgsa": {
+      "scheme_key": "rgsa",
+      "display_name": "RGSA",
+      "ministry": "Ministry of Panchayati Raj",
+      "category": "Governance",
+      "dajgua_priority": "High",
+      "eligibility_fields": [
+        "gram_sabha_member",
+        "panchayat_area",
+        "tribal_area",
+        "capacity_building_need"
+      ],
+      "evidence_expected": [
+        "gram_sabha_resolution",
+        "panchayat_certificate",
+        "training_attendance",
+        "capacity_assessment"
+      ],
+      "guideline_ref": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf#intervention_8",
+      "monitoring_notes": "Strengthening Panchayati Raj Institutions. Capacity building of Gram Sabhas, especially in tribal areas for effective FRA implementation.",
+      "convergence_tags": ["panchayati_raj", "gram_sabha", "capacity_building", "governance"],
+      "benefit_amount": "Training and capacity building",
+      "convergence_ministries": ["Ministry of Tribal Affairs", "Ministry of Rural Development"]
+    }
+  },
+  "convergence_rules": {
+    "ministry_weights": {
+      "Ministry of Agriculture & Farmers Welfare": 1.2,
+      "Ministry of Rural Development": 1.3,
+      "Ministry of Jal Shakti": 1.1,
+      "Ministry of Tribal Affairs": 1.4,
+      "Ministry of Fisheries, Animal Husbandry & Dairying": 1.0,
+      "Ministry of Panchayati Raj": 1.1,
+      "Ministry of Environment, Forest & Climate Change": 1.2
+    },
+    "category_weights": {
+      "Agriculture": 1.2,
+      "Water & Sanitation": 1.3,
+      "Employment": 1.4,
+      "Housing": 1.3,
+      "Fisheries": 1.0,
+      "Livestock": 1.0,
+      "Governance": 1.1
+    },
+    "dajgua_priority_weights": {
+      "High": 1.5,
+      "Medium": 1.0,
+      "Low": 0.7
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+

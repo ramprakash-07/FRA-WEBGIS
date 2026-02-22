@@ -1,0 +1,42 @@
+# Patta Document Verification System Requirements
+
+# Core OCR and Image Processing
+pytesseract>=0.3.10
+Pillow>=9.0.0
+pdf2image>=3.1.0
+opencv-python>=4.8.0
+
+# NLP and Text Processing
+spacy>=3.4.0
+nltk>=3.8.0
+
+# Data Processing
+pandas>=1.5.0
+numpy>=1.24.0
+geopandas>=0.12.0
+shapely>=1.8.0
+
+# Web Framework
+Flask>=2.3.0
+Werkzeug>=2.3.0
+
+# HTTP Requests
+requests>=2.31.0
+
+# QR Code Processing
+qrcode>=7.4.0
+
+# Additional Utilities
+python-dateutil>=2.8.0
+hashlib2>=1.3.0
+
+# Optional: For advanced image processing
+scikit-image>=0.20.0
+
+# Optional: For machine learning-based verification
+scikit-learn>=1.3.0
+
+# Development and Testing
+pytest>=7.4.0
+pytest-flask>=1.2.0
+

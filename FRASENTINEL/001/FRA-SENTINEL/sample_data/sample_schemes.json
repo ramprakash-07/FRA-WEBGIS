@@ -1,0 +1,28 @@
+{
+  "schemes": [
+    {
+      "name": "PM-KISAN",
+      "ministry": "Agriculture",
+      "category": "Income Support",
+      "eligibility_criteria": {
+        "land_holding": "<= 2 hectares",
+        "farmer_type": "small_marginal"
+      },
+      "benefit_amount": "\u20b96000/year",
+      "convergence_score": 0.8,
+      "priority": 1
+    },
+    {
+      "name": "Jal Jeevan Mission",
+      "ministry": "Jal Shakti",
+      "category": "Water Supply",
+      "eligibility_criteria": {
+        "water_scarcity": true,
+        "population": ">= 100"
+      },
+      "benefit_amount": "Infrastructure",
+      "convergence_score": 0.9,
+      "priority": 2
+    }
+  ]
+}

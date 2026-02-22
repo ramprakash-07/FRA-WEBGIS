@@ -1,0 +1,142 @@
+# Hindi translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-09-26 06:56+0530\n"
+"PO-Revision-Date: 2025-09-26 06:56+0530\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: hi\n"
+"Language-Team: hi <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#: templates/base.html:6
+msgid "FRA Sentinel"
+msgstr "एफआरए सेंटिनल"
+
+#: templates/dashboard.html:1719
+msgid "AI Predictions"
+msgstr "एआई भविष्यवाणी"
+
+#: templates/dashboard.html:1723
+msgid "AI Assistant"
+msgstr "एआई सहायक"
+
+#: templates/dashboard.html:1727
+msgid "Analytics"
+msgstr "विश्लेषण"
+
+#: templates/dashboard.html:1731
+msgid "Reports"
+msgstr "रिपोर्ट्स"
+
+#: templates/dashboard.html:1735
+msgid "Schemes"
+msgstr "योजनाएं"
+
+#: templates/dashboard.html:1739
+msgid "Enter Data"
+msgstr "डेटा दर्ज करें"
+
+#: templates/fra_data_collection.html:6 templates/fra_data_collection.html:316
+msgid "FRA Data Collection"
+msgstr ""
+
+#: templates/fra_data_collection.html:317
+msgid ""
+"Enter your household information to get personalized government scheme "
+"suggestions"
+msgstr ""
+
+#: templates/schemes.html:6 templates/schemes.html:336
+msgid "Government Schemes"
+msgstr "सरकारी योजनाएं"
+
+#: templates/schemes.html:337
+msgid ""
+"Discover eligible government schemes for FRA beneficiaries and forest-"
+"dwelling communities"
+msgstr "एफआरए लाभार्थियों और वन-निवासी समुदायों के लिए पात्र सरकारी योजनाओं की खोज करें"
+
+#: templates/schemes.html:340
+msgid "DAJGUA Convergence Mode"
+msgstr "डाजगुआ अभिसरण मोड"
+
+#: templates/schemes.html:344
+msgid "Village Convergence Score"
+msgstr "गांव अभिसरण स्कोर"
+
+#: templates/dashboard.html:1719
+msgid "Overview"
+msgstr "अवलोकन"
+
+#: templates/dashboard.html:1723
+msgid "Progress"
+msgstr "प्रगति"
+
+#: templates/dashboard.html:1727
+msgid "Export"
+msgstr "निर्यात"
+
+#: templates/dashboard.html:1731
+msgid "Smart Recommendations"
+msgstr "स्मार्ट सिफारिशें"
+
+#: templates/dashboard.html:1735
+msgid "Analyzing data..."
+msgstr "डेटा का विश्लेषण कर रहे हैं..."
+
+#: templates/fra_data_collection.html:6 templates/fra_data_collection.html:315
+msgid "FRA Data Collection"
+msgstr "एफआरए डेटा संग्रह"
+
+#: templates/fra_data_collection.html:316
+msgid ""
+"Enter your household information to get personalized government scheme "
+"suggestions"
+msgstr "व्यक्तिगत सरकारी योजना सुझाव प्राप्त करने के लिए अपने घरेलू जानकारी दर्ज करें"
+
+#: templates/fra_data_collection.html:328
+msgid "Personal Information"
+msgstr "व्यक्तिगत जानकारी"
+
+#: templates/fra_data_collection.html:332
+msgid "Head of Household Name"
+msgstr "परिवार के मुखिया का नाम"
+
+#: templates/fra_data_collection.html:362
+msgid "Address Information"
+msgstr "पता जानकारी"
+
+#: templates/fra_data_collection.html:366
+msgid "Complete Address"
+msgstr "पूरा पता"
+
+#: templates/fra_data_collection.html:370
+msgid "Located in Tribal District?"
+msgstr "आदिवासी जिले में स्थित?"
+
+#: templates/fra_data_collection.html:393
+msgid "Total Family Members"
+msgstr "कुल परिवार के सदस्य"
+
+#: templates/fra_data_collection.html:555
+msgid "Land Information"
+msgstr "भूमि जानकारी"
+
+#: templates/fra_data_collection.html:632
+msgid "Get Scheme Suggestions"
+msgstr "योजना सुझाव प्राप्त करें"
+
+#: templates/fra_data_collection.html:633
+msgid "Clear Form"
+msgstr "फॉर्म साफ़ करें"
+

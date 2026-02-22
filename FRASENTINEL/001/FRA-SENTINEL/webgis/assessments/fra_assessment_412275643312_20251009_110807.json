@@ -1,0 +1,373 @@
+{
+  "assessment_date": "2025-10-09T11:08:07.714284",
+  "household_id": "412275643312",
+  "head_name": "Ram",
+  "eligible_schemes": [
+    {
+      "scheme_id": "PM_KISAN",
+      "category": "agricultural_schemes",
+      "name": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+      "description": "Direct income support of Rs. 6,000 per year to small and marginal farmers",
+      "benefit_amount": "Rs. 6,000 per year",
+      "ministry": "Ministry of Agriculture & Farmers Welfare",
+      "website": "https://pmkisan.gov.in",
+      "eligibility_criteria": {
+        "land_ownership": true,
+        "cultivates_crops": true,
+        "social_category": [
+          "General",
+          "SC",
+          "ST",
+          "OBC"
+        ],
+        "min_land_area": 0.01,
+        "max_land_area": 2.0,
+        "exclusions": [
+          "Government employees",
+          "Income tax payers"
+        ]
+      },
+      "eligibility_score": 10000.0,
+      "reasons": [
+        "✓ Has land ownership",
+        "✓ Cultivates crops",
+        "✓ Eligible social category: ST",
+        "✓ Land area 2.0 hectares meets requirement",
+        "✓ Land area 2.0 hectares within limit"
+      ]
+    },
+    {
+      "scheme_id": "PMAY",
+      "category": "housing_schemes",
+      "name": "Pradhan Mantri Awas Yojana (PMAY)",
+      "description": "Housing for all by 2022",
+      "benefit_amount": "Rs. 1.5-2.5 lakhs",
+      "ministry": "Ministry of Housing and Urban Affairs",
+      "website": "https://pmaymis.gov.in",
+      "eligibility_criteria": {
+        "bpl_status": true,
+        "owns_house": false,
+        "house_type": [
+          "Kutcha",
+          "Homeless"
+        ],
+        "social_category": [
+          "SC",
+          "ST",
+          "OBC"
+        ],
+        "bank_account": true
+      },
+      "eligibility_score": 10000.0,
+      "reasons": [
+        "✓ Below Poverty Line",
+        "✓ Eligible social category: ST",
+        "✓ Has bank account"
+      ]
+    },
+    {
+      "scheme_id": "FRA_TITLE",
+      "category": "forest_rights_schemes",
+      "name": "Forest Rights Act - Individual Forest Rights",
+      "description": "Recognition of individual forest rights",
+      "benefit_amount": "Land title up to 4 hectares",
+      "ministry": "Ministry of Tribal Affairs",
+      "website": "https://tribal.nic.in",
+      "eligibility_criteria": {
+        "tribal_district": true,
+        "collects_forest_produce": true,
+        "social_category": [
+          "ST"
+        ],
+        "land_ownership": false
+      },
+      "eligibility_score": 10000.0,
+      "reasons": [
+        "✓ Located in tribal district",
+        "✓ Collects forest produce",
+        "✓ Eligible social category: ST"
+      ]
+    },
+    {
+      "scheme_id": "FRA_COMMUNITY",
+      "category": "forest_rights_schemes",
+      "name": "Forest Rights Act - Community Forest Rights",
+      "description": "Recognition of community forest rights",
+      "benefit_amount": "Community forest management rights",
+      "ministry": "Ministry of Tribal Affairs",
+      "website": "https://tribal.nic.in",
+      "eligibility_criteria": {
+        "tribal_district": true,
+        "collects_forest_produce": true,
+        "social_category": [
+          "ST"
+        ]
+      },
+      "eligibility_score": 10000.0,
+      "reasons": [
+        "✓ Located in tribal district",
+        "✓ Collects forest produce",
+        "✓ Eligible social category: ST"
+      ]
+    },
+    {
+      "scheme_id": "PMJAY",
+      "category": "social_welfare_schemes",
+      "name": "Pradhan Mantri Jan Arogya Yojana (PMJAY)",
+      "description": "Health insurance for poor and vulnerable families",
+      "benefit_amount": "Up to Rs. 5 lakhs per family per year",
+      "ministry": "Ministry of Health and Family Welfare",
+      "website": "https://pmjay.gov.in",
+      "eligibility_criteria": {
+        "bpl_status": true,
+        "social_category": [
+          "SC",
+          "ST",
+          "OBC"
+        ],
+        "total_family_members": 1
+      },
+      "eligibility_score": 10000.0,
+      "reasons": [
+        "✓ Below Poverty Line",
+        "✓ Eligible social category: ST"
+      ]
+    },
+    {
+      "scheme_id": "PMUY",
+      "category": "social_welfare_schemes",
+      "name": "Pradhan Mantri Ujjwala Yojana (PMUY)",
+      "description": "Free LPG connections to poor households",
+      "benefit_amount": "Free LPG connection + Rs. 1,600 subsidy",
+      "ministry": "Ministry of Petroleum and Natural Gas",
+      "website": "https://pmuy.gov.in",
+      "eligibility_criteria": {
+        "bpl_status": true,
+        "clean_fuel": false,
+        "social_category": [
+          "SC",
+          "ST",
+          "OBC"
+        ]
+      },
+      "eligibility_score": 100.0,
+      "reasons": [
+        "✓ Below Poverty Line",
+        "✓ Eligible social category: ST"
+      ]
+    },
+    {
+      "scheme_id": "PMFBY",
+      "category": "agricultural_schemes",
+      "name": "Pradhan Mantri Fasal Bima Yojana (PMFBY)",
+      "description": "Crop insurance scheme for farmers",
+      "benefit_amount": "Up to 100% of sum insured",
+      "ministry": "Ministry of Agriculture & Farmers Welfare",
+      "website": "https://pmfby.gov.in",
+      "eligibility_criteria": {
+        "cultivates_crops": true,
+        "land_ownership": true,
+        "bank_account": true
+      },
+      "eligibility_score": 97.5,
+      "reasons": [
+        "✓ Cultivates crops",
+        "✓ Has land ownership",
+        "✓ Has bank account"
+      ]
+    },
+    {
+      "scheme_id": "MGNREGA",
+      "category": "employment_schemes",
+      "name": "Mahatma Gandhi National Rural Employment Guarantee Act",
+      "description": "100 days of guaranteed wage employment",
+      "benefit_amount": "Rs. 200-300 per day",
+      "ministry": "Ministry of Rural Development",
+      "website": "https://nrega.nic.in",
+      "eligibility_criteria": {
+        "willing_mgnrega": true,
+        "adults_count": 1,
+        "bank_account": true,
+        "ration_card": true
+      },
+      "eligibility_score": 58.5,
+      "reasons": [
+        "✓ Willing for MGNREGA work",
+        "✓ Has bank account"
+      ]
+    },
+    {
+      "scheme_id": "SAUBHAGYA",
+      "category": "infrastructure_schemes",
+      "name": "Pradhan Mantri Sahaj Bijli Har Ghar Yojana (SAUBHAGYA)",
+      "description": "Electricity connection to every household",
+      "benefit_amount": "Free electricity connection",
+      "ministry": "Ministry of Power",
+      "website": "https://saubhagya.gov.in",
+      "eligibility_criteria": {
+        "electricity": false,
+        "bpl_status": true
+      },
+      "eligibility_score": 58.5,
+      "reasons": [
+        "✓ Below Poverty Line"
+      ]
+    },
+    {
+      "scheme_id": "JAL_JEEVAN",
+      "category": "infrastructure_schemes",
+      "name": "Jal Jeevan Mission",
+      "description": "Tap water connection to every household",
+      "benefit_amount": "Free tap water connection",
+      "ministry": "Ministry of Jal Shakti",
+      "website": "https://jaljeevanmission.gov.in",
+      "eligibility_criteria": {
+        "tap_water": false,
+        "rural_area": true
+      },
+      "eligibility_score": 0.0,
+      "reasons": []
+    }
+  ],
+  "priority_schemes": [
+    {
+      "scheme_id": "PM_KISAN",
+      "category": "agricultural_schemes",
+      "name": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+      "description": "Direct income support of Rs. 6,000 per year to small and marginal farmers",
+      "benefit_amount": "Rs. 6,000 per year",
+      "ministry": "Ministry of Agriculture & Farmers Welfare",
+      "website": "https://pmkisan.gov.in",
+      "eligibility_criteria": {
+        "land_ownership": true,
+        "cultivates_crops": true,
+        "social_category": [
+          "General",
+          "SC",
+          "ST",
+          "OBC"
+        ],
+        "min_land_area": 0.01,
+        "max_land_area": 2.0,
+        "exclusions": [
+          "Government employees",
+          "Income tax payers"
+        ]
+      },
+      "eligibility_score": 10000.0,
+      "reasons": [
+        "✓ Has land ownership",
+        "✓ Cultivates crops",
+        "✓ Eligible social category: ST",
+        "✓ Land area 2.0 hectares meets requirement",
+        "✓ Land area 2.0 hectares within limit"
+      ]
+    },
+    {
+      "scheme_id": "PMAY",
+      "category": "housing_schemes",
+      "name": "Pradhan Mantri Awas Yojana (PMAY)",
+      "description": "Housing for all by 2022",
+      "benefit_amount": "Rs. 1.5-2.5 lakhs",
+      "ministry": "Ministry of Housing and Urban Affairs",
+      "website": "https://pmaymis.gov.in",
+      "eligibility_criteria": {
+        "bpl_status": true,
+        "owns_house": false,
+        "house_type": [
+          "Kutcha",
+          "Homeless"
+        ],
+        "social_category": [
+          "SC",
+          "ST",
+          "OBC"
+        ],
+        "bank_account": true
+      },
+      "eligibility_score": 10000.0,
+      "reasons": [
+        "✓ Below Poverty Line",
+        "✓ Eligible social category: ST",
+        "✓ Has bank account"
+      ]
+    },
+    {
+      "scheme_id": "FRA_TITLE",
+      "category": "forest_rights_schemes",
+      "name": "Forest Rights Act - Individual Forest Rights",
+      "description": "Recognition of individual forest rights",
+      "benefit_amount": "Land title up to 4 hectares",
+      "ministry": "Ministry of Tribal Affairs",
+      "website": "https://tribal.nic.in",
+      "eligibility_criteria": {
+        "tribal_district": true,
+        "collects_forest_produce": true,
+        "social_category": [
+          "ST"
+        ],
+        "land_ownership": false
+      },
+      "eligibility_score": 10000.0,
+      "reasons": [
+        "✓ Located in tribal district",
+        "✓ Collects forest produce",
+        "✓ Eligible social category: ST"
+      ]
+    },
+    {
+      "scheme_id": "FRA_COMMUNITY",
+      "category": "forest_rights_schemes",
+      "name": "Forest Rights Act - Community Forest Rights",
+      "description": "Recognition of community forest rights",
+      "benefit_amount": "Community forest management rights",
+      "ministry": "Ministry of Tribal Affairs",
+      "website": "https://tribal.nic.in",
+      "eligibility_criteria": {
+        "tribal_district": true,
+        "collects_forest_produce": true,
+        "social_category": [
+          "ST"
+        ]
+      },
+      "eligibility_score": 10000.0,
+      "reasons": [
+        "✓ Located in tribal district",
+        "✓ Collects forest produce",
+        "✓ Eligible social category: ST"
+      ]
+    },
+    {
+      "scheme_id": "PMJAY",
+      "category": "social_welfare_schemes",
+      "name": "Pradhan Mantri Jan Arogya Yojana (PMJAY)",
+      "description": "Health insurance for poor and vulnerable families",
+      "benefit_amount": "Up to Rs. 5 lakhs per family per year",
+      "ministry": "Ministry of Health and Family Welfare",
+      "website": "https://pmjay.gov.in",
+      "eligibility_criteria": {
+        "bpl_status": true,
+        "social_category": [
+          "SC",
+          "ST",
+          "OBC"
+        ],
+        "total_family_members": 1
+      },
+      "eligibility_score": 10000.0,
+      "reasons": [
+        "✓ Below Poverty Line",
+        "✓ Eligible social category: ST"
+      ]
+    }
+  ],
+  "ineligible_schemes": [],
+  "overall_score": 1.0,
+  "recommendations": [
+    "🎯 You are eligible for 10 government schemes",
+    "⭐ Top priority schemes: Pradhan Mantri Kisan Samman Nidhi (PM-KISAN), Pradhan Mantri Awas Yojana (PMAY), Forest Rights Act - Individual Forest Rights",
+    "🌟 High eligibility score - Apply for multiple schemes",
+    "📄 Consider uploading patta document for enhanced eligibility"
+  ],
+  "patta_integration": {}
+}

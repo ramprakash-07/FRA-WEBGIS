@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏆 FRA SENTINEL - Hackathon Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/unified-buttons.css') }}" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #0d4f3c;
+            --secondary-color: #28a745;
+            --accent-color: #ffc107;
+            --text-primary: #333;
+            --text-secondary: #666;
+            --background: #f8f9fa;
+            --white: #ffffff;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --border-radius: 12px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .demo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        .demo-header {
+            text-align: center;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow);
+        }
+
+        .demo-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .demo-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .impact-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .impact-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            text-align: center;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .impact-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .impact-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .demo-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow);
+        }
+
+        .demo-card h3 {
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-md);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            border: none;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(13, 79, 60, 0.3);
+        }
+
+        .demo-result {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-md);
+            display: none;
+        }
+
+        .success-story {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .success-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .success-description {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .success-impact {
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .chart-container {
+            height: 300px;
+            margin-top: var(--spacing-md);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: var(--spacing-lg);
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--spacing-md);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .metric-highlight {
+            background: linear-gradient(135deg, #e8f5e8, #f0f8ff);
+            border-radius: 8px;
+            padding: var(--spacing-md);
+            margin: var(--spacing-sm) 0;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .demo-title {
+                font-size: 2rem;
+            }
+            
+            .impact-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <!-- Demo Header -->
+        <div class="demo-header">
+            <h1 class="demo-title">🏆 FRA SENTINEL</h1>
+            <p class="demo-subtitle">AI-Powered Forest Rights Monitoring System</p>
+            
+            <!-- Impact Statistics -->
+            <div class="impact-stats">
+                <div class="impact-card">
+                    <div class="impact-number">200M+</div>
+                    <div class="impact-label">People Served</div>
+                </div>
+                <div class="impact-card">
+                    <div class="impact-number">₹50,000 Cr</div>
+                    <div class="impact-label">Annual Impact</div>
+                </div>
+                <div class="impact-card">
+                    <div class="impact-number">90.9%</div>
+                    <div class="impact-label">AI Accuracy</div>
+                </div>
+                <div class="impact-card">
+                    <div class="impact-number">70%</div>
+                    <div class="impact-label">Faster Processing</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo Grid -->
+        <div class="demo-grid">
+            <!-- AI Predictions Demo -->
+            <div class="demo-card">
+                <h3>🔮 AI Predictions Demo</h3>
+                <p style="color: var(--text-secondary); margin-bottom: var(--spacing-md);">
+                    Experience our AI-powered land use prediction system with 70%+ accuracy.
+                </p>
+                <button class="btn-unified btn-primary" onclick="demoAIPredictions()">
+                    <span>🔮</span>
+                    Generate AI Prediction
+                </button>
+                <div class="demo-result" id="aiResult">
+                    <div class="loading" id="aiLoading">
+                        <div class="spinner"></div>
+                        <p>AI is analyzing land use patterns...</p>
+                    </div>
+                    <div id="aiContent"></div>
+                </div>
+            </div>
+
+            <!-- Analytics Demo -->
+            <div class="demo-card">
+                <h3>📊 Real-Time Analytics</h3>
+                <p style="color: var(--text-secondary); margin-bottom: var(--spacing-md);">
+                    View live Patta document processing metrics and system performance.
+                </p>
+                <button class="btn-unified btn-primary" onclick="demoAnalytics()">
+                    <span>📊</span>
+                    Load Analytics Dashboard
+                </button>
+                <div class="demo-result" id="analyticsResult">
+                    <div class="loading" id="analyticsLoading">
+                        <div class="spinner"></div>
+                        <p>Loading real-time analytics...</p>
+                    </div>
+                    <div id="analyticsContent"></div>
+                </div>
+            </div>
+
+            <!-- Patta Processing Demo -->
+            <div class="demo-card">
+                <h3>📄 Patta Document Processing</h3>
+                <p style="color: var(--text-secondary); margin-bottom: var(--spacing-md);">
+                    See how our AI processes Tamil Nadu Patta documents with 90%+ accuracy.
+                </p>
+                <button class="btn-unified btn-primary" onclick="demoPattaProcessing()">
+                    <span>📄</span>
+                    Process Sample Document
+                </button>
+                <div class="demo-result" id="pattaResult">
+                    <div class="loading" id="pattaLoading">
+                        <div class="spinner"></div>
+                        <p>Processing Patta document...</p>
+                    </div>
+                    <div id="pattaContent"></div>
+                </div>
+            </div>
+
+            <!-- AI Chatbot Demo -->
+            <div class="demo-card">
+                <h3>🤖 AI Assistant Demo</h3>
+                <p style="color: var(--text-secondary); margin-bottom: var(--spacing-md);">
+                    Interact with our intelligent FRA assistant for instant help and guidance.
+                </p>
+                <button class="btn-unified btn-primary" onclick="demoChatbot()">
+                    <span>🤖</span>
+                    Chat with AI Assistant
+                </button>
+                <div class="demo-result" id="chatbotResult">
+                    <div class="loading" id="chatbotLoading">
+                        <div class="spinner"></div>
+                        <p>AI Assistant is responding...</p>
+                    </div>
+                    <div id="chatbotContent"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Stories -->
+        <div class="demo-card">
+            <h3>🌟 Success Stories</h3>
+            <div id="successStories"></div>
+        </div>
+
+        <!-- Performance Metrics -->
+        <div class="demo-card">
+            <h3>⚡ System Performance</h3>
+            <div class="chart-container" id="performanceChart"></div>
+        </div>
+    </div>
+
+    <script>
+        // Demo Functions
+        async function demoAIPredictions() {
+            const resultDiv = document.getElementById('aiResult');
+            const loadingDiv = document.getElementById('aiLoading');
+            const contentDiv = document.getElementById('aiContent');
+            
+            resultDiv.style.display = 'block';
+            loadingDiv.style.display = 'block';
+            contentDiv.innerHTML = '';
+            
+            try {
+                const response = await fetch('/api/demo/ai-prediction');
+                const data = await response.json();
+                
+                setTimeout(() => {
+                    loadingDiv.style.display = 'none';
+                    contentDiv.innerHTML = `
+                        <div class="metric-highlight">
+                            <div class="metric-value">${data.landUsePrediction.suitabilityScore}%</div>
+                            <div class="metric-label">Suitability Score</div>
+                        </div>
+                        <div class="metric-highlight">
+                            <div class="metric-value">${data.landUsePrediction.successProbability}%</div>
+                            <div class="metric-label">Success Probability</div>
+                        </div>
+                        <div class="metric-highlight">
+                            <div class="metric-value">${data.landUsePrediction.processingTime} days</div>
+                            <div class="metric-label">Processing Time</div>
+                        </div>
+                        <p><strong>Recommended Use:</strong> ${data.landUsePrediction.recommendedUse}</p>
+                        <p><strong>Environmental Impact:</strong> ${data.landUsePrediction.environmentalImpact}</p>
+                    `;
+                }, 2000);
+            } catch (error) {
+                loadingDiv.style.display = 'none';
+                contentDiv.innerHTML = '<p style="color: red;">Error loading AI prediction data</p>';
+            }
+        }
+
+        async function demoAnalytics() {
+            const resultDiv = document.getElementById('analyticsResult');
+            const loadingDiv = document.getElementById('analyticsLoading');
+            const contentDiv = document.getElementById('analyticsContent');
+            
+            resultDiv.style.display = 'block';
+            loadingDiv.style.display = 'block';
+            contentDiv.innerHTML = '';
+            
+            try {
+                const response = await fetch('/api/demo/patta-metrics');
+                const data = await response.json();
+                
+                setTimeout(() => {
+                    loadingDiv.style.display = 'none';
+                    contentDiv.innerHTML = `
+                        <div class="metric-highlight">
+                            <div class="metric-value">${data.totalPattaDocs}</div>
+                            <div class="metric-label">Patta Documents Processed</div>
+                        </div>
+                        <div class="metric-highlight">
+                            <div class="metric-value">${data.extractionAccuracy}%</div>
+                            <div class="metric-label">Extraction Accuracy</div>
+                        </div>
+                        <div class="metric-highlight">
+                            <div class="metric-value">${data.avgProcessingTime}s</div>
+                            <div class="metric-label">Average Processing Time</div>
+                        </div>
+                        <div class="metric-highlight">
+                            <div class="metric-value">${data.totalAreaProcessed} hectares</div>
+                            <div class="metric-label">Total Area Processed</div>
+                        </div>
+                    `;
+                }, 1500);
+            } catch (error) {
+                loadingDiv.style.display = 'none';
+                contentDiv.innerHTML = '<p style="color: red;">Error loading analytics data</p>';
+            }
+        }
+
+        async function demoPattaProcessing() {
+            const resultDiv = document.getElementById('pattaResult');
+            const loadingDiv = document.getElementById('pattaLoading');
+            const contentDiv = document.getElementById('pattaContent');
+            
+            resultDiv.style.display = 'block';
+            loadingDiv.style.display = 'block';
+            contentDiv.innerHTML = '';
+            
+            try {
+                const response = await fetch('/api/demo/patta-documents');
+                const data = await response.json();
+                
+                setTimeout(() => {
+                    loadingDiv.style.display = 'none';
+                    const doc = data[0]; // Get first sample document
+                    contentDiv.innerHTML = `
+                        <div class="metric-highlight">
+                            <div class="metric-value">${doc.confidence}%</div>
+                            <div class="metric-label">Extraction Confidence</div>
+                        </div>
+                        <div class="metric-highlight">
+                            <div class="metric-value">${doc.processing_time}s</div>
+                            <div class="metric-label">Processing Time</div>
+                        </div>
+                        <p><strong>Document:</strong> ${doc.filename}</p>
+                        <p><strong>Owner:</strong> ${doc.owner_name}</p>
+                        <p><strong>Patta Number:</strong> ${doc.patta_number}</p>
+                        <p><strong>Area:</strong> ${doc.area_hectares} hectares</p>
+                        <p><strong>Status:</strong> <span style="color: green; font-weight: bold;">${doc.status}</span></p>
+                    `;
+                }, 2500);
+            } catch (error) {
+                loadingDiv.style.display = 'none';
+                contentDiv.innerHTML = '<p style="color: red;">Error processing document</p>';
+            }
+        }
+
+        async function demoChatbot() {
+            const resultDiv = document.getElementById('chatbotResult');
+            const loadingDiv = document.getElementById('chatbotLoading');
+            const contentDiv = document.getElementById('chatbotContent');
+            
+            resultDiv.style.display = 'block';
+            loadingDiv.style.display = 'block';
+            contentDiv.innerHTML = '';
+            
+            try {
+                const response = await fetch('/api/demo/chatbot-response?type=patta_info');
+                const data = await response.json();
+                
+                setTimeout(() => {
+                    loadingDiv.style.display = 'none';
+                    contentDiv.innerHTML = `
+                        <div style="background: #e8f5e8; padding: var(--spacing-md); border-radius: 8px; border-left: 4px solid var(--secondary-color);">
+                            <p><strong>🤖 AI Assistant:</strong></p>
+                            <p>${data.response}</p>
+                        </div>
+                        <div style="margin-top: var(--spacing-md);">
+                            <p><strong>💡 Try asking:</strong></p>
+                            <ul style="margin-left: var(--spacing-lg);">
+                                <li>How do I apply for forest rights?</li>
+                                <li>What documents do I need?</li>
+                                <li>How can I check my application status?</li>
+                            </ul>
+                        </div>
+                    `;
+                }, 1500);
+            } catch (error) {
+                loadingDiv.style.display = 'none';
+                contentDiv.innerHTML = '<p style="color: red;">Error connecting to AI Assistant</p>';
+            }
+        }
+
+        // Load Success Stories
+        async function loadSuccessStories() {
+            try {
+                const response = await fetch('/api/demo/success-stories');
+                const stories = await response.json();
+                
+                const container = document.getElementById('successStories');
+                container.innerHTML = stories.map(story => `
+                    <div class="success-story">
+                        <div class="success-title">${story.title}</div>
+                        <div class="success-description">${story.description}</div>
+                        <div class="success-impact">📈 Impact: ${story.impact}</div>
+                        <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: var(--spacing-sm);">
+                            📍 ${story.location}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                document.getElementById('successStories').innerHTML = '<p>Error loading success stories</p>';
+            }
+        }
+
+        // Load Performance Chart
+        function loadPerformanceChart() {
+            const trace1 = {
+                x: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                y: [12, 15, 20, 18, 25],
+                name: 'Documents Processed',
+                type: 'bar',
+                marker: {color: '#0d4f3c'}
+            };
+            
+            const trace2 = {
+                x: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                y: [11, 14, 18, 17, 23],
+                name: 'Successful Extractions',
+                type: 'bar',
+                marker: {color: '#28a745'}
+            };
+
+            Plotly.newPlot('performanceChart', [trace1, trace2], {
+                title: 'Monthly Processing Performance',
+                xaxis: {title: 'Month'},
+                yaxis: {title: 'Number of Documents'},
+                barmode: 'group'
+            });
+        }
+
+        // Initialize demo
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSuccessStories();
+            loadPerformanceChart();
+        });
+    </script>
+</body>
+</html>

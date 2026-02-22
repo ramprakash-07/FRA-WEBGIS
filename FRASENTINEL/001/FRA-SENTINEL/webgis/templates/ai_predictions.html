@@ -1,0 +1,443 @@
+{% extends "base.html" %}
+
+{% block title %}{% trans %}AI Predictions{% endtrans %}{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #0d4f3c 0%, #1b5e20 25%, #2e7d32 50%, #4caf50 75%, #81c784 100%);
+        --text-primary: #1a1a1a;
+        --text-secondary: #2e7d32;
+        --border-radius: 16px;
+        --shadow: 0 8px 32px rgba(13, 79, 60, 0.08);
+        --spacing-md: 16px;
+        --spacing-lg: 24px;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%);
+        min-height: 100vh;
+    }
+
+    .top-navbar {
+        background: var(--primary-gradient);
+        color: white;
+        padding: 12px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 20px rgba(13, 79, 60, 0.3);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    .navbar-brand h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .back-btn {
+        background: rgba(255,255,255,0.2);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .back-btn:hover {
+        background: rgba(255,255,255,0.3);
+        transform: translateY(-2px);
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--spacing-lg);
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+        margin-bottom: 12px;
+    }
+
+    .page-subtitle {
+        font-size: 1.2rem;
+        color: #666;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .prediction-form {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: var(--spacing-lg);
+        box-shadow: var(--shadow);
+        border: 1px solid #e0e0e0;
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-md);
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 8px;
+    }
+
+    .form-input {
+        padding: 12px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--text-secondary);
+    }
+
+    .btn-unified {
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+
+    .btn-unified:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(13, 79, 60, 0.3);
+    }
+
+    .results-section {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: var(--spacing-lg);
+        box-shadow: var(--shadow);
+        border: 1px solid #e0e0e0;
+        margin-top: var(--spacing-lg);
+        display: none;
+    }
+
+    .result-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .result-item:last-child {
+        border-bottom: none;
+    }
+
+    .result-label {
+        font-weight: 600;
+        color: var(--text-secondary);
+    }
+
+    .result-value {
+        font-weight: 700;
+        color: #333;
+    }
+
+    .confidence-bar {
+        width: 100%;
+        height: 8px;
+        background: #f0f0f0;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 4px;
+    }
+
+    .confidence-fill {
+        height: 100%;
+        background: var(--primary-gradient);
+        transition: width 0.3s ease;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .feature-card {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: var(--spacing-lg);
+        box-shadow: var(--shadow);
+        border: 1px solid #e0e0e0;
+        transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(13, 79, 60, 0.15);
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .card-icon {
+        font-size: 2rem;
+    }
+
+    .card-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+    }
+
+    .card-description {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: var(--spacing-md);
+    }
+</style>
+
+<!-- Top Navigation -->
+<nav class="top-navbar">
+    <div class="navbar-brand">
+        <h1>🔮 {% trans %}AI Predictions{% endtrans %}</h1>
+    </div>
+    <a href="{{ url_for('dashboard') }}" class="back-btn">
+        ← {% trans %}Back to Dashboard{% endtrans %}
+    </a>
+</nav>
+
+<!-- Main Container -->
+<div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">{% trans %}AI-Powered Predictions{% endtrans %}</h1>
+        <p class="page-subtitle">{% trans %}Advanced analytics and predictive insights for forest rights management{% endtrans %}</p>
+    </div>
+
+    <!-- Prediction Form -->
+    <div class="prediction-form">
+        <h2 style="margin-bottom: 24px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px;">
+            🔮 {% trans %}Land Use Prediction Tool{% endtrans %}
+        </h2>
+        <form id="predictionForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">{% trans %}Village Name{% endtrans %}</label>
+                    <input type="text" class="form-input" id="villageName" placeholder="{% trans %}Enter village name{% endtrans %}" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{% trans %}District{% endtrans %}</label>
+                    <input type="text" class="form-input" id="district" placeholder="{% trans %}Enter district name{% endtrans %}" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">{% trans %}Land Area (Hectares){% endtrans %}</label>
+                    <input type="number" class="form-input" id="landArea" placeholder="{% trans %}Enter land area{% endtrans %}" step="0.1" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{% trans %}Current Land Use{% endtrans %}</label>
+                    <select class="form-input" id="currentUse" required>
+                        <option value="">{% trans %}Select current use{% endtrans %}</option>
+                        <option value="agricultural">{% trans %}Agricultural{% endtrans %}</option>
+                        <option value="forest">{% trans %}Forest{% endtrans %}</option>
+                        <option value="barren">{% trans %}Barren Land{% endtrans %}</option>
+                        <option value="settlement">{% trans %}Settlement{% endtrans %}</option>
+                        <option value="other">{% trans %}Other{% endtrans %}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">{% trans %}Soil Type{% endtrans %}</label>
+                    <select class="form-input" id="soilType" required>
+                        <option value="">{% trans %}Select soil type{% endtrans %}</option>
+                        <option value="clay">{% trans %}Clay{% endtrans %}</option>
+                        <option value="sandy">{% trans %}Sandy{% endtrans %}</option>
+                        <option value="loamy">{% trans %}Loamy{% endtrans %}</option>
+                        <option value="rocky">{% trans %}Rocky{% endtrans %}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{% trans %}Water Availability{% endtrans %}</label>
+                    <select class="form-input" id="waterAvailability" required>
+                        <option value="">{% trans %}Select water availability{% endtrans %}</option>
+                        <option value="high">{% trans %}High{% endtrans %}</option>
+                        <option value="medium">{% trans %}Medium{% endtrans %}</option>
+                        <option value="low">{% trans %}Low{% endtrans %}</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn-unified btn-primary">
+                <span>🔮</span>
+                {% trans %}Generate Prediction{% endtrans %}
+            </button>
+        </form>
+        <div id="predictionResults"></div>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="features-grid">
+        <!-- Land Use Prediction -->
+        <div class="feature-card">
+            <div class="card-header">
+                <span class="card-icon">🌱</span>
+                <h3 class="card-title">{% trans %}Land Use Prediction{% endtrans %}</h3>
+            </div>
+            <p class="card-description">
+                {% trans %}Predict optimal land use patterns and identify areas suitable for forest rights allocation based on historical data and environmental factors.{% endtrans %}
+            </p>
+            <button class="btn-unified btn-primary" onclick="openLandUsePredictor()">
+                <span>🌱</span>
+                {% trans %}Predict Land Use{% endtrans %}
+            </button>
+        </div>
+
+        <!-- Claim Success Probability -->
+        <div class="feature-card">
+            <div class="card-header">
+                <span class="card-icon">📊</span>
+                <h3 class="card-title">{% trans %}Claim Success Probability{% endtrans %}</h3>
+            </div>
+            <p class="card-description">
+                {% trans %}Analyze claim patterns and predict the likelihood of successful forest rights applications using machine learning algorithms.{% endtrans %}
+            </p>
+            <button class="btn-unified btn-success" onclick="openSuccessCalculator()">
+                <span>📊</span>
+                {% trans %}Calculate Success Rate{% endtrans %}
+            </button>
+        </div>
+
+        <!-- Environmental Impact -->
+        <div class="feature-card">
+            <div class="card-header">
+                <span class="card-icon">🌍</span>
+                <h3 class="card-title">{% trans %}Environmental Impact{% endtrans %}</h3>
+            </div>
+            <p class="card-description">
+                {% trans %}Assess environmental impact of land use changes and provide recommendations for sustainable forest management practices.{% endtrans %}
+            </p>
+            <button class="btn-unified btn-info" onclick="openEnvironmentalAssessment()">
+                <span>🌍</span>
+                {% trans %}Assess Impact{% endtrans %}
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('predictionForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = {
+            villageName: document.getElementById('villageName').value,
+            district: document.getElementById('district').value,
+            landArea: parseFloat(document.getElementById('landArea').value),
+            currentUse: document.getElementById('currentUse').value,
+            soilType: document.getElementById('soilType').value,
+            waterAvailability: document.getElementById('waterAvailability').value
+        };
+
+        // Simulate AI prediction
+        setTimeout(() => {
+            const results = generateMockPrediction(formData);
+            displayResults(results);
+        }, 1500);
+    });
+
+    function generateMockPrediction(data) {
+        const predictions = {
+            optimalUse: ['Forest Conservation', 'Agroforestry', 'Sustainable Agriculture'][Math.floor(Math.random() * 3)],
+            successProbability: Math.random() * 40 + 60, // 60-100%
+            environmentalScore: Math.random() * 30 + 70, // 70-100%
+            recommendations: [
+                '{% trans %}Implement soil conservation measures{% endtrans %}',
+                '{% trans %}Establish water harvesting systems{% endtrans %}',
+                '{% trans %}Promote native species plantation{% endtrans %}'
+            ]
+        };
+        return predictions;
+    }
+
+    function displayResults(results) {
+        const resultsDiv = document.getElementById('predictionResults');
+        resultsDiv.innerHTML = `
+            <div class="results-section" style="display: block;">
+                <h3 style="margin-bottom: 20px; color: var(--text-secondary);">{% trans %}Prediction Results{% endtrans %}</h3>
+                <div class="result-item">
+                    <span class="result-label">{% trans %}Optimal Land Use{% endtrans %}:</span>
+                    <span class="result-value">${results.optimalUse}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">{% trans %}Success Probability{% endtrans %}:</span>
+                    <span class="result-value">${results.successProbability.toFixed(1)}%</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">{% trans %}Environmental Score{% endtrans %}:</span>
+                    <span class="result-value">${results.environmentalScore.toFixed(1)}%</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">{% trans %}Recommendations{% endtrans %}:</span>
+                    <span class="result-value">${results.recommendations.join(', ')}</span>
+                </div>
+            </div>
+        `;
+    }
+
+    function openLandUsePredictor() {
+        alert('{% trans %}Land Use Predictor feature coming soon!{% endtrans %}');
+    }
+
+    function openSuccessCalculator() {
+        alert('{% trans %}Success Calculator feature coming soon!{% endtrans %}');
+    }
+
+    function openEnvironmentalAssessment() {
+        alert('{% trans %}Environmental Assessment feature coming soon!{% endtrans %}');
+    }
+</script>
+{% endblock %}
+

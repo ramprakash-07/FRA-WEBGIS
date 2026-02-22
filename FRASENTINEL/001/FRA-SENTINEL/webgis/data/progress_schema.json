@@ -1,0 +1,226 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created": "2025-09-26",
+    "source": "FRAActnRulesBook.pdf#annexure_v",
+    "description": "Progress monitoring schema aligned to Annexure V quarterly reporting format"
+  },
+  "schema": {
+    "state": {
+      "type": "string",
+      "description": "State name",
+      "required": true,
+      "validation": "state_name"
+    },
+    "district": {
+      "type": "string",
+      "description": "District name",
+      "required": true,
+      "validation": "district_name"
+    },
+    "block": {
+      "type": "string",
+      "description": "Block/Tehsil name",
+      "required": true,
+      "validation": "block_name"
+    },
+    "village": {
+      "type": "string",
+      "description": "Village name",
+      "required": true,
+      "validation": "village_name"
+    },
+    "ifr_filed": {
+      "type": "number",
+      "description": "Number of Individual Forest Rights claims filed",
+      "required": true,
+      "validation": "non_negative_integer"
+    },
+    "ifr_granted": {
+      "type": "number",
+      "description": "Number of Individual Forest Rights claims granted",
+      "required": true,
+      "validation": "non_negative_integer"
+    },
+    "ifr_rejected": {
+      "type": "number",
+      "description": "Number of Individual Forest Rights claims rejected",
+      "required": true,
+      "validation": "non_negative_integer"
+    },
+    "cr_filed": {
+      "type": "number",
+      "description": "Number of Community Rights claims filed",
+      "required": true,
+      "validation": "non_negative_integer"
+    },
+    "cr_granted": {
+      "type": "number",
+      "description": "Number of Community Rights claims granted",
+      "required": true,
+      "validation": "non_negative_integer"
+    },
+    "cr_rejected": {
+      "type": "number",
+      "description": "Number of Community Rights claims rejected",
+      "required": true,
+      "validation": "non_negative_integer"
+    },
+    "cfr_filed": {
+      "type": "number",
+      "description": "Number of Community Forest Resource claims filed",
+      "required": true,
+      "validation": "non_negative_integer"
+    },
+    "cfr_granted": {
+      "type": "number",
+      "description": "Number of Community Forest Resource claims granted",
+      "required": true,
+      "validation": "non_negative_integer"
+    },
+    "cfr_rejected": {
+      "type": "number",
+      "description": "Number of Community Forest Resource claims rejected",
+      "required": true,
+      "validation": "non_negative_integer"
+    },
+    "total_area_vested": {
+      "type": "number",
+      "description": "Total area vested in hectares",
+      "required": true,
+      "validation": "non_negative_decimal"
+    },
+    "cfr_managed_area": {
+      "type": "number",
+      "description": "Area under CFR management in hectares",
+      "required": true,
+      "validation": "non_negative_decimal"
+    },
+    "remarks": {
+      "type": "string",
+      "description": "Additional remarks or notes",
+      "required": false,
+      "validation": "text"
+    }
+  },
+  "calculated_fields": {
+    "ifr_pending": {
+      "formula": "ifr_filed - ifr_granted - ifr_rejected",
+      "description": "Pending IFR claims"
+    },
+    "cr_pending": {
+      "formula": "cr_filed - cr_granted - cr_rejected",
+      "description": "Pending CR claims"
+    },
+    "cfr_pending": {
+      "formula": "cfr_filed - cfr_granted - cfr_rejected",
+      "description": "Pending CFR claims"
+    },
+    "total_filed": {
+      "formula": "ifr_filed + cr_filed + cfr_filed",
+      "description": "Total claims filed"
+    },
+    "total_granted": {
+      "formula": "ifr_granted + cr_granted + cfr_granted",
+      "description": "Total claims granted"
+    },
+    "total_rejected": {
+      "formula": "ifr_rejected + cr_rejected + cfr_rejected",
+      "description": "Total claims rejected"
+    },
+    "total_pending": {
+      "formula": "total_filed - total_granted - total_rejected",
+      "description": "Total pending claims"
+    },
+    "grant_rate": {
+      "formula": "total_granted / total_filed * 100",
+      "description": "Grant rate percentage"
+    },
+    "rejection_rate": {
+      "formula": "total_rejected / total_filed * 100",
+      "description": "Rejection rate percentage"
+    }
+  },
+  "aggregation_levels": {
+    "village": {
+      "description": "Village-level data",
+      "fields": "all_fields"
+    },
+    "block": {
+      "description": "Block-level aggregated data",
+      "aggregation": "sum",
+      "fields": [
+        "ifr_filed", "ifr_granted", "ifr_rejected",
+        "cr_filed", "cr_granted", "cr_rejected",
+        "cfr_filed", "cfr_granted", "cfr_rejected",
+        "total_area_vested", "cfr_managed_area"
+      ]
+    },
+    "district": {
+      "description": "District-level aggregated data",
+      "aggregation": "sum",
+      "fields": [
+        "ifr_filed", "ifr_granted", "ifr_rejected",
+        "cr_filed", "cr_granted", "cr_rejected",
+        "cfr_filed", "cfr_granted", "cfr_rejected",
+        "total_area_vested", "cfr_managed_area"
+      ]
+    },
+    "state": {
+      "description": "State-level aggregated data",
+      "aggregation": "sum",
+      "fields": [
+        "ifr_filed", "ifr_granted", "ifr_rejected",
+        "cr_filed", "cr_granted", "cr_rejected",
+        "cfr_filed", "cfr_granted", "cfr_rejected",
+        "total_area_vested", "cfr_managed_area"
+      ]
+    }
+  },
+  "export_formats": {
+    "annexure_v_csv": {
+      "description": "Quarterly Progress Report format as per Annexure V",
+      "columns": [
+        "state", "district", "block", "village",
+        "ifr_filed", "ifr_granted", "ifr_rejected",
+        "cr_filed", "cr_granted", "cr_rejected",
+        "cfr_filed", "cfr_granted", "cfr_rejected",
+        "total_area_vested", "cfr_managed_area", "remarks"
+      ]
+    },
+    "summary_csv": {
+      "description": "Summary format with calculated fields",
+      "columns": [
+        "state", "district", "block", "village",
+        "total_filed", "total_granted", "total_rejected", "total_pending",
+        "grant_rate", "rejection_rate",
+        "total_area_vested", "cfr_managed_area"
+      ]
+    }
+  },
+  "validation_rules": {
+    "logical_consistency": [
+      "ifr_granted + ifr_rejected <= ifr_filed",
+      "cr_granted + cr_rejected <= cr_filed",
+      "cfr_granted + cfr_rejected <= cfr_filed",
+      "cfr_managed_area <= total_area_vested"
+    ],
+    "data_quality": [
+      "all_numeric_fields >= 0",
+      "grant_rate + rejection_rate <= 100",
+      "area_fields_in_hectares"
+    ]
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+

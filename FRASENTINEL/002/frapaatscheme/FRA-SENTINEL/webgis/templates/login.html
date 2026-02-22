@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FRA Dashboard Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0d4f3c 0%, #1b5e20 40%, #2e7d32 75%, #81c784 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #2d5016;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 6px 22px rgba(45, 80, 22, 0.12);
+            padding: 36px 32px 28px;
+            width: 100%;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .login-container h2 {
+            margin-bottom: 18px;
+            font-size: 2rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .form-group {
+            width: 100%;
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            font-weight: 500;
+            color: #444;
+            margin-bottom: 7px;
+            display: block;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 7px;
+            border: 2px solid #cde7cb;
+            font-size: 1.1rem;
+            background: #f7faf7;
+            transition: border 0.2s;
+            box-sizing: border-box;
+        }
+        .form-group input:focus {
+            border-color: #72ad65;
+            outline: none;
+        }
+        .error-msg {
+            background: #fff3cd;
+            border: 1px solid #ffe295;
+            color: #cc7722;
+            border-radius: 5px;
+            font-size: 0.99rem;
+            margin: 5px 0 0 0;
+            padding: 7px 12px;
+        }
+        .secure-login-btn {
+            width: 100%;
+            background: #2d5016;
+            color: #fff;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-radius: 9px;
+            padding: 14px;
+            margin: 14px 0 22px 0;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 2px 8px rgba(45, 80, 22, 0.16);
+        }
+        .secure-login-btn:hover {
+            background: #1b5e20;
+        }
+        .demo-creds {
+            width: 100%;
+            margin-top: 6px;
+            padding: 12px 0;
+        }
+        .demo-creds-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 9px;
+        }
+        .demo-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .demo-list li {
+            margin-bottom: 9px;
+            display: flex;
+            align-items: center;
+            font-size: 1.05rem;
+            color: #257857;
+        }
+        .demo-list li strong {
+            margin-right: 7px;
+        }
+        .demo-list li .icon {
+            font-size: 1.17rem;
+            margin-right: 7px;
+        }
+        .demo-user {
+            color: #6563df;
+        }
+        .info-card {
+            width: 100%;
+            margin-top: 10px;
+            padding: 16px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%);
+            border: 1px solid #c8e6c9;
+            box-shadow: 0 4px 16px rgba(13,79,60,0.08);
+        }
+        .info-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.05rem;
+            color: #1b5e20;
+        }
+        .info-card ul {
+            margin: 8px 0 0 18px;
+            padding: 0;
+            color: #2e7d32;
+        }
+        .info-card li {
+            margin: 6px 0;
+        }
+        @media (max-width: 500px) {
+            .login-container { padding: 18px 5px 18px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>FRA Sentinel Login</h2>
+        <form id="loginForm" autocomplete="off" method="post">
+            <div class="form-group">
+                <label for="emailInput">Official Email ID</label>
+                <input type="text" id="emailInput" name="email" placeholder="e.g. ccf.admin@fra.gov.in" required />
+                <div class="error-msg" id="emailError" style="display: none;"></div>
+            </div>
+            <div class="form-group">
+                <input type="password" id="passwordInput" name="password" placeholder="●●●●●●●●" required />
+            </div>
+            <button type="submit" class="secure-login-btn">Secure Login</button>
+        </form>
+        <div class="demo-creds">
+            <div class="demo-creds-title">🔐 Demo Login Credentials</div>
+            <ul class="demo-list">
+                <li><span class="icon">🏛️</span> <strong>CCF (Chief Conservator)</strong> &nbsp; </li>
+                <li><span class="icon">🏛</span> <strong>DCF (Deputy Conservator)</strong> &nbsp; </li>
+                <li><span class="icon">🌲</span> <strong>RFO (Range Forest Officer)</strong> &nbsp; </li>
+                <li><span class="icon">🧑‍🌾</span> <strong>Gram Sabha Head</strong> &nbsp; </li>
+                <li><span class="icon demo-user">👤</span> <strong>Public User</strong> &nbsp; </li>
+            </ul>
+        </div>
+        <div class="info-card">
+            <h3>🌲 About FRA Sentinel</h3>
+            <ul>
+                <li>AI-powered monitoring of Forest Rights Act implementation.</li>
+                <li>Sentinel-2 based land-use insights for village-level decisions.</li>
+                <li>Smart scheme recommendations and real-time dashboards.</li>
+                <li>Role-based access for CCF, DCF, RFO and Gram Sabha.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Basic client-side email validation
+        document.getElementById('loginForm').onsubmit = function(e) {
+            var email = document.getElementById('emailInput').value.trim();
+            var errorMsg = document.getElementById('emailError');
+            if(!email.includes('@')) {
+                errorMsg.innerText = "Please include an '@' in the email address. '" + email + "' is missing an '@'.";
+                errorMsg.style.display = 'block';
+                e.preventDefault();
+                return false;
+            } else {
+                errorMsg.style.display = 'none';
+            }
+            // Form will be submitted if validation passes
+        }
+    </script>
+</body>
+</html>

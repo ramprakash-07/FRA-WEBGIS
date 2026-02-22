@@ -1,0 +1,20 @@
+{
+  "database": {
+    "url": "sqlite:///fra_atlas.db",
+    "use_postgis": false
+  },
+  "ocr": {
+    "tesseract_config": "--oem 3 --psm 6 -l eng+tam",
+    "batch_size": 10,
+    "max_retries": 3
+  },
+  "dss": {
+    "ml_weight": 0.5,
+    "threshold": 0.5
+  },
+  "tiles": {
+    "tile_size": 256,
+    "max_zoom": 18,
+    "min_zoom": 1
+  }
+}

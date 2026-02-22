@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRA Atlas - Admin Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #0d4f3c 0%, #1b5e20 25%, #2e7d32 50%, #4caf50 75%, #81c784 100%);
+            --secondary-gradient: linear-gradient(135deg, #1b5e20 0%, #4caf50 100%);
+            --surface-gradient: linear-gradient(135deg, #ffffff 0%, #f1f8e9 100%);
+            --card-gradient: linear-gradient(135deg, #ffffff 0%, #f9fbe7 100%);
+            --text-primary: #1a1a1a;
+            --text-secondary: #2e7d32;
+            --border-color: #c8e6c9;
+            --shadow: 0 8px 32px rgba(13, 79, 60, 0.08);
+            --border-radius: 16px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: var(--spacing-lg);
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ffffff, #e8f5e8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .user-info {
+            background: rgba(255,255,255,0.2);
+            padding: 12px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            margin: 10px 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.2);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: var(--spacing-lg);
+            min-height: calc(100vh - 200px);
+            padding: var(--spacing-lg);
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .sidebar {
+            background: var(--surface-gradient);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            height: fit-content;
+            position: sticky;
+            top: var(--spacing-lg);
+        }
+        
+        .sidebar-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: var(--spacing-lg);
+            text-align: center;
+        }
+        
+        .sidebar-content {
+            padding: var(--spacing-lg);
+        }
+        
+        .info-section {
+            margin-bottom: var(--spacing-lg);
+            padding: var(--spacing-md);
+            background: var(--card-gradient);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+        }
+        
+        .info-section h3 {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .map-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+            min-height: calc(100vh - 240px);
+        }
+        
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .action-btn {
+            padding: 12px 16px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(13, 79, 60, 0.3);
+        }
+        
+        .stat-item {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: 12px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+        
+        .stat-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+        
+        .stat-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+        
+        .stat-value {
+            font-weight: 600;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .permission-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(46, 125, 50, 0.1);
+            color: var(--text-secondary);
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin: 2px;
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 30px;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        
+        .loading::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--text-secondary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+            
+            .sidebar {
+                position: static;
+            }
+            
+            .map-container {
+                height: 500px;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>🌲 FRA Atlas</h1>
+        <p>Administrative Dashboard - Forest Rights Management</p>
+        <div class="user-info">
+            👤 {{ session.user_name }} | 🏷️ {{ role_info.name }} | 🔑 Level {{ role_info.level }}
+        </div>
+        <div class="nav-links">
+            <a href="/upload_patta">📤 Upload Patta</a>
+            <a href="/manage_files">📁 Manage Files</a>
+            <a href="/logout">🚪 Logout</a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>⚡ Admin Controls</h3>
+                <p>{{ role_info.name }}</p>
+            </div>
+            
+            <div class="sidebar-content">
+                <div class="quick-actions">
+                    <a href="/upload_patta" class="action-btn">
+                        📤 Upload
+                    </a>
+                    <a href="/manage_files" class="action-btn">
+                        📁 Manage
+                    </a>
+                </div>
+                
+                <div class="info-section">
+                    <h3>🔑 Your Permissions</h3>
+                    <div>
+                        {% for permission in role_info.permissions %}
+                            <span class="permission-badge">{{ permission.title() }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="info-section">
+                    <h3>📈 System Statistics</h3>
+                    <div id="system-stats" class="loading">Loading statistics...</div>
+                </div>
+                
+                <div class="info-section">
+                    <h3>📊 Your Activity</h3>
+                    <div id="user-stats" class="loading">Loading your statistics...</div>
+                </div>
+                
+                <div class="info-section">
+                    <h3>🏘️ Village Information</h3>
+                    <div id="village-info">
+                        <div class="stat-item">
+                            <span class="stat-label">Click on map markers to view details</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Container -->
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        console.log('🚀 FRA Atlas Admin Dashboard Starting...');
+        
+        let map = null;
+        let fraLayer = null;
+        
+        // Initialize map
+        function initMap() {
+            console.log('🗺️ Initializing admin map...');
+            
+            map = L.map('map', {
+                center: [21.8225, 75.6102],
+                zoom: 9,
+                zoomControl: false
+            });
+            
+            L.control.zoom({ position: 'bottomright' }).addTo(map);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            
+            console.log('✅ Admin map initialized');
+        }
+        
+        // Load system data
+        async function loadSystemData() {
+            try {
+                // Load system stats
+                const statsResponse = await fetch('/api/system_status');
+                const statsData = await statsResponse.json();
+                displaySystemStats(statsData);
+                
+                // Load user stats
+                const userResponse = await fetch('/api/user_stats');
+                const userData = await userResponse.json();
+                displayUserStats(userData);
+                
+                // Load FRA data
+                const fraResponse = await fetch('/api/fra_data');
+                const fraData = await fraResponse.json();
+                displayFRAData(fraData);
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+        
+        function displaySystemStats(stats) {
+            const container = document.getElementById('system-stats');
+            container.innerHTML = `
+                <div class="stat-item">
+                    <span class="stat-label">📁 Total Files</span>
+                    <span class="stat-value">${stats.total_files || 0}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">✅ Approved</span>
+                    <span class="stat-value">${stats.approved_files || 0}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">⏳ Pending</span>
+                    <span class="stat-value">${stats.pending_files || 0}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">🏘️ Villages</span>
+                    <span class="stat-value">${stats.villages_loaded || 0}</span>
+                </div>
+            `;
+        }
+        
+        function displayUserStats(userData) {
+            const container = document.getElementById('user-stats');
+            let html = '';
+            
+            if (userData.uploads_by_user) {
+                Object.entries(userData.uploads_by_user).forEach(([user, count]) => {
+                    html += `
+                        <div class="stat-item">
+                            <span class="stat-label">📤 Your Uploads</span>
+                            <span class="stat-value">${count}</span>
+                        </div>
+                    `;
+                });
+            }
+            
+            if (userData.status_counts) {
+                Object.entries(userData.status_counts).forEach(([status, count]) => {
+                    html += `
+                        <div class="stat-item">
+                            <span class="stat-label">${getStatusIcon(status)} ${status}</span>
+                            <span class="stat-value">${count}</span>
+                        </div>
+                    `;
+                });
+            }
+            
+            container.innerHTML = html || '<p>No activity data available</p>';
+        }
+        
+        function getStatusIcon(status) {
+            const icons = {
+                'Approved': '✅',
+                'Pending': '⏳',
+                'Under Review': '🔍',
+                'Rejected': '❌'
+            };
+            return icons[status] || '📋';
+        }
+        
+        function displayFRAData(data) {
+            if (!data.features || data.features.length === 0) {
+                console.log('No FRA data available');
+                return;
+            }
+            
+            if (fraLayer) {
+                map.removeLayer(fraLayer);
+            }
+            
+            fraLayer = L.geoJSON(data, {
+                pointToLayer: (feature, latlng) => {
+                    return L.circleMarker(latlng, {
+                        radius: 14,
+                        fillColor: "#2e7d32",
+                        color: "#ffffff",
+                        weight: 3,
+                        opacity: 1,
+                        fillOpacity: 0.9
+                    });
+                },
+                onEachFeature: (feature, layer) => {
+                    const props = feature.properties;
+                    
+                    const popupContent = `
+                        <div style="font-family: 'Inter', sans-serif; padding: 15px; min-width: 280px;">
+                            <h4 style="margin: 0 0 10px 0; color: #2e7d32;">${props.village}</h4>
+                            <p><strong>📋 Patta Holder:</strong> ${props.patta_holder}</p>
+                            <p><strong>📏 Land Area:</strong> ${props.area_hectares} hectares</p>
+                            <p><strong>👥 Family Size:</strong> ${props.family_size} members</p>
+                            <p><strong>🏛️ Tribal Group:</strong> ${props.tribal_group || 'N/A'}</p>
+                            <p><strong>👤 Uploaded by:</strong> ${props.uploaded_by}</p>
+                            <p><strong>✅ Verified by:</strong> ${props.verified_by || 'Pending'}</p>
+                            <p><strong>📄 File ID:</strong> ${props.file_id}</p>
+                        </div>
+                    `;
+                    
+                    layer.bindPopup(popupContent);
+                    
+                    layer.on('click', () => {
+                        selectVillage(props);
+                    });
+                }
+            });
+            
+            fraLayer.addTo(map);
+            map.fitBounds(fraLayer.getBounds(), { padding: [20, 20] });
+            
+            console.log(`✅ Displayed ${data.features.length} villages on admin map`);
+        }
+        
+        function selectVillage(props) {
+            console.log('🔍 Admin viewing village:', props.village);
+            
+            const villageInfo = document.getElementById('village-info');
+            villageInfo.innerHTML = `
+                <div style="padding: 15px; background: white; border-radius: 8px; border: 1px solid var(--border-color);">
+                    <h4 style="color: #2e7d32; margin-bottom: 10px;">${props.village}</h4>
+                    <div class="stat-item" style="margin: 5px 0;">
+                        <span class="stat-label">👤 Patta Holder</span>
+                        <span class="stat-value">${props.patta_holder}</span>
+                    </div>
+                    <div class="stat-item" style="margin: 5px 0;">
+                        <span class="stat-label">📏 Area</span>
+                        <span class="stat-value">${props.area_hectares} ha</span>
+                    </div>
+                    <div class="stat-item" style="margin: 5px 0;">
+                        <span class="stat-label">📄 File ID</span>
+                        <span class="stat-value">${props.file_id}</span>
+                    </div>
+                    <div class="stat-item" style="margin: 5px 0;">
+                        <span class="stat-label">👤 Uploaded by</span>
+                        <span class="stat-value">${props.uploaded_by}</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Admin dashboard loaded');
+            initMap();
+            loadSystemData();
+        });
+    </script>
+</body>
+</html>

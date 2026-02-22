@@ -1,0 +1,320 @@
+{
+  "dajgua_schemes": {
+    "PM_KISAN": {
+      "key": "PM_KISAN",
+      "name": "Pradhan Mantri Kisan Samman Nidhi",
+      "ministry": "Ministry of Agriculture & Farmers Welfare",
+      "category": "agricultural_schemes",
+      "eligibility_rules": {
+        "land_ownership": true,
+        "cultivates_crops": true,
+        "social_category": ["General", "SC", "ST", "OBC"],
+        "min_land_area": 0.01,
+        "max_land_area": 2.0,
+        "exclusions": ["Government employees", "Income tax payers"]
+      },
+      "reason_templates": {
+        "eligible": [
+          "✓ Has land ownership",
+          "✓ Cultivates crops",
+          "✓ Eligible social category: {social_category}",
+          "✓ Land area {land_area} hectares meets requirement"
+        ],
+        "ineligible": [
+          "✗ No land ownership",
+          "✗ Does not cultivate crops",
+          "✗ Social category {social_category} not eligible",
+          "✗ Land area {land_area} hectares below minimum"
+        ]
+      },
+      "score_weights": {
+        "land_ownership": 0.3,
+        "cultivates_crops": 0.25,
+        "social_category": 0.2,
+        "land_area": 0.15,
+        "documentation": 0.1
+      },
+      "benefit_amount": "Rs. 6,000 per year",
+      "convergence_ministries": ["Ministry of Agriculture", "Ministry of Rural Development"],
+      "dajgua_priority": "high"
+    },
+    "JAL_JEEVAN_MISSION": {
+      "key": "JAL_JEEVAN_MISSION",
+      "name": "Jal Jeevan Mission",
+      "ministry": "Ministry of Jal Shakti",
+      "category": "infrastructure_schemes",
+      "eligibility_rules": {
+        "tap_water": false,
+        "rural_area": true,
+        "water_index": "low",
+        "population_factor": true
+      },
+      "reason_templates": {
+        "eligible": [
+          "✓ No tap water connection",
+          "✓ Rural household",
+          "✓ Low water index area",
+          "✓ Population meets criteria"
+        ],
+        "ineligible": [
+          "✗ Already has tap water",
+          "✗ Urban area",
+          "✗ High water index area"
+        ]
+      },
+      "score_weights": {
+        "water_access": 0.4,
+        "rural_status": 0.3,
+        "water_index": 0.2,
+        "population": 0.1
+      },
+      "benefit_amount": "Free tap water connection",
+      "convergence_ministries": ["Ministry of Jal Shakti", "Ministry of Rural Development"],
+      "dajgua_priority": "high"
+    },
+    "MGNREGA": {
+      "key": "MGNREGA",
+      "name": "Mahatma Gandhi National Rural Employment Guarantee Act",
+      "ministry": "Ministry of Rural Development",
+      "category": "employment_schemes",
+      "eligibility_rules": {
+        "willing_mgnrega": true,
+        "adults_count": 1,
+        "bank_account": true,
+        "ration_card": true,
+        "rural_area": true
+      },
+      "reason_templates": {
+        "eligible": [
+          "✓ Willing for MGNREGA work",
+          "✓ Has bank account",
+          "✓ Rural household",
+          "✓ Adult members available"
+        ],
+        "ineligible": [
+          "✗ Not willing for MGNREGA work",
+          "✗ No bank account",
+          "✗ Urban area"
+        ]
+      },
+      "score_weights": {
+        "willingness": 0.3,
+        "bank_account": 0.25,
+        "rural_status": 0.25,
+        "adult_members": 0.2
+      },
+      "benefit_amount": "Rs. 200-300 per day for 100 days",
+      "convergence_ministries": ["Ministry of Rural Development", "Ministry of Labour"],
+      "dajgua_priority": "medium"
+    },
+    "PMAY_G": {
+      "key": "PMAY_G",
+      "name": "Pradhan Mantri Awas Yojana - Gramin",
+      "ministry": "Ministry of Rural Development",
+      "category": "housing_schemes",
+      "eligibility_rules": {
+        "bpl_status": true,
+        "owns_house": false,
+        "house_type": ["Kutcha", "Homeless"],
+        "social_category": ["SC", "ST", "OBC"],
+        "bank_account": true
+      },
+      "reason_templates": {
+        "eligible": [
+          "✓ Below Poverty Line",
+          "✓ Eligible social category: {social_category}",
+          "✓ No pucca house",
+          "✓ Has bank account"
+        ],
+        "ineligible": [
+          "✗ Not Below Poverty Line",
+          "✗ Already has pucca house",
+          "✗ Social category not eligible"
+        ]
+      },
+      "score_weights": {
+        "bpl_status": 0.4,
+        "house_condition": 0.3,
+        "social_category": 0.2,
+        "bank_account": 0.1
+      },
+      "benefit_amount": "Rs. 1.5-2.5 lakhs",
+      "convergence_ministries": ["Ministry of Rural Development", "Ministry of Housing"],
+      "dajgua_priority": "high"
+    },
+    "RKVY": {
+      "key": "RKVY",
+      "name": "Rashtriya Krishi Vikas Yojana",
+      "ministry": "Ministry of Agriculture & Farmers Welfare",
+      "category": "agricultural_schemes",
+      "eligibility_rules": {
+        "land_ownership": true,
+        "cultivates_crops": true,
+        "agricultural_land_percent": 20,
+        "social_category": ["SC", "ST", "OBC", "General"]
+      },
+      "reason_templates": {
+        "eligible": [
+          "✓ Has agricultural land",
+          "✓ Cultivates crops",
+          "✓ Agricultural area {agri_percent}% meets criteria",
+          "✓ Eligible for agricultural development"
+        ],
+        "ineligible": [
+          "✗ No agricultural land",
+          "✗ Does not cultivate crops",
+          "✗ Agricultural area below threshold"
+        ]
+      },
+      "score_weights": {
+        "land_ownership": 0.3,
+        "cultivation": 0.3,
+        "agricultural_area": 0.25,
+        "social_category": 0.15
+      },
+      "benefit_amount": "Up to Rs. 1 lakh for agricultural development",
+      "convergence_ministries": ["Ministry of Agriculture", "Ministry of Rural Development"],
+      "dajgua_priority": "medium"
+    },
+    "PMMSY": {
+      "key": "PMMSY",
+      "name": "Pradhan Mantri Matsya Sampada Yojana",
+      "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying",
+      "category": "fisheries_schemes",
+      "eligibility_rules": {
+        "water_bodies": true,
+        "fishing_activity": true,
+        "coastal_area": false,
+        "inland_fisheries": true
+      },
+      "reason_templates": {
+        "eligible": [
+          "✓ Has access to water bodies",
+          "✓ Engages in fishing activity",
+          "✓ Inland fisheries eligible",
+          "✓ Water resources available"
+        ],
+        "ineligible": [
+          "✗ No access to water bodies",
+          "✗ Does not engage in fishing",
+          "✗ Coastal area not covered"
+        ]
+      },
+      "score_weights": {
+        "water_access": 0.4,
+        "fishing_activity": 0.3,
+        "inland_status": 0.2,
+        "water_quality": 0.1
+      },
+      "benefit_amount": "Up to Rs. 2 lakhs for fisheries development",
+      "convergence_ministries": ["Ministry of Fisheries", "Ministry of Jal Shakti"],
+      "dajgua_priority": "medium"
+    },
+    "NLM": {
+      "key": "NLM",
+      "name": "National Livestock Mission",
+      "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying",
+      "category": "livestock_schemes",
+      "eligibility_rules": {
+        "livestock_ownership": true,
+        "rural_area": true,
+        "social_category": ["SC", "ST", "OBC", "General"],
+        "land_availability": true
+      },
+      "reason_templates": {
+        "eligible": [
+          "✓ Owns livestock",
+          "✓ Rural household",
+          "✓ Has land for livestock",
+          "✓ Eligible for livestock development"
+        ],
+        "ineligible": [
+          "✗ No livestock ownership",
+          "✗ Urban area",
+          "✗ No land for livestock"
+        ]
+      },
+      "score_weights": {
+        "livestock_ownership": 0.4,
+        "rural_status": 0.3,
+        "land_availability": 0.2,
+        "social_category": 0.1
+      },
+      "benefit_amount": "Up to Rs. 1.5 lakhs for livestock development",
+      "convergence_ministries": ["Ministry of Animal Husbandry", "Ministry of Rural Development"],
+      "dajgua_priority": "medium"
+    },
+    "RGSA": {
+      "key": "RGSA",
+      "name": "Rashtriya Gram Swaraj Abhiyan",
+      "ministry": "Ministry of Panchayati Raj",
+      "category": "governance_schemes",
+      "eligibility_rules": {
+        "panchayat_area": true,
+        "rural_area": true,
+        "governance_participation": true,
+        "social_category": ["SC", "ST", "OBC", "General"]
+      },
+      "reason_templates": {
+        "eligible": [
+          "✓ Located in panchayat area",
+          "✓ Rural household",
+          "✓ Participates in governance",
+          "✓ Eligible for governance schemes"
+        ],
+        "ineligible": [
+          "✗ Not in panchayat area",
+          "✗ Urban area",
+          "✗ No governance participation"
+        ]
+      },
+      "score_weights": {
+        "panchayat_status": 0.4,
+        "rural_status": 0.3,
+        "governance_participation": 0.2,
+        "social_category": 0.1
+      },
+      "benefit_amount": "Up to Rs. 50,000 for governance development",
+      "convergence_ministries": ["Ministry of Panchayati Raj", "Ministry of Rural Development"],
+      "dajgua_priority": "low"
+    }
+  },
+  "convergence_rules": {
+    "ministry_weights": {
+      "Ministry of Agriculture & Farmers Welfare": 1.0,
+      "Ministry of Jal Shakti": 1.0,
+      "Ministry of Rural Development": 1.0,
+      "Ministry of Tribal Affairs": 1.2,
+      "Ministry of Fisheries, Animal Husbandry and Dairying": 0.8,
+      "Ministry of Panchayati Raj": 0.8,
+      "Ministry of Housing and Urban Affairs": 0.9,
+      "Ministry of Labour": 0.9
+    },
+    "category_weights": {
+      "agricultural_schemes": 1.0,
+      "infrastructure_schemes": 1.1,
+      "employment_schemes": 1.0,
+      "housing_schemes": 1.0,
+      "fisheries_schemes": 0.9,
+      "livestock_schemes": 0.9,
+      "governance_schemes": 0.8
+    },
+    "dajgua_priority_weights": {
+      "high": 1.2,
+      "medium": 1.0,
+      "low": 0.8
+    }
+  },
+  "village_attributes": {
+    "water_index": {
+      "low": "< 5% water coverage",
+      "medium": "5-15% water coverage",
+      "high": "> 15% water coverage"
+    },
+    "agri_pct": "Percentage of agricultural land",
+    "has_patta_count": "Number of patta holders",
+    "housing_kutcha_pct": "Percentage of kutcha houses",
+    "forest_cover_pct": "Percentage of forest cover",
+    "tribal_population_pct": "Percentage of tribal population"
+  }
+}

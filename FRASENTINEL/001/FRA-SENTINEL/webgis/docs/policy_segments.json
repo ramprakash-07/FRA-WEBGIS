@@ -1,0 +1,144 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created": "2025-09-26",
+    "sources": [
+      "FRAActnRulesBook.pdf",
+      "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf"
+    ]
+  },
+  "segments": [
+    {
+      "source": "FRAActnRulesBook.pdf",
+      "section": "Forest Rights Act 2006",
+      "anchor": "section_3",
+      "text": "Recognition of forest rights - The forest rights recognized under this Act include: (a) right to hold and live in the forest land under the individual or common occupation for habitation or for self-cultivation for livelihood; (b) community rights such as nistar; (c) right of ownership, access to collect, use, and dispose of minor forest produce; (d) other community rights of uses or entitlements such as fish and other products of water bodies; (e) rights including community tenures of habitat and habitation for primitive tribal groups and pre-agricultural communities; (f) rights in or over disputed lands under any nomenclature in any State where claims are disputed; (g) rights for conversion of pattas or leases or grants issued by any local authority or any State Government on forest lands to titles; (h) rights of settlement and conversion of all forest villages, old habitation, un-surveyed villages and other villages in forests into revenue villages; (i) right to protect, regenerate or conserve or manage any community forest resource which they have been traditionally protecting and conserving for sustainable use; (j) rights which are recognized under any State law or laws of any Autonomous District Council or Autonomous Regional Council or which are accepted as rights of tribals under any traditional or customary law of the concerned tribes of any State; (k) right of access to biodiversity and community right to intellectual property and traditional knowledge related to biodiversity and cultural diversity; (l) any other traditional right customarily enjoyed by the forest dwelling Scheduled Tribes or other traditional forest dwellers; (m) right to in situ rehabilitation including alternative land in cases where the Scheduled Tribes and other traditional forest dwellers have been illegally evicted or displaced from forest land of any description without receiving their legal entitlement to rehabilitation prior to the 13th day of December, 2005.",
+      "tags": ["FRA_2006", "forest_rights", "recognition", "section_3"]
+    },
+    {
+      "source": "FRAActnRulesBook.pdf",
+      "section": "Forest Rights Rules 2007",
+      "anchor": "rule_13",
+      "text": "Evidence for determination of forest rights - The evidence for determination of forest rights may include: (a) public documents, government records, maps, survey and settlement records; (b) statements by village elders, other community members, and traditional functionaries; (c) physical evidence such as houses, huts, and permanent improvements made to land; (d) any other relevant evidence that the Gram Sabha may consider appropriate.",
+      "tags": ["FRA_Rules", "evidence", "determination", "rule_13"]
+    },
+    {
+      "source": "FRAActnRulesBook.pdf",
+      "section": "Forms and Annexures",
+      "anchor": "form_a",
+      "text": "Form A - Application for recognition of individual forest rights under section 3(1)(a) of the Forest Rights Act, 2006. Contains fields for: claimant details, family information, land details, evidence submitted, Gram Sabha verification.",
+      "tags": ["FRA_Forms", "individual_rights", "form_a", "application"]
+    },
+    {
+      "source": "FRAActnRulesBook.pdf",
+      "section": "Forms and Annexures",
+      "anchor": "form_b",
+      "text": "Form B - Application for recognition of community forest rights under section 3(1)(b) to (m) of the Forest Rights Act, 2006. Contains fields for: community details, traditional practices, forest area, evidence of traditional use.",
+      "tags": ["FRA_Forms", "community_rights", "form_b", "application"]
+    },
+    {
+      "source": "FRAActnRulesBook.pdf",
+      "section": "Forms and Annexures",
+      "anchor": "form_c",
+      "text": "Form C - Application for recognition of community forest resource rights under section 3(1)(i) of the Forest Rights Act, 2006. Contains fields for: community details, forest resource management, traditional conservation practices, area details.",
+      "tags": ["FRA_Forms", "community_forest_resource", "form_c", "application"]
+    },
+    {
+      "source": "FRAActnRulesBook.pdf",
+      "section": "Quarterly Reporting",
+      "anchor": "annexure_v",
+      "text": "Annexure V - Quarterly Progress Report format for Forest Rights Act implementation. Contains columns for: State, District, Block, Village, IFR Filed, IFR Granted, IFR Rejected, CR Filed, CR Granted, CR Rejected, CFR Filed, CFR Granted, CFR Rejected, Total Area Vested, CFR Managed Area, Remarks.",
+      "tags": ["FRA_Reporting", "quarterly_progress", "annexure_v", "monitoring"]
+    },
+    {
+      "source": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf",
+      "section": "DAJGUA Overview",
+      "anchor": "introduction",
+      "text": "Development of Particularly Vulnerable Tribal Groups and Other Traditional Forest Dwellers (DAJGUA) is a comprehensive scheme for the development of tribal communities. The scheme focuses on 25 interventions across 17 ministries to ensure convergence and holistic development of tribal areas.",
+      "tags": ["DAJGUA", "overview", "interventions", "convergence", "tribal_development"]
+    },
+    {
+      "source": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf",
+      "section": "Interventions List",
+      "anchor": "intervention_1",
+      "text": "PM-KISAN: Pradhan Mantri Kisan Samman Nidhi - Direct income support to farmers. Eligibility: Small and marginal farmers with landholding up to 2 hectares. Benefit: Rs. 6,000 per year in three equal installments.",
+      "tags": ["DAJGUA", "PM_KISAN", "agriculture", "income_support", "farmers"]
+    },
+    {
+      "source": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf",
+      "section": "Interventions List",
+      "anchor": "intervention_2",
+      "text": "Jal Jeevan Mission (JJM): Providing functional household tap connections to every rural household. Priority areas: Tribal areas, water-stressed regions, aspirational districts.",
+      "tags": ["DAJGUA", "Jal_Jeevan_Mission", "water", "rural_development", "tap_connections"]
+    },
+    {
+      "source": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf",
+      "section": "Interventions List",
+      "anchor": "intervention_3",
+      "text": "MGNREGA: Mahatma Gandhi National Rural Employment Guarantee Act - Provides 100 days of guaranteed wage employment. Focus on water conservation, drought proofing, and land development works in tribal areas.",
+      "tags": ["DAJGUA", "MGNREGA", "employment", "rural_development", "water_conservation"]
+    },
+    {
+      "source": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf",
+      "section": "Interventions List",
+      "anchor": "intervention_4",
+      "text": "PMAY-G: Pradhan Mantri Awas Yojana - Gramin - Housing for all in rural areas. Priority for tribal households, particularly those in forest areas and with FRA titles.",
+      "tags": ["DAJGUA", "PMAY_G", "housing", "rural_development", "tribal_households"]
+    },
+    {
+      "source": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf",
+      "section": "Interventions List",
+      "anchor": "intervention_5",
+      "text": "RKVY: Rashtriya Krishi Vikas Yojana - Remunerative Approaches for Agriculture and Allied Sectors. Focus on tribal agriculture, organic farming, and value addition of forest produce.",
+      "tags": ["DAJGUA", "RKVY", "agriculture", "organic_farming", "forest_produce"]
+    },
+    {
+      "source": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf",
+      "section": "Interventions List",
+      "anchor": "intervention_6",
+      "text": "PMMSY: Pradhan Mantri Matsya Sampada Yojana - Development of fisheries sector. Support for traditional fishing communities, fish farming in tribal areas, and value chain development.",
+      "tags": ["DAJGUA", "PMMSY", "fisheries", "traditional_communities", "value_chain"]
+    },
+    {
+      "source": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf",
+      "section": "Interventions List",
+      "anchor": "intervention_7",
+      "text": "NLM: National Livestock Mission - Development of livestock sector. Support for traditional pastoral communities, animal husbandry, and dairy development in tribal areas.",
+      "tags": ["DAJGUA", "NLM", "livestock", "pastoral_communities", "dairy_development"]
+    },
+    {
+      "source": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf",
+      "section": "Interventions List",
+      "anchor": "intervention_8",
+      "text": "RGSA: Rashtriya Gram Swaraj Abhiyan - Strengthening Panchayati Raj Institutions. Capacity building of Gram Sabhas, especially in tribal areas for effective FRA implementation.",
+      "tags": ["DAJGUA", "RGSA", "panchayati_raj", "gram_sabha", "capacity_building"]
+    },
+    {
+      "source": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf",
+      "section": "CFR Management",
+      "anchor": "annexure_viii",
+      "text": "Annexure VIII - CFR Management Plan Template. Structure includes: District, Block, GP, Village, CFR Title Details, Interventions List (water bodies management, fire management, nurseries, NTFP value addition, soil-moisture works), Budget Heads, Monitoring Notes.",
+      "tags": ["DAJGUA", "CFR_management", "annexure_viii", "template", "interventions"]
+    },
+    {
+      "source": "Guidelines4InterventionsimplementedMoTA_Under_DAJGUA30102024.pdf",
+      "section": "Monitoring Framework",
+      "anchor": "monitoring_indicators",
+      "text": "Key monitoring indicators for DAJGUA implementation: (1) Number of households covered under each intervention, (2) Convergence achieved between different schemes, (3) Impact on tribal livelihoods, (4) Forest rights recognition and implementation, (5) Community participation in decision making.",
+      "tags": ["DAJGUA", "monitoring", "indicators", "convergence", "impact_assessment"]
+    }
+  ]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

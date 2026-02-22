@@ -1,0 +1,217 @@
+# Docker Compose for Development Environment
+# FRA-SENTINEL Development Setup with Live Reload
+
+version: '3.8'
+
+# =============================================================================
+# Development Services Configuration
+# =============================================================================
+services:
+  # =============================================================================
+  # PostgreSQL Database with PostGIS
+  # =============================================================================
+  db:
+    image: postgis/postgis:15-3.3
+    container_name: fra-sentinel-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-fra_atlas_dev}
+      POSTGRES_USER: ${POSTGRES_USER:-fra_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev_password}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      # Persistent data storage
+      - postgres_dev_data:/var/lib/postgresql/data
+      # Database initialization scripts
+      - ./database/init:/docker-entrypoint-initdb.d
+    ports:
+      # Expose database port for external connections
+      - "${DB_PORT:-5432}:5432"
+    networks:
+      - fra-dev-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-fra_user} -d ${POSTGRES_DB:-fra_atlas_dev}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # =============================================================================
+  # Redis Cache Service
+  # =============================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: fra-sentinel-redis-dev
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-dev_redis_password}
+    volumes:
+      - redis_dev_data:/data
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    networks:
+      - fra-dev-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # =============================================================================
+  # Flask Backend Service (Development)
+  # =============================================================================
+  web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+      target: development
+    container_name: fra-sentinel-web-dev
+    restart: unless-stopped
+    environment:
+      # Flask development configuration
+      FLASK_ENV: development
+      FLASK_APP: webgis/app.py
+      FLASK_DEBUG: 1
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-key-change-in-production}
+      
+      # Database configuration
+      DATABASE_URL: postgresql://${POSTGRES_USER:-fra_user}:${POSTGRES_PASSWORD:-dev_password}@db:5432/${POSTGRES_DB:-fra_atlas_dev}
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-fra_atlas_dev}
+      POSTGRES_USER: ${POSTGRES_USER:-fra_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev_password}
+      
+      # Redis configuration
+      REDIS_URL: redis://:${REDIS_PASSWORD:-dev_redis_password}@redis:6379/0
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-dev_redis_password}
+      
+      # Development settings
+      DEBUG: "True"
+      LOG_LEVEL: debug
+      RELOAD: "True"
+    ports:
+      - "${BACKEND_PORT:-5000}:5000"
+    volumes:
+      # Bind mounts for live reload
+      - ../webgis:/app/webgis
+      - ../data:/app/data
+      - ../logs:/app/logs
+      - ../models:/app/models
+      - ../uploads:/app/uploads
+      - ../static:/app/static
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - fra-dev-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # =============================================================================
+  # Celery Worker Service (Development)
+  # =============================================================================
+  worker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.worker
+      target: development
+    container_name: fra-sentinel-worker-dev
+    restart: unless-stopped
+    environment:
+      # Same environment as web service
+      DATABASE_URL: postgresql://${POSTGRES_USER:-fra_user}:${POSTGRES_PASSWORD:-dev_password}@db:5432/${POSTGRES_DB:-fra_atlas_dev}
+      REDIS_URL: redis://:${REDIS_PASSWORD:-dev_redis_password}@redis:6379/0
+      FLASK_ENV: development
+      DEBUG: "True"
+    volumes:
+      # Bind mounts for live reload
+      - ../webgis:/app/webgis
+      - ../data:/app/data
+      - ../logs:/app/logs
+      - ../models:/app/models
+      - ../uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - fra-dev-network
+    healthcheck:
+      test: ["CMD", "celery", "-A", "celery_config", "inspect", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # =============================================================================
+  # Nginx Reverse Proxy (Development)
+  # =============================================================================
+  nginx:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.nginx
+      target: production
+    container_name: fra-sentinel-nginx-dev
+    restart: unless-stopped
+    ports:
+      - "${NGINX_PORT:-80}:80"
+    volumes:
+      # Development nginx config
+      - ./nginx-dev.conf:/etc/nginx/nginx.conf
+      - ../static:/usr/share/nginx/html/static
+    depends_on:
+      - web
+    networks:
+      - fra-dev-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # =============================================================================
+  # pgAdmin for Database Management (Optional)
+  # =============================================================================
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: fra-sentinel-pgadmin-dev
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@fra-sentinel.local}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "${PGADMIN_PORT:-8080}:80"
+    volumes:
+      - pgadmin_dev_data:/var/lib/pgadmin
+    depends_on:
+      - db
+    networks:
+      - fra-dev-network
+
+# =============================================================================
+# Volumes for Development Data Persistence
+# =============================================================================
+volumes:
+  postgres_dev_data:
+    driver: local
+  redis_dev_data:
+    driver: local
+  pgadmin_dev_data:
+    driver: local
+
+# =============================================================================
+# Development Network
+# =============================================================================
+networks:
+  fra-dev-network:
+    driver: bridge
+    name: fra-sentinel-dev-network

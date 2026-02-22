@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRA Atlas - Ultimate Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+    :root {
+    /* Beautiful Green Gradient Color Palette */
+    --primary-gradient: linear-gradient(135deg, #0d4f3c 0%, #1b5e20 25%, #2e7d32 50%, #4caf50 75%, #81c784 100%);
+    --secondary-gradient: linear-gradient(135deg, #1b5e20 0%, #4caf50 100%);
+    --success-gradient: linear-gradient(135deg, #2e7d32 0%, #81c784 100%);
+    --warning-gradient: linear-gradient(135deg, #ff8f00 0%, #ffb74d 100%);
+    --info-gradient: linear-gradient(135deg, #1b5e20 0%, #66bb6a 100%);
+    --dark-gradient: linear-gradient(135deg, #0d4f3c 0%, #1b4332 100%);
+    
+    --surface-gradient: linear-gradient(135deg, #ffffff 0%, #f1f8e9 100%);
+    --card-gradient: linear-gradient(135deg, #ffffff 0%, #f9fbe7 100%);
+    --sidebar-gradient: linear-gradient(180deg, #ffffff 0%, #f1f8e9 50%, #e8f5e8 100%);
+    
+    --text-primary: #1a1a1a;
+    --text-secondary: #2e7d32;
+    --text-light: #4caf50;
+    --border-color: #c8e6c9;
+    --shadow: 0 8px 32px rgba(13, 79, 60, 0.08);
+    --shadow-hover: 0 16px 48px rgba(13, 79, 60, 0.12);
+    
+    --border-radius: 16px;
+    --border-radius-small: 12px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    --spacing-xs: 8px;
+    --spacing-sm: 12px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-xxl: 48px;
+}
+/* Enhanced Green Theme Styles */
+.header {
+    background: linear-gradient(135deg, #0d4f3c 0%, #1b5e20 25%, #2e7d32 50%, #4caf50 75%, #81c784 100%);
+    color: white;
+    padding: var(--spacing-xl) var(--spacing-lg);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(13, 79, 60, 0.2);
+}
+
+.header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0 0 var(--spacing-sm) 0;
+    background: linear-gradient(45deg, #ffffff, #e8f5e8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    line-height: 1.2;
+}
+
+/* Green-themed buttons */
+.control-button:hover {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+    color: white;
+    transform: translateX(2px);
+}
+
+.control-button.active {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+    color: white;
+    box-shadow: 0 2px 8px rgba(13, 79, 60, 0.3);
+}
+
+.tab-button.active {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+    color: white;
+    box-shadow: 0 4px 12px rgba(13, 79, 60, 0.2);
+}
+
+/* Green-themed village avatar */
+.village-avatar {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+    box-shadow: 0 4px 12px rgba(13, 79, 60, 0.3);
+}
+
+.village-avatar::after {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+}
+
+/* Green-themed stat values */
+.stat-value {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.village-details h3 {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.scheme-name {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.section-icon {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Green-themed chatbot */
+.chatbot-fab {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+    box-shadow: 0 8px 32px rgba(13, 79, 60, 0.3);
+}
+
+.chatbot-fab:hover {
+    box-shadow: 0 12px 40px rgba(13, 79, 60, 0.4);
+}
+
+.chatbot-header {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+}
+
+.bot-message .message-avatar {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+}
+
+.suggestion-btn {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+    box-shadow: 0 2px 8px rgba(13, 79, 60, 0.2);
+}
+
+.suggestion-btn:hover {
+    box-shadow: 0 4px 12px rgba(13, 79, 60, 0.3);
+}
+
+.chatbot-send-btn {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+}
+
+.chatbot-send-btn:hover {
+    box-shadow: 0 4px 16px rgba(13, 79, 60, 0.3);
+}
+
+/* Green-themed priority badges */
+.priority-high { 
+    background: linear-gradient(135deg, #d32f2f, #f44336); 
+    color: white; 
+}
+.priority-medium { 
+    background: linear-gradient(135deg, #f57c00, #ff9800); 
+    color: white; 
+}
+.priority-low { 
+    background: linear-gradient(135deg, #2e7d32, #4caf50); 
+    color: white; 
+}
+
+/* Green-themed score bars */
+.score-fill {
+    background: linear-gradient(135deg, #2e7d32, #4caf50);
+}
+
+.score-value {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Green-themed reason items */
+.reason-item {
+    background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+    border-left: 4px solid #2e7d32;
+}
+
+.reason-check {
+    color: #2e7d32;
+}
+
+/* Green-themed borders and accents */
+.info-section::before {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+}
+
+.village-card::before {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+}
+
+.recommendation-item::before {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+}
+
+.stat-item:hover::before {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+}
+
+/* Green-themed map markers */
+.leaflet-marker-icon {
+    filter: hue-rotate(120deg);
+}
+
+/* Custom scrollbar with green theme */
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #0d4f3c, #2e7d32);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #1b5e20, #4caf50);
+}
+
+
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        color: var(--text-primary);
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+    
+    /* Perfect Header Alignment */
+    .header {
+        background: var(--primary-gradient);
+        color: white;
+        padding: var(--spacing-xl) var(--spacing-lg);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    }
+    
+    .header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        animation: shimmer 3s infinite;
+    }
+    
+    @keyframes shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+    
+    .header-content {
+        position: relative;
+        z-index: 2;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .header h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin: 0 0 var(--spacing-sm) 0;
+        background: linear-gradient(45deg, #ffffff, #e3f2fd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        line-height: 1.2;
+    }
+    
+    .header p {
+        font-size: 1.25rem;
+        opacity: 0.95;
+        font-weight: 400;
+        margin: 0;
+    }
+    
+    /* Perfect Container Layout */
+    .container {
+        display: grid;
+        grid-template-columns: 420px 1fr;
+        gap: var(--spacing-lg);
+        min-height: calc(100vh - 140px);
+        padding: var(--spacing-lg);
+        max-width: 1600px;
+        margin: 0 auto;
+        align-items: start;
+    }
+    
+    /* Perfect Sidebar Alignment */
+    .sidebar {
+        background: var(--sidebar-gradient);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        transition: var(--transition);
+        border: 1px solid var(--border-color);
+        height: fit-content;
+        position: sticky;
+        top: var(--spacing-lg);
+    }
+    
+    .sidebar:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-hover);
+    }
+    
+    /* Perfect Map Container */
+    .map-container {
+        background: var(--card-gradient);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        position: relative;
+        border: 1px solid var(--border-color);
+        min-height: calc(100vh - 180px);
+        height: calc(100vh - 180px);
+    }
+    
+    #map {
+        height: 100%;
+        width: 100%;
+    }
+    
+    /* Perfect Layer Controls Alignment */
+    .map-controls {
+        position: absolute;
+        top: var(--spacing-md);
+        right: var(--spacing-md);
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    
+    .control-group {
+        background: var(--surface-gradient);
+        border-radius: var(--border-radius-small);
+        padding: var(--spacing-xs);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(10px);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .control-button {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+        background: transparent;
+        border: none;
+        border-radius: var(--spacing-xs);
+        padding: var(--spacing-sm) var(--spacing-md);
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: var(--transition);
+        color: var(--text-primary);
+        white-space: nowrap;
+        min-width: 120px;
+        justify-content: flex-start;
+    }
+    
+    .control-button:hover {
+        background: var(--primary-gradient);
+        color: white;
+        transform: translateX(2px);
+    }
+    
+    .control-button.active {
+        background: var(--primary-gradient);
+        color: white;
+        box-shadow: 0 2px 8px rgba(30, 60, 114, 0.3);
+    }
+    
+    .control-icon {
+        font-size: 1.1em;
+        width: 20px;
+        text-align: center;
+    }
+    
+    /* Perfect Tab Navigation */
+    .tab-navigation {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        background: var(--surface-gradient);
+        border-bottom: 1px solid var(--border-color);
+        padding: 6px;
+        gap: 4px;
+    }
+    
+    .tab-button {
+        padding: var(--spacing-md) var(--spacing-sm);
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        transition: var(--transition);
+        font-weight: 500;
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        border-radius: var(--spacing-xs);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-xs);
+        text-align: center;
+    }
+    
+    .tab-button:hover {
+        background: rgba(255,255,255,0.7);
+        color: var(--text-primary);
+    }
+    
+    .tab-button.active {
+        background: var(--primary-gradient);
+        color: white;
+        box-shadow: 0 4px 12px rgba(30, 60, 114, 0.2);
+    }
+    
+    /* Perfect Tab Content */
+    .tab-content {
+        padding: var(--spacing-lg);
+        max-height: calc(100vh - 280px);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-lg);
+    }
+    
+    .tab-pane {
+        display: none;
+    }
+    
+    .tab-pane.active {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-lg);
+        animation: fadeInUp 0.5s ease;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Perfect Info Section Alignment */
+   .info-section {
+    padding: var(--spacing-md);
+    background: var(--card-gradient);
+    border-radius: var(--border-radius-small);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: var(--spacing-md);
+}
+
+    .info-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--primary-gradient);
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+    }
+    
+    .info-section:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    }
+    
+  .info-section h3 {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin: 0 0 var(--spacing-sm) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    line-height: 1.2;
+}
+
+.section-icon {
+    font-size: 1.2em;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    width: 20px;
+    text-align: center;
+}
+
+    
+   
+    
+    /* Perfect Stat Items Grid */
+    .stats-grid {
+        display: grid;
+        gap: var(--spacing-sm);
+        grid-template-columns: 1fr;
+    }
+    
+.stat-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--surface-gradient);
+    border-radius: var(--spacing-xs);
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    min-height: 44px;
+}
+
+    .stat-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 0;
+        background: var(--primary-gradient);
+        transition: width 0.3s ease;
+    }
+    
+    .stat-item:hover::before {
+        width: 4px;
+    }
+    
+    .stat-item:hover {
+        transform: translateX(4px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+    
+  .stat-label {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+}
+
+.stat-icon {
+    font-size: 1.1em;
+    width: 18px;
+    text-align: center;
+}
+
+.stat-value-container {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: flex-end;
+}
+
+.stat-value {
+    font-weight: 600;
+    font-size: 1rem;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+}
+
+.stat-subtext {
+    font-size: 0.7rem;
+    color: var(--text-light);
+    margin: 0;
+}
+
+       
+    /* Perfect Loading Animation */
+    .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-xxl);
+        color: var(--text-secondary);
+        font-style: italic;
+        font-size: 0.95rem;
+    }
+    
+    .loading::before {
+        content: '';
+        width: 24px;
+        height: 24px;
+        border: 3px solid var(--border-color);
+        border-top: 3px solid transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        background: conic-gradient(from 0deg, transparent, #667eea);
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Perfect Village Card */
+  .village-card {
+    background: var(--card-gradient);
+    border-radius: var(--border-radius-small);
+    padding: var(--spacing-md);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    position: relative;
+    overflow: hidden;
+}
+
+    
+    .village-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: var(--primary-gradient);
+    }
+    
+   .village-header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--spacing-sm);
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+    .village-avatar {
+    width: 48px;
+    height: 48px;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: white;
+    box-shadow: 0 4px 12px rgba(30, 60, 114, 0.25);
+    flex-shrink: 0;
+}
+
+    
+    .village-avatar::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: var(--primary-gradient);
+        border-radius: 50%;
+        z-index: -1;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.02); opacity: 0.9; }
+    }
+    
+   .village-details h3 {
+    margin: 0 0 2px 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+}
+
+.village-details p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 400;
+}
+
+    
+    
+    .village-stats {
+        display: grid;
+        gap: var(--spacing-sm);
+    }
+    
+    /* Perfect Recommendations */
+  .recommendation-item {
+    background: var(--card-gradient);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-small);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: var(--spacing-sm);
+}
+
+    
+    .recommendation-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        background: var(--primary-gradient);
+    }
+    
+    .recommendation-item:hover {
+        transform: translateY(-2px) translateX(2px);
+        box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+    }
+    
+    .scheme-header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: var(--spacing-md);
+        align-items: start;
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .scheme-name {
+        font-weight: 700;
+        font-size: 1.3rem;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        line-height: 1.3;
+    }
+    
+    .scheme-icon {
+        font-size: 1.2em;
+        width: 24px;
+        text-align: center;
+    }
+    
+    .priority {
+        padding: var(--spacing-xs) var(--spacing-md);
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: none;
+        color: white;
+        white-space: nowrap;
+    }
+    
+    .priority-high { background: var(--warning-gradient); }
+    .priority-medium { background: var(--info-gradient); }
+    .priority-low { background: var(--success-gradient); }
+    
+    .scheme-content {
+        display: grid;
+        gap: var(--spacing-md);
+    }
+    
+    .scheme-details {
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+    
+    .scheme-details p {
+        margin: var(--spacing-xs) 0;
+    }
+    
+    .scheme-details strong {
+        color: var(--text-primary);
+    }
+    
+    .eligibility-reasons {
+        display: grid;
+        gap: var(--spacing-xs);
+    }
+    
+    .reason-item {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm) var(--spacing-md);
+        background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+        border-radius: var(--spacing-xs);
+        border-left: 4px solid #4caf50;
+    }
+    
+    .reason-check {
+        color: #4caf50;
+        font-weight: 600;
+        font-size: 1.1em;
+    }
+    
+    .eligibility-score {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: var(--spacing-sm);
+        align-items: center;
+        font-size: 0.95rem;
+        margin-top: var(--spacing-md);
+    }
+    
+    .score-label {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+    
+    .score-bar {
+        height: 10px;
+        background: var(--border-color);
+        border-radius: 5px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .score-fill {
+        height: 100%;
+        background: var(--success-gradient);
+        transition: width 2s ease;
+        border-radius: 5px;
+    }
+    
+    .score-value {
+        font-weight: 700;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    /* Perfect Status Display */
+    .debug-status {
+        position: fixed;
+        bottom: var(--spacing-lg);
+        right: var(--spacing-lg);
+        background: var(--dark-gradient);
+        color: white;
+        padding: var(--spacing-sm) var(--spacing-md);
+        border-radius: var(--border-radius-small);
+        font-size: 0.85rem;
+        font-weight: 500;
+        z-index: 10000;
+        max-width: 320px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    /* Perfect Chatbot Styles */
+    .chatbot-fab {
+        position: fixed;
+        bottom: var(--spacing-lg);
+        left: var(--spacing-lg);
+        width: 64px;
+        height: 64px;
+        background: var(--primary-gradient);
+        border: none;
+        border-radius: 50%;
+        color: white;
+        font-size: 1.8rem;
+        cursor: pointer;
+        box-shadow: 0 8px 32px rgba(30, 60, 114, 0.25);
+        transition: var(--transition);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .chatbot-fab:hover {
+        transform: scale(1.05) translateY(-2px);
+        box-shadow: 0 12px 40px rgba(30, 60, 114, 0.35);
+    }
+    
+    .chatbot-container {
+        position: fixed;
+        bottom: 100px;
+        left: var(--spacing-lg);
+        width: 380px;
+        max-height: 600px;
+        background: var(--surface-gradient);
+        border-radius: var(--border-radius);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        z-index: 9998;
+        transform: translateY(100%);
+        opacity: 0;
+        transition: var(--transition);
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+    }
+    
+    .chatbot-container.open {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    
+    .chatbot-header {
+        background: var(--primary-gradient);
+        color: white;
+        padding: var(--spacing-lg);
+        cursor: pointer;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: var(--spacing-md);
+        align-items: center;
+    }
+    
+    .chatbot-title h4 {
+        margin: 0 0 4px 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+    
+    .chatbot-status {
+        font-size: 0.85rem;
+        opacity: 0.9;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        background: #4caf50;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+    
+    .chatbot-toggle {
+        font-size: 1.3rem;
+        transition: transform 0.3s ease;
+    }
+    
+    .chatbot-container.open .chatbot-toggle {
+        transform: rotate(180deg);
+    }
+    
+    .chatbot-messages {
+        height: 380px;
+        overflow-y: auto;
+        padding: var(--spacing-lg);
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+    
+    .message {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: var(--spacing-sm);
+        align-items: flex-start;
+        animation: messageSlide 0.3s ease;
+    }
+    
+    .user-message {
+        grid-template-columns: 1fr auto;
+    }
+    
+    @keyframes messageSlide {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .message-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+    
+    .bot-message .message-avatar {
+        background: var(--primary-gradient);
+        color: white;
+    }
+    
+    .user-message .message-avatar {
+        background: var(--secondary-gradient);
+        color: white;
+        order: 2;
+    }
+    
+    .message-content {
+        background: var(--surface-gradient);
+        padding: var(--spacing-md) var(--spacing-lg);
+        border-radius: var(--border-radius);
+        max-width: 280px;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        border: 1px solid var(--border-color);
+    }
+    
+    .user-message .message-content {
+        background: var(--secondary-gradient);
+        color: white;
+        border-color: transparent;
+        justify-self: end;
+    }
+    
+    .message-content p {
+        margin: 0 0 var(--spacing-xs) 0;
+    }
+    
+    .message-content p:last-child {
+        margin-bottom: 0;
+    }
+    
+    .suggestion-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--spacing-xs);
+        margin-top: var(--spacing-sm);
+    }
+    
+    .suggestion-btn {
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        padding: 6px var(--spacing-sm);
+        border-radius: var(--spacing-md);
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    
+    .suggestion-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(30, 60, 114, 0.25);
+    }
+    
+    .chatbot-input {
+        padding: var(--spacing-lg);
+        border-top: 1px solid var(--border-color);
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: var(--spacing-sm);
+        align-items: center;
+        background: var(--surface-gradient);
+    }
+    
+    .chatbot-input input {
+        padding: var(--spacing-sm) var(--spacing-md);
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        font-size: 0.95rem;
+        outline: none;
+        transition: var(--transition);
+    }
+    
+    .chatbot-input input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .chatbot-send-btn {
+        width: 44px;
+        height: 44px;
+        background: var(--primary-gradient);
+        border: none;
+        border-radius: 50%;
+        color: white;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+    
+    .chatbot-send-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 16px rgba(30, 60, 114, 0.25);
+    }
+    
+    /* Perfect Responsive Design */
+    @media (max-width: 1400px) {
+        .container {
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+        }
+        
+        .sidebar {
+            order: 2;
+            position: static;
+        }
+        
+        .map-container {
+            height: 500px;
+            order: 1;
+        }
+        
+        .chatbot-container {
+            width: 320px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .header h1 {
+            font-size: 2rem;
+        }
+        
+        .header p {
+            font-size: 1rem;
+        }
+        
+        .container {
+            padding: var(--spacing-md);
+            gap: var(--spacing-md);
+        }
+        
+       .tab-content {
+    padding: var(--spacing-md);
+    max-height: calc(100vh - 240px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+        .chatbot-container {
+            left: var(--spacing-md);
+            right: var(--spacing-md);
+            width: auto;
+        }
+        
+        .chatbot-fab {
+            left: var(--spacing-md);
+            bottom: var(--spacing-md);
+        }
+        
+        .debug-status {
+            right: var(--spacing-md);
+            bottom: var(--spacing-md);
+        }
+        
+        .village-header {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+        
+        .scheme-header {
+            grid-template-columns: 1fr;
+            gap: var(--spacing-sm);
+        }
+        
+        .eligibility-score {
+            grid-template-columns: 1fr;
+            gap: var(--spacing-xs);
+            text-align: center;
+        }
+    }
+    
+    /* Perfect Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: var(--border-color);
+        border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: var(--primary-gradient);
+        border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--secondary-gradient);
+    }
+    
+    /* Perfect Animation Keyframes */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Perfect Focus States */
+    button:focus-visible,
+    input:focus-visible {
+        outline: 2px solid #667eea;
+        outline-offset: 2px;
+    }
+</style>
+
+</head>
+<body>
+<div class="auth-header" style="background: var(--primary-gradient); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <div style="font-size: 1.5rem;">
+            {% if session.user_role == 'CCF' %}🏛️
+            {% elif session.user_role == 'DCF' %}👔
+            {% elif session.user_role == 'RFO' %}🌲
+            {% elif session.user_role == 'GRAM_SABHA' %}🏘️
+            {% else %}👤
+            {% endif %}
+        </div>
+        <div>
+            <div style="font-weight: 600;">{{ session.user_name }}</div>
+            <div style="font-size: 0.9em; opacity: 0.9;">{{ session.user_role }} Access</div>
+        </div>
+    </div>
+    <div style="display: flex; gap: 10px;">
+        {% if session.user_role in ['CCF', 'DCF', 'RFO'] %}
+        <a href="{{ url_for('admin_panel') }}" style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">
+            🛠️ Admin
+        </a>
+        {% endif %}
+        <a href="{{ url_for('logout') }}" style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">
+            🚪 Logout
+        </a>
+    </div>
+</div>
+
+    <!-- Debug Status -->
+    <div class="debug-status" id="debug-status">
+        System: Initializing...
+    </div>
+
+    <!-- Enhanced Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1>🌲 FRA Atlas</h1>
+            <p>AI-Powered Forest Rights Monitoring & Decision Support System</p>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Enhanced Sidebar -->
+        <aside class="sidebar">
+            <nav class="tab-navigation">
+                <button class="tab-button active" data-tab="overview">
+                    <span>📊</span> Overview
+                </button>
+                <button class="tab-button" data-tab="analytics">
+                    <span>📈</span> Analytics
+                </button>
+                <button class="tab-button" data-tab="export">
+                    <span>📥</span> Export
+                </button>
+            </nav>
+
+            <div class="tab-content">
+                <div id="overview" class="tab-pane active">
+                    <div class="info-section">
+                        <h3><span class="section-icon">🏘️</span> Village Information</h3>
+                        <div id="village-info" class="loading">Loading village data...</div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3><span class="section-icon">📊</span> Land Use Statistics</h3>
+                        <div id="land-stats" class="loading">Calculating statistics...</div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3><span class="section-icon">🎯</span> Smart Recommendations</h3>
+                        <div id="recommendations" class="loading">Analyzing data...</div>
+                    </div>
+                </div>
+
+                <div id="analytics" class="tab-pane">
+                    <div class="info-section">
+                        <h3><span class="section-icon">📈</span> System Analytics</h3>
+                        <div id="system-analytics">
+                            <div class="stat-item">
+                                <span class="stat-label">
+                                    <span>🟢</span> System Status
+                                </span>
+                                <span class="stat-value" id="system-status">Checking...</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">
+                                    <span>🏘️</span> Villages Loaded
+                                </span>
+                                <span class="stat-value" id="villages-count">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">
+                                    <span>📊</span> Data Categories
+                                </span>
+                                <span class="stat-value" id="stats-count">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="export" class="tab-pane">
+                    <div class="info-section">
+                        <h3><span class="section-icon">📥</span> Export Options</h3>
+                        <div class="stat-item">
+                            <span class="stat-label">
+                                <span>📄</span> PDF Report
+                            </span>
+                            <button class="control-button">Generate</button>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">
+                                <span>📊</span> Excel Data
+                            </span>
+                            <button class="control-button">Export</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Enhanced Map Container with Layer Controls -->
+        <main class="map-container">
+            <div class="map-controls">
+                <div class="control-group">
+                    <button class="control-button active" id="street-view" onclick="switchMapLayer('street')">
+                        <span class="control-icon">🗺️</span> Street
+                    </button>
+                    <button class="control-button" id="satellite-view" onclick="switchMapLayer('satellite')">
+                        <span class="control-icon">🛰️</span> Satellite
+                    </button>
+                    <button class="control-button" id="terrain-view" onclick="switchMapLayer('terrain')">
+                        <span class="control-icon">🏔️</span> Terrain
+                    </button>
+                </div>
+                
+                <div class="control-group">
+                    <button class="control-button" onclick="resetMapView()">
+                        <span class="control-icon">🏠</span> Reset
+                    </button>
+                    <button class="control-button" onclick="toggleFullscreen()">
+                        <span class="control-icon">⛶</span> Full
+                    </button>
+                </div>
+            </div>
+            
+            <div id="map"></div>
+        </main>
+    </div>
+
+    <!-- Chatbot Interface -->
+    <div class="chatbot-container" id="chatbot-container">
+        <div class="chatbot-header" onclick="toggleChatbot()">
+            <div class="chatbot-title">
+                <h4>🤖 FRA Assistant</h4>
+                <div class="chatbot-status">
+                    <span class="status-dot"></span>
+                    <span>Online & Ready</span>
+                </div>
+            </div>
+            <div class="chatbot-toggle" id="chatbot-toggle">▼</div>
+        </div>
+        
+        <div class="chatbot-messages" id="chatbot-messages">
+            <div class="message bot-message">
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <p>Welcome to FRA Atlas! I'm your intelligent assistant for Forest Rights Act queries.</p>
+                    <p>I can help you with:</p>
+                    <ul style="margin: 8px 0; padding-left: 20px;">
+                        <li>FRA information & eligibility</li>
+                        <li>Government scheme recommendations</li>
+                        <li>Village data analysis</li>
+                        <li>Land use classification details</li>
+                    </ul>
+                    <div class="suggestion-buttons">
+                        <button class="suggestion-btn" onclick="sendSuggestion('Tell me about FRA')">About FRA</button>
+                        <button class="suggestion-btn" onclick="sendSuggestion('What schemes are available?')">Available Schemes</button>
+                        <button class="suggestion-btn" onclick="sendSuggestion('Show village analysis')">Village Analysis</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chatbot-input">
+            <input type="text" id="chatbot-input" placeholder="Ask me about FRA, schemes, or village data..." />
+            <button class="chatbot-send-btn" onclick="sendMessage()">
+                <span>📤</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Chatbot Toggle Button -->
+    <button class="chatbot-fab" onclick="toggleChatbot()" title="FRA Assistant">
+        🤖
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        console.log('🚀 FRA Atlas Ultimate Starting...');
+        
+        class FRAAtlas {
+            constructor() {
+                this.map = null;
+                this.fraLayer = null;
+                this.currentMapLayer = null;
+                this.mapLayers = {};
+                this.init();
+            }
+
+            init() {
+                console.log('🔧 Initializing FRA Atlas Ultimate...');
+                this.updateDebugStatus('Initializing...');
+                this.initMap();
+                this.initTabs();
+                this.loadSystemData();
+            }
+
+            updateDebugStatus(message) {
+                const debugEl = document.getElementById('debug-status');
+                if (debugEl) {
+                    debugEl.textContent = `System: ${message}`;
+                }
+                console.log('🔄 Status:', message);
+            }
+
+            initMap() {
+                console.log('🗺️ Initializing enhanced map...');
+                
+                this.map = L.map('map', {
+                    center: [21.8225, 75.6102],
+                    zoom: 10,
+                    zoomControl: false
+                });
+                
+                // Add zoom control
+                L.control.zoom({
+                    position: 'bottomright'
+                }).addTo(this.map);
+                
+                // Define map layers
+                this.mapLayers = {
+                    street: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '© OpenStreetMap contributors',
+                        maxZoom: 18
+                    }),
+                    satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                        attribution: '© Esri, DigitalGlobe, GeoEye',
+                        maxZoom: 18
+                    }),
+                    terrain: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                        attribution: '© OpenTopoMap contributors',
+                        maxZoom: 15
+                    })
+                };
+                
+                // Add default street layer
+                this.currentMapLayer = this.mapLayers.street;
+                this.currentMapLayer.addTo(this.map);
+                
+                console.log('✅ Enhanced map initialized with multiple layers');
+                this.updateDebugStatus('Map Ready with Layer Controls');
+            }
+
+            initTabs() {
+                const tabButtons = document.querySelectorAll('.tab-button');
+                const tabPanes = document.querySelectorAll('.tab-pane');
+
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const target = button.getAttribute('data-tab');
+                        
+                        tabButtons.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                        
+                        tabPanes.forEach(pane => pane.classList.remove('active'));
+                        document.getElementById(target).classList.add('active');
+                        
+                        console.log('📑 Switched to tab:', target);
+                    });
+                });
+            }
+
+            async loadSystemData() {
+                console.log('📊 Loading system data...');
+                this.updateDebugStatus('Loading Data...');
+                
+                try {
+                    // Load system status
+                    const statusResponse = await fetch('/api/system_status');
+                    if (!statusResponse.ok) throw new Error(`Status API failed: ${statusResponse.status}`);
+                    const statusData = await statusResponse.json();
+                    console.log('✅ System status loaded:', statusData);
+                    this.updateSystemStatus(statusData);
+                    
+                    // Load FRA data
+                    const fraResponse = await fetch('/api/fra_data');
+                    if (!fraResponse.ok) throw new Error(`FRA API failed: ${fraResponse.status}`);
+                    const fraData = await fraResponse.json();
+                    if (fraData.error) throw new Error(fraData.error);
+                    console.log('✅ FRA data loaded:', fraData);
+                    this.displayFRAData(fraData);
+                    
+                    // Load statistics
+                    const statsResponse = await fetch('/api/classification_stats');
+                    if (!statsResponse.ok) throw new Error(`Stats API failed: ${statsResponse.status}`);
+                    const statsData = await statsResponse.json();
+                    console.log('✅ Statistics loaded:', statsData);
+                    this.displayStatistics(statsData);
+                    
+                    this.updateDebugStatus('✅ All Data Loaded Successfully');
+                    
+                    // Auto-select first village
+                    if (fraData.features && fraData.features.length > 0) {
+                        setTimeout(() => {
+                            console.log('🎯 Auto-selecting first village...');
+                            this.selectVillage(fraData.features[0].properties);
+                        }, 1000);
+                    }
+                    
+                } catch (error) {
+                    console.error('💥 Error loading data:', error);
+                    this.updateDebugStatus('❌ Error: ' + error.message);
+                }
+            }
+
+            updateSystemStatus(statusData) {
+                document.getElementById('system-status').textContent = statusData.status || 'Unknown';
+                document.getElementById('villages-count').textContent = statusData.villages_loaded || 0;
+                document.getElementById('stats-count').textContent = statusData.stats_loaded || 0;
+            }
+
+            displayFRAData(data) {
+                console.log('🏘️ Displaying FRA data with enhanced markers...');
+                
+                if (!data.features || data.features.length === 0) {
+                    console.error('❌ No villages found');
+                    return;
+                }
+
+                if (this.fraLayer) {
+                    this.map.removeLayer(this.fraLayer);
+                }
+
+                this.fraLayer = L.geoJSON(data, {
+                    pointToLayer: (feature, latlng) => {
+                        return L.circleMarker(latlng, {
+                            radius: 16,
+                            fillColor: "#1e3c72",
+                            color: "#ffffff",
+                            weight: 4,
+                            opacity: 1,
+                            fillOpacity: 0.9
+                        });
+                    },
+                    onEachFeature: (feature, layer) => {
+                        const props = feature.properties;
+                        
+                        const popupContent = `
+                            <div style="font-family: 'Inter', sans-serif; padding: 20px; min-width: 280px; background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border-radius: 12px;">
+                                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #1e3c72, #2a5298); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5em; color: white; box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);">🏘️</div>
+                                    <div>
+                                        <h4 style="margin: 0; background: linear-gradient(135deg, #1e3c72, #4a7c59); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.4em;">${props.village}</h4>
+                                        <p style="margin: 4px 0 0 0; color: #666; font-size: 0.95em;">Forest Rights Village</p>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 16px; border-radius: 10px; margin: 15px 0;">
+                                    <p style="margin: 6px 0; color: #333;"><strong>🧑‍🌾 Patta Holder:</strong> ${props.patta_holder}</p>
+                                    <p style="margin: 6px 0; color: #333;"><strong>📏 Land Area:</strong> ${props.area_hectares} hectares</p>
+                                    <p style="margin: 6px 0; color: #333;"><strong>✅ Status:</strong> <span style="color: #28a745; font-weight: 600;">${props.claim_status}</span></p>
+                                    <p style="margin: 6px 0; color: #333;"><strong>📍 Location:</strong> ${props.latitude.toFixed(4)}, ${props.longitude.toFixed(4)}</p>
+                                </div>
+                                
+                                <button onclick="window.fraAtlas.selectVillage(${JSON.stringify(props).replace(/"/g, '&quot;')})" 
+                                        style="background: linear-gradient(135deg, #1e3c72, #4a7c59); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; width: 100%; font-size: 1em; font-weight: 500; transition: all 0.3s ease;">
+                                    📊 View Detailed Analysis
+                                </button>
+                            </div>
+                        `;
+                        
+                        layer.bindPopup(popupContent, {
+                            maxWidth: 320,
+                            className: 'custom-popup'
+                        });
+                        
+                        layer.on('click', () => {
+                            console.log('🔍 Village clicked:', props.village);
+                            this.selectVillage(props);
+                        });
+                        
+                        // Enhanced hover effects
+                        layer.on('mouseover', function() {
+                            this.setStyle({ fillOpacity: 1, radius: 20 });
+                        });
+                        
+                        layer.on('mouseout', function() {
+                            this.setStyle({ fillOpacity: 0.9, radius: 16 });
+                        });
+                    }
+                });
+                
+                this.fraLayer.addTo(this.map);
+                this.map.fitBounds(this.fraLayer.getBounds(), { padding: [40, 40] });
+                
+                console.log(`✅ Displayed ${data.features.length} villages with enhanced styling`);
+            }
+
+           displayStatistics(stats) {
+    console.log('📈 Displaying enhanced statistics...');
+    
+    const container = document.getElementById('land-stats');
+    if (!container) return;
+    
+    const icons = {
+        'farmland': '🌾',
+        'forest': '🌲', 
+        'water': '💧',
+        'homestead': '🏠'
+    };
+
+    let html = '<div class="stats-grid">';
+    Object.entries(stats).forEach(([type, data], index) => {
+        const icon = icons[type] || '📊';
+        html += `
+            <div class="stat-item" style="animation: slideUp 0.5s ease ${index * 0.1}s both;">
+                <div class="stat-label">
+                    <span class="stat-icon">${icon}</span>
+                    <span>${type.charAt(0).toUpperCase() + type.slice(1)}</span>
+                </div>
+                <div class="stat-value-container">
+                    <div class="stat-value">${data.percentage}%</div>
+                    <div class="stat-subtext">${data.pixels.toLocaleString()} pixels</div>
+                </div>
+            </div>
+        `;
+    });
+    html += '</div>';
+    
+    container.innerHTML = html;
+    console.log('✅ Perfect statistics displayed');
+}
+
+
+            async selectVillage(props) {
+                console.log('🎯 Selecting village with enhanced display:', props);
+                
+                const villageName = props.village;
+                this.updateDebugStatus(`Analyzing ${villageName}...`);
+                
+                // Enhanced village info display
+                const villageContainer = document.getElementById('village-info');
+                villageContainer.innerHTML = `
+                    <div class="village-card">
+                        <div class="village-header">
+                            <div class="village-avatar">🏘️</div>
+                            <div class="village-details">
+                                <h3>${villageName}</h3>
+                                <p>Forest Rights Village • ${props.claim_status}</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; gap: 14px;">
+                            <div class="stat-item">
+                                <span class="stat-label">
+                                    <span>👤</span> Patta Holder
+                                </span>
+                                <span class="stat-value">${props.patta_holder}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">
+                                    <span>📏</span> Land Area
+                                </span>
+                                <span class="stat-value">${props.area_hectares} ha</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">
+                                    <span>✅</span> Claim Status
+                                </span>
+                                <span class="stat-value" style="color: #28a745;">${props.claim_status}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">
+                                    <span>📍</span> Coordinates
+                                </span>
+                                <span class="stat-value">${props.latitude.toFixed(4)}, ${props.longitude.toFixed(4)}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Load recommendations
+                try {
+                    console.log('🔄 Loading enhanced recommendations...');
+                    document.getElementById('recommendations').innerHTML = '<div class="loading">Loading recommendations...</div>';
+                    
+                    const encodedVillage = encodeURIComponent(villageName);
+                    const recResponse = await fetch(`/api/dss_recommendation/${encodedVillage}`);
+                    if (!recResponse.ok) throw new Error(`API failed: ${recResponse.status}`);
+                    
+                    const recData = await recResponse.json();
+                    if (recData.error) throw new Error(recData.error);
+                    
+                    console.log('✅ Enhanced recommendations loaded:', recData);
+                    this.displayRecommendations(recData);
+                    this.updateDebugStatus(`✅ ${villageName} Analysis Complete`);
+                    
+                } catch (error) {
+                    console.error('💥 Error loading recommendations:', error);
+                    document.getElementById('recommendations').innerHTML = `
+                        <div style="background: linear-gradient(135deg, #f8d7da, #f1aeb5); color: #721c24; padding: 20px; border-radius: 12px; border-left: 4px solid #dc3545;">
+                            <strong>❌ Failed to load recommendations:</strong><br>
+                            ${error.message}
+                        </div>
+                    `;
+                }
+            }
+
+            displayRecommendations(data) {
+                console.log('🎯 Displaying enhanced recommendations...');
+                
+                const container = document.getElementById('recommendations');
+                
+                if (!data.recommendations || data.recommendations.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 50px; background: var(--card-gradient); border-radius: var(--border-radius);">
+                            <div style="font-size: 4em; margin-bottom: 20px;">🎯</div>
+                            <h4 style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px;">All Schemes Optimized</h4>
+                            <p style="color: var(--text-secondary);">Current scheme distribution is optimal for this village.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                data.recommendations.forEach((rec, index) => {
+                    const priorityIcons = { 'High': '🔥', 'Medium': '⚡', 'Low': '📝' };
+                    const priorityIcon = priorityIcons[rec.priority] || '📋';
+                    
+                    html += `
+                        <div class="recommendation-item" style="animation-delay: ${index * 0.15}s;">
+                            <div class="scheme-header">
+                                <div class="scheme-name">
+                                    <span class="scheme-icon">${priorityIcon}</span>
+                                    <span>${rec.scheme}</span>
+                                </div>
+                                <span class="priority priority-${rec.priority.toLowerCase()}">${rec.priority} Priority</span>
+                            </div>
+                            
+                            <div style="margin: 20px 0; color: var(--text-secondary); line-height: 1.6;">
+                                <p style="margin: 10px 0;"><strong style="color: var(--text-primary);">💰 Benefit:</strong> ${rec.benefit}</p>
+                                <p style="margin: 10px 0;"><strong style="color: var(--text-primary);">🏛️ Ministry:</strong> ${rec.ministry}</p>
+                                
+                                <div style="margin: 20px 0;">
+                                    <strong style="color: var(--text-primary);">✓ Eligibility Reasons:</strong>
+                                    <div style="margin-top: 12px;">
+                                        ${rec.reasons.map(reason => `
+                                            <div style="display: flex; align-items: center; gap: 12px; margin: 8px 0; padding: 12px 16px; background: var(--success-gradient); background: linear-gradient(135deg, #e8f5e8, #f1f8e9); border-radius: 8px; border-left: 4px solid #4caf50;">
+                                                <span style="color: #4caf50; font-weight: 600;">✓</span>
+                                                <span style="color: var(--text-primary);">${reason}</span>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                                
+                                <div style="display: flex; align-items: center; gap: 12px; margin-top: 20px; font-size: 0.95em;">
+                                    <span style="font-weight: 600; color: var(--text-primary);">Eligibility Score:</span>
+                                    <div style="flex: 1; height: 10px; background: var(--border-color); border-radius: 5px; overflow: hidden;">
+                                        <div style="height: 100%; background: var(--success-gradient); width: ${rec.eligibility_score}%; transition: width 2s ease; border-radius: 5px;"></div>
+                                    </div>
+                                    <span style="font-weight: 700; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">${rec.eligibility_score.toFixed(1)}/100</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+                console.log(`✅ Displayed ${data.recommendations.length} enhanced recommendations`);
+            }
+        }
+
+        // Global functions for map controls
+        function switchMapLayer(layerType) {
+            console.log('🗺️ Switching to', layerType, 'layer');
+            
+            if (window.fraAtlas && window.fraAtlas.currentMapLayer) {
+                window.fraAtlas.map.removeLayer(window.fraAtlas.currentMapLayer);
+            }
+            
+            window.fraAtlas.currentMapLayer = window.fraAtlas.mapLayers[layerType];
+            window.fraAtlas.currentMapLayer.addTo(window.fraAtlas.map);
+            
+            // Update button states
+            document.querySelectorAll('#street-view, #satellite-view, #terrain-view').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(layerType + '-view').classList.add('active');
+            
+            window.fraAtlas.updateDebugStatus(`Map: ${layerType.charAt(0).toUpperCase() + layerType.slice(1)} View Active`);
+        }
+
+        function resetMapView() {
+            if (window.fraAtlas && window.fraAtlas.map) {
+                window.fraAtlas.map.setView([21.8225, 75.6102], 10);
+                console.log('🏠 Map view reset to default');
+            }
+        }
+
+        function toggleFullscreen() {
+            const mapContainer = document.querySelector('.map-container');
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                mapContainer.requestFullscreen();
+            }
+        }
+
+        // Chatbot functionality
+        let chatbotOpen = false;
+        
+        function toggleChatbot() {
+            const container = document.getElementById('chatbot-container');
+            chatbotOpen = !chatbotOpen;
+            
+            if (chatbotOpen) {
+                container.classList.add('open');
+                document.getElementById('chatbot-input').focus();
+            } else {
+                container.classList.remove('open');
+            }
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('chatbot-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            addMessage(message, 'user');
+            input.value = '';
+            showTyping();
+            
+            try {
+                // Simulate API call (replace with real chatbot API)
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                removeTyping();
+                
+                // Mock responses based on message content
+                let response = "I understand your question about FRA. Let me help you with that information.";
+                let suggestions = ["Tell me more", "Show village data", "Available schemes"];
+                
+                if (message.toLowerCase().includes('fra')) {
+                    response = "The Forest Rights Act (FRA) 2006 recognizes the rights of forest-dwelling communities over land and forest resources. It covers Individual Forest Rights (IFR), Community Rights (CR), and Community Forest Resource Rights (CFR).";
+                    suggestions = ["What schemes are available?", "Show eligibility criteria", "Village analysis"];
+                } else if (message.toLowerCase().includes('scheme')) {
+                    response = "Available schemes include PM-KISAN (₹6,000 annual), Jal Shakti Mission (water infrastructure), MGNREGA (employment guarantee), DAJGUA (tribal development), and Van Dhan Vikas (forest produce marketing).";
+                    suggestions = ["Check eligibility", "View village recommendations", "Export data"];
+                } else if (message.toLowerCase().includes('village') || message.toLowerCase().includes('khargone')) {
+                    response = "Khargone village has 2.5 hectares of approved FRA land under Ram Singh. The land analysis shows 35.5% farmland and 42.3% forest cover, making it eligible for multiple government schemes.";
+                    suggestions = ["Show recommendations", "View on map", "Generate report"];
+                }
+                
+                addMessage(response, 'bot');
+                addSuggestions(suggestions);
+                
+            } catch (error) {
+                removeTyping();
+                addMessage("Sorry, I'm having trouble connecting right now. Please try again later.", 'bot');
+            }
+        }
+        
+        function sendSuggestion(suggestion) {
+            document.getElementById('chatbot-input').value = suggestion;
+            sendMessage();
+        }
+        
+        function addMessage(text, sender) {
+            const messagesContainer = document.getElementById('chatbot-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            
+            const avatar = sender === 'bot' ? '🤖' : '👤';
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${avatar}</div>
+                <div class="message-content">
+                    <p>${text}</p>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function addSuggestions(suggestions) {
+            const messagesContainer = document.getElementById('chatbot-messages');
+            const suggestionsDiv = document.createElement('div');
+            suggestionsDiv.className = 'message bot-message';
+            
+            const suggestionsHTML = suggestions.map(suggestion => 
+                `<button class="suggestion-btn" onclick="sendSuggestion('${suggestion}')">${suggestion}</button>`
+            ).join('');
+            
+            suggestionsDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <p>You might also want to ask:</p>
+                    <div class="suggestion-buttons">${suggestionsHTML}</div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(suggestionsDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function showTyping() {
+            const messagesContainer = document.getElementById('chatbot-messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot-message';
+            typingDiv.id = 'typing-indicator';
+            
+            typingDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <p>Thinking...</p>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function removeTyping() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+        
+        // Handle Enter key in chatbot input
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('chatbot-input');
+            if (input) {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendMessage();
+                    }
+                });
+            }
+        });
+
+        // Initialize when page loads
+        let fraAtlas;
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 FRA Atlas Ultimate loaded, starting system...');
+            fraAtlas = new FRAAtlas();
+            window.fraAtlas = fraAtlas;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - FRA Sentinel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/unified-buttons.css') }}" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #0d4f3c 0%, #1b5e20 25%, #2e7d32 50%, #4caf50 75%, #81c784 100%);
+            --text-primary: #1a1a1a;
+            --text-secondary: #2e7d32;
+            --border-radius: 16px;
+            --shadow: 0 8px 32px rgba(13, 79, 60, 0.08);
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%);
+            min-height: 100vh;
+        }
+
+        .top-navbar {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(13, 79, 60, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .report-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow);
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .report-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(13, 79, 60, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .card-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .report-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+
+        .action-btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(13, 79, 60, 0.3);
+        }
+
+        .action-btn.secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .action-btn.secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .coming-soon {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: var(--spacing-lg);
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin-top: var(--spacing-lg);
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-navbar">
+        <div class="navbar-brand">
+            <h1>📈 Reports</h1>
+        </div>
+        <a href="{{ url_for('dashboard') }}" class="back-btn">
+            ← Back to Dashboard
+        </a>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Reports & Documentation</h1>
+            <p class="page-subtitle">Generate comprehensive reports and documentation for forest rights management</p>
+        </div>
+
+        <!-- Reports Grid -->
+        <div class="reports-grid">
+            <!-- Monthly Summary -->
+            <div class="report-card">
+                <div class="card-header">
+                    <span class="card-icon">📅</span>
+                    <h3 class="card-title">Monthly Summary</h3>
+                </div>
+                <p class="card-description">
+                    Generate monthly reports summarizing claims processed, approvals, rejections, and key performance indicators.
+                </p>
+                <div class="report-actions">
+                    <button class="btn-unified btn-primary" onclick="generateReport('monthly')">
+                        <span>📊</span>
+                        Generate Report
+                    </button>
+                    <button class="btn-unified btn-secondary" onclick="previewReport('monthly')">
+                        <span>👁️</span>
+                        Preview
+                    </button>
+                </div>
+            </div>
+
+            <!-- Regional Analysis -->
+            <div class="report-card">
+                <div class="card-header">
+                    <span class="card-icon">🗺️</span>
+                    <h3 class="card-title">Regional Analysis</h3>
+                </div>
+                <p class="card-description">
+                    Create detailed reports analyzing forest rights claims and outcomes by region, district, and village.
+                </p>
+                <div class="report-actions">
+                    <button class="btn-unified btn-primary" onclick="generateReport('regional')">
+                        <span>📊</span>
+                        Generate Report
+                    </button>
+                    <button class="btn-unified btn-secondary" onclick="previewReport('regional')">
+                        <span>👁️</span>
+                        Preview
+                    </button>
+                </div>
+            </div>
+
+            <!-- Performance Metrics -->
+            <div class="report-card">
+                <div class="card-header">
+                    <span class="card-icon">⚡</span>
+                    <h3 class="card-title">Performance Metrics</h3>
+                </div>
+                <p class="card-description">
+                    Track and report on system performance, processing times, and efficiency metrics.
+                </p>
+                <div class="report-actions">
+                    <button class="btn-unified btn-primary" onclick="generateReport('performance')">
+                        📊 Generate Report
+                    </button>
+                    <button class="btn-unified btn-secondary" onclick="previewReport('performance')">
+                        👁️ Preview
+                    </button>
+                </div>
+            </div>
+
+            <!-- Compliance Report -->
+            <div class="report-card">
+                <div class="card-header">
+                    <span class="card-icon">✅</span>
+                    <h3 class="card-title">Compliance Report</h3>
+                </div>
+                <p class="card-description">
+                    Generate compliance reports ensuring adherence to forest rights regulations and policies.
+                </p>
+                <div class="report-actions">
+                    <button class="btn-unified btn-primary" onclick="generateReport('compliance')">
+                        📊 Generate Report
+                    </button>
+                    <button class="btn-unified btn-secondary" onclick="previewReport('compliance')">
+                        👁️ Preview
+                    </button>
+                </div>
+            </div>
+
+            <!-- Custom Report -->
+            <div class="report-card">
+                <div class="card-header">
+                    <span class="card-icon">🛠️</span>
+                    <h3 class="card-title">Custom Report</h3>
+                </div>
+                <p class="card-description">
+                    Create custom reports with specific parameters, date ranges, and data filters.
+                </p>
+                <div class="report-actions">
+                    <button class="btn-unified btn-primary" onclick="openCustomReport()">
+                        🛠️ Create Custom
+                    </button>
+                    <button class="btn-unified btn-secondary" onclick="manageTemplates()">
+                        📋 Templates
+                    </button>
+                </div>
+            </div>
+
+            <!-- Export Data -->
+            <div class="report-card">
+                <div class="card-header">
+                    <span class="card-icon">📤</span>
+                    <h3 class="card-title">Export Data</h3>
+                </div>
+                <p class="card-description">
+                    Export raw data in various formats (CSV, Excel, PDF) for external analysis and processing.
+                </p>
+                <div class="report-actions">
+                    <button class="btn-unified btn-primary" onclick="exportData()">
+                        📤 Export Data
+                    </button>
+                    <button class="btn-unified btn-secondary" onclick="scheduleExport()">
+                        ⏰ Schedule
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="coming-soon">
+            🚧 Advanced reporting features including automated report generation, scheduled reports, and interactive dashboards will be available soon!
+        </div>
+    </div>
+
+    <script>
+        function generateReport(type) {
+            const reportTypes = {
+                'monthly': 'Monthly Summary Report',
+                'regional': 'Regional Analysis Report',
+                'performance': 'Performance Metrics Report',
+                'compliance': 'Compliance Report'
+            };
+            
+            const reportName = reportTypes[type] || 'Custom Report';
+            
+            // Simulate report generation
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '<span>⏳</span> Generating...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.innerHTML = '<span>✅</span> Generated';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    
+                    // Show download link
+                    showDownloadLink(reportName, type);
+                }, 1000);
+            }, 3000);
+        }
+        
+        function showDownloadLink(reportName, type) {
+            const downloadDiv = document.createElement('div');
+            downloadDiv.style.cssText = `
+                background: #e8f5e8;
+                border: 1px solid #4caf50;
+                border-radius: 8px;
+                padding: 12px;
+                margin: 16px 0;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            `;
+            
+            downloadDiv.innerHTML = `
+                <div>
+                    <strong>📊 ${reportName}</strong><br>
+                    <small>Generated on ${new Date().toLocaleDateString()}</small>
+                </div>
+                <button onclick="downloadReport('${type}')" style="
+                    background: #4caf50;
+                    color: white;
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                ">📥 Download</button>
+            `;
+            
+            // Insert after the clicked button's parent card
+            const card = event.target.closest('.report-card');
+            card.parentNode.insertBefore(downloadDiv, card.nextSibling);
+            
+            // Auto-remove after 10 seconds
+            setTimeout(() => {
+                if (downloadDiv.parentNode) {
+                    downloadDiv.parentNode.removeChild(downloadDiv);
+                }
+            }, 10000);
+        }
+        
+        function downloadReport(type) {
+            const reportData = generateReportData(type);
+            const blob = new Blob([reportData], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `fra_report_${type}_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        function generateReportData(type) {
+            const data = {
+                monthly: `FRA MONTHLY SUMMARY REPORT
+Generated: ${new Date().toLocaleDateString()}
+
+SUMMARY STATISTICS:
+- Total Applications: 1,247
+- Approved Claims: 892 (71.5%)
+- Pending Claims: 156 (12.5%)
+- Rejected Claims: 199 (16.0%)
+- Average Processing Time: 28.5 days
+
+REGIONAL BREAKDOWN:
+- Khargone: 234 applications
+- Barwani: 189 applications
+- Dindori: 156 applications
+- Mandla: 143 applications
+
+PERFORMANCE METRICS:
+- Success Rate: 71.5% (+3.2% from last month)
+- Processing Efficiency: 89.2%
+- Customer Satisfaction: 4.2/5.0`,
+                
+                regional: `FRA REGIONAL ANALYSIS REPORT
+Generated: ${new Date().toLocaleDateString()}
+
+DISTRICT-WISE ANALYSIS:
+
+KHARGONE DISTRICT:
+- Total Applications: 234
+- Approved: 167 (71.4%)
+- Pending: 28 (12.0%)
+- Rejected: 39 (16.6%)
+- Average Processing Time: 26 days
+
+BARWANI DISTRICT:
+- Total Applications: 189
+- Approved: 135 (71.4%)
+- Pending: 22 (11.6%)
+- Rejected: 32 (16.9%)
+- Average Processing Time: 29 days
+
+DINDORI DISTRICT:
+- Total Applications: 156
+- Approved: 112 (71.8%)
+- Pending: 19 (12.2%)
+- Rejected: 25 (16.0%)
+- Average Processing Time: 31 days`,
+                
+                performance: `FRA PERFORMANCE METRICS REPORT
+Generated: ${new Date().toLocaleDateString()}
+
+SYSTEM PERFORMANCE:
+- Uptime: 99.8%
+- Response Time: 1.2 seconds
+- Data Accuracy: 98.5%
+- User Satisfaction: 4.2/5.0
+
+PROCESSING METRICS:
+- Average Processing Time: 28.5 days
+- Fastest Processing: 12 days
+- Slowest Processing: 67 days
+- Queue Length: 156 applications
+
+EFFICIENCY INDICATORS:
+- Automation Rate: 78.5%
+- Manual Review Rate: 21.5%
+- Error Rate: 2.3%
+- Resolution Time: 4.2 hours`,
+                
+                compliance: `FRA COMPLIANCE REPORT
+Generated: ${new Date().toLocaleDateString()}
+
+REGULATORY COMPLIANCE:
+- FRA Act 2006 Compliance: 100%
+- State Guidelines Adherence: 98.7%
+- Documentation Standards: 96.2%
+- Verification Protocols: 99.1%
+
+AUDIT FINDINGS:
+- Minor Issues: 12
+- Major Issues: 2
+- Critical Issues: 0
+- Resolution Rate: 100%
+
+COMPLIANCE SCORES:
+- Overall Compliance: 98.5%
+- Documentation Compliance: 96.2%
+- Process Compliance: 99.1%
+- Timeline Compliance: 97.8%`
+            };
+            
+            return data[type] || 'Report data not available';
+        }
+
+        function previewReport(type) {
+            const reportData = generateReportData(type);
+            const previewWindow = window.open('', '_blank', 'width=800,height=600');
+            previewWindow.document.write(`
+                <html>
+                    <head><title>Report Preview - ${type}</title></head>
+                    <body style="font-family: monospace; padding: 20px; white-space: pre-wrap;">${reportData}</body>
+                </html>
+            `);
+        }
+
+        function openCustomReport() {
+            const customDiv = document.createElement('div');
+            customDiv.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                padding: 20px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                z-index: 1000;
+                width: 400px;
+            `;
+            
+            customDiv.innerHTML = `
+                <h3>🛠️ Custom Report Builder</h3>
+                <div style="margin: 16px 0;">
+                    <label>Report Type:</label><br>
+                    <select id="customType" style="width: 100%; padding: 8px; margin: 8px 0;">
+                        <option value="summary">Summary Report</option>
+                        <option value="detailed">Detailed Report</option>
+                        <option value="comparative">Comparative Report</option>
+                    </select>
+                </div>
+                <div style="margin: 16px 0;">
+                    <label>Date Range:</label><br>
+                    <input type="date" id="startDate" style="width: 48%; padding: 8px; margin: 8px 1%;">
+                    <input type="date" id="endDate" style="width: 48%; padding: 8px; margin: 8px 1%;">
+                </div>
+                <div style="margin: 16px 0;">
+                    <label>Include Charts:</label>
+                    <input type="checkbox" id="includeCharts" checked>
+                </div>
+                <div style="text-align: right; margin-top: 20px;">
+                    <button onclick="closeCustomReport()" style="margin-right: 8px; padding: 8px 16px;">Cancel</button>
+                    <button onclick="generateCustomReport()" style="background: #4caf50; color: white; border: none; padding: 8px 16px; border-radius: 4px;">Generate</button>
+                </div>
+            `;
+            
+            document.body.appendChild(customDiv);
+            
+            // Set default dates
+            const today = new Date();
+            const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+            document.getElementById('endDate').value = today.toISOString().split('T')[0];
+            document.getElementById('startDate').value = lastMonth.toISOString().split('T')[0];
+        }
+        
+        function closeCustomReport() {
+            const customDiv = document.querySelector('div[style*="position: fixed"]');
+            if (customDiv) {
+                customDiv.remove();
+            }
+        }
+        
+        function generateCustomReport() {
+            const type = document.getElementById('customType').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const includeCharts = document.getElementById('includeCharts').checked;
+            
+            closeCustomReport();
+            generateReport('custom');
+        }
+
+        function manageTemplates() {
+            alert(`📋 Report Templates Management\n\nAvailable Templates:\n• Standard Monthly Report\n• Regional Analysis Template\n• Performance Dashboard\n• Compliance Checklist\n\nYou can customize and save your own templates for future use.`);
+        }
+
+        function exportData() {
+            const format = prompt('Select export format:\n1. CSV\n2. Excel\n3. PDF\n4. JSON\n\nEnter number (1-4):');
+            const formats = { '1': 'CSV', '2': 'Excel', '3': 'PDF', '4': 'JSON' };
+            
+            if (format && formats[format]) {
+                alert(`📤 Exporting data in ${formats[format]} format...\n\nThe export will include all FRA data from the last 12 months.`);
+            }
+        }
+
+        function scheduleExport() {
+            alert(`⏰ Schedule Data Export\n\nSet up automated exports:\n• Daily exports at 6:00 AM\n• Weekly exports every Monday\n• Monthly exports on the 1st\n• Custom schedule options\n\nConfigure email notifications for completed exports.`);
+        }
+
+        console.log('📈 Reports page loaded successfully');
+    </script>
+</body>
+</html>
